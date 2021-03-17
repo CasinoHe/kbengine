@@ -19,3 +19,6 @@
 [submodule "kbe/src/lib/dependencies/tinyxml"]
 	path = kbe/src/lib/dependencies/tinyxml
 	url = https://github.com/CasinoHe/tinyxml-cmake.git
+[submodule "kbe/src/lib/dependencies/sigar"]
+	path = kbe/src/lib/dependencies/sigar
+	url = https://github.com/CasinoHe/sigar.git
