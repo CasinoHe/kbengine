@@ -13,3 +13,6 @@
 [submodule "kbe/src/lib/dependencies/hiredis"]
 	path = kbe/src/lib/dependencies/hiredis
 	url = https://github.com/redis/hiredis.git
+[submodule "kbe/src/lib/dependencies/g3dlite"]
+	path = kbe/src/lib/dependencies/g3dlite
+	url = https://github.com/CasinoHe/g3dlite.git
