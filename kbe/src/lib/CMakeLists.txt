@@ -5,6 +5,7 @@ include(ExternalProject)
 add_subdirectory(dependencies/zlib)
 add_subdirectory(dependencies/fmt)
 
+# use autogen to build jemalloc
 ExternalProject_Add(jemalloc
   PREFIX ${KBE_ROOT}/lib/dependencies/jemalloc
   SOURCE_DIR ${KBE_ROOT}/lib/dependencies/jemalloc

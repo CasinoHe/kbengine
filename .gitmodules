@@ -7,3 +7,6 @@
 [submodule "kbe/src/lib/dependencies/jemalloc"]
 	path = kbe/src/lib/dependencies/jemalloc
 	url = https://github.com/jemalloc/jemalloc.git
+[submodule "kbe/src/lib/dependencies/curl"]
+	path = kbe/src/lib/dependencies/curl
+	url = https://github.com/curl/curl.git
