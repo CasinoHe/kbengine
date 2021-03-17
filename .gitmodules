@@ -1,0 +1,6 @@
+[submodule "kbe/src/lib/dependencies/zlib"]
+	path = kbe/src/lib/dependencies/zlib
+	url = https://github.com/madler/zlib.git
+[submodule "kbe/src/lib/dependencies/fmt"]
+	path = kbe/src/lib/dependencies/fmt
+	url = https://github.com/fmtlib/fmt.git
