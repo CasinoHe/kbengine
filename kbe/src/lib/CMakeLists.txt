@@ -14,3 +14,5 @@ ExternalProject_Add(jemalloc
   BUILD_IN_SOURCE 1
   INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory ${KBE_ROOT}/lib/dependencies/jemalloc/lib ${CMAKE_BINARY_DIR}/lib/dependencies/jemalloc
 )
+
+add_subdirectory(dependencies/curl)

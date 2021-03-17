@@ -10,3 +10,6 @@
 [submodule "kbe/src/lib/dependencies/curl"]
 	path = kbe/src/lib/dependencies/curl
 	url = https://github.com/curl/curl.git
+[submodule "kbe/src/lib/dependencies/hiredis"]
+	path = kbe/src/lib/dependencies/hiredis
+	url = https://github.com/redis/hiredis.git
