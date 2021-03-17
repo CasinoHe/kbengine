@@ -16,3 +16,5 @@ ExternalProject_Add(jemalloc
 )
 
 add_subdirectory(dependencies/curl)
+add_subdirectory(dependencies/g3dlite)
+add_subdirectory(dependencies/tinyxml)
