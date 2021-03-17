@@ -1,4 +1,4 @@
-# ----[ Visual Studio ]------- #
+# ----[ Visual Studio & Visual Studio Code]------- #
 /kbe/src/_objs
 /kbe/src/ipch
 __pycache__/
@@ -18,6 +18,8 @@ logs/
 *.exe
 *.pdb
 *.chw
+*.vs
+*.code-workspace
 
 # -------------[ OS generated ]------------------------ #
 .DS_Store
