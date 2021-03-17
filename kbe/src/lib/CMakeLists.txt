@@ -1,4 +1,15 @@
 cmake_minimum_required(VERSION 3.16.0)
 
+include(ExternalProject)
+
 add_subdirectory(dependencies/zlib)
 add_subdirectory(dependencies/fmt)
+
+ExternalProject_Add(jemalloc
+  PREFIX ${KBE_ROOT}/lib/dependencies/jemalloc
+  SOURCE_DIR ${KBE_ROOT}/lib/dependencies/jemalloc
+  CONFIGURE_COMMAND ./autogen.sh
+  BUILD_COMMAND make
+  BUILD_IN_SOURCE 1
+  INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory ${KBE_ROOT}/lib/dependencies/jemalloc/lib ${CMAKE_BINARY_DIR}/lib/dependencies/jemalloc
+)
