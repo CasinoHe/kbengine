@@ -27,3 +27,4 @@ add_subdirectory(dependencies/sigar)
 
 include_directories(dependencies/tinyxml)
 add_subdirectory(dependencies/tmxparser)
+add_subdirectory(dependencies/jwsmtp)
