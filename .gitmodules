@@ -28,3 +28,6 @@
 [submodule "kbe/src/lib/dependencies/jwsmtp"]
 	path = kbe/src/lib/dependencies/jwsmtp
 	url = https://github.com/CasinoHe/jwsmtp.git
+[submodule "kbe/src/lib/dependencies/apr"]
+	path = kbe/src/lib/dependencies/apr
+	url = https://github.com/apache/apr.git
