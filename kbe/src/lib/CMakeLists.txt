@@ -43,8 +43,10 @@ else()
     BUILD_IN_SOURCE 1
     INSTALL_COMMAND make install
   )
-  include_directories(${CMAKE_BINARY_DIR}/lib/dependencies/apr/include)
+  include_directories(${CMAKE_BINARY_DIR}/lib/dependencies/apr/include/apr-1)
   link_directories(${CMAKE_BINARY_DIR}/lib/dependencies/apr/lib)
+  set(APR_INCLUDE_DIR ${CMAKE_BINARY_DIR}/lib/dependencies/apr/include)
+  set(APR_LIBRARIES libapr-1.a)
 endif()
 
 add_subdirectory(dependencies/expat/expat)
@@ -60,6 +62,10 @@ else()
     BUILD_IN_SOURCE 1
     INSTALL_COMMAND make install
   )
-  include_directories(${CMAKE_BINARY_DIR}/lib/dependencies/apr-util/include)
+  include_directories(${CMAKE_BINARY_DIR}/lib/dependencies/apr-util/include/apr-1)
   link_directories(${CMAKE_BINARY_DIR}/lib/dependencies/apr-util/lib)
+  set(APR_UTIL_INCLUDE_DIR ${CMAKE_BINARY_DIR}/lib/dependencies/apr-util/include/apr-1)
+  set(APR_UTIL_LIBRARIES libaprutil-1.dll)
 endif()
+
+add_subdirectory(dependencies/log4cxx)
