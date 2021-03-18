@@ -37,3 +37,6 @@
 [submodule "kbe/src/lib/dependencies/apr-util"]
 	path = kbe/src/lib/dependencies/apr-util
 	url = https://github.com/apache/apr-util.git
+[submodule "kbe/src/lib/dependencies/log4cxx"]
+	path = kbe/src/lib/dependencies/log4cxx
+	url = https://github.com/apache/logging-log4cxx.git
