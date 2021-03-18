@@ -48,3 +48,18 @@ else()
 endif()
 
 add_subdirectory(dependencies/expat/expat)
+
+if (WIN32)
+  add_subdirectory(dependencies/apr-util)
+else()
+  ExternalProject_Add(apr-uril
+    PREFIX ${KBE_ROOT}/lib/dependencies/apr-util
+    SOURCE_DIR ${KBE_ROOT}/lib/dependencies/apr-util
+    CONFIGURE_COMMAND ./buildconf COMMAND ./configure --prefix=${CMAKE_BINARY_DIR}/lib/dependencies/apr-util -with-apr=${CMAKE_BINARY_DIR}/lib/dependencies/apr
+    BUILD_COMMAND make
+    BUILD_IN_SOURCE 1
+    INSTALL_COMMAND make install
+  )
+  include_directories(${CMAKE_BINARY_DIR}/lib/dependencies/apr-util/include)
+  link_directories(${CMAKE_BINARY_DIR}/lib/dependencies/apr-util/lib)
+endif()
