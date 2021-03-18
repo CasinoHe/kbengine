@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.16.0)
 include(ExternalProject)
 
 add_subdirectory(dependencies/zlib)
+set(ZLIB_LIBRARIES zlib)
+
 add_subdirectory(dependencies/fmt)
 
 # use autogen to build jemalloc
@@ -19,4 +21,9 @@ add_subdirectory(dependencies/curl)
 add_subdirectory(dependencies/hiredis)
 add_subdirectory(dependencies/g3dlite)
 add_subdirectory(dependencies/tinyxml)
+set(TINYXML_LIBRARIES tinyxml)
+
 add_subdirectory(dependencies/sigar)
+
+include_directories(dependencies/tinyxml)
+add_subdirectory(dependencies/tmxparser)

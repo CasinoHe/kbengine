@@ -24,4 +24,4 @@
 	url = https://github.com/CasinoHe/sigar.git
 [submodule "kbe/src/lib/dependencies/tmxparser"]
 	path = kbe/src/lib/dependencies/tmxparser
-	url = https://github.com/sainteos/tmxparser.git
+	url =https://github.com/CasinoHe/tmxparser.git
