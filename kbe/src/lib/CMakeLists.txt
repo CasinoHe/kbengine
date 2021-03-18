@@ -46,3 +46,5 @@ else()
   include_directories(${CMAKE_BINARY_DIR}/lib/dependencies/apr/include)
   link_directories(${CMAKE_BINARY_DIR}/lib/dependencies/apr/lib)
 endif()
+
+add_subdirectory(dependencies/expat/expat)
