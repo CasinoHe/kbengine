@@ -22,3 +22,6 @@
 [submodule "kbe/src/lib/dependencies/sigar"]
 	path = kbe/src/lib/dependencies/sigar
 	url = https://github.com/CasinoHe/sigar.git
+[submodule "kbe/src/lib/dependencies/tmxparser"]
+	path = kbe/src/lib/dependencies/tmxparser
+	url = https://github.com/sainteos/tmxparser.git
