@@ -31,3 +31,6 @@
 [submodule "kbe/src/lib/dependencies/apr"]
 	path = kbe/src/lib/dependencies/apr
 	url = https://github.com/apache/apr.git
+[submodule "kbe/src/lib/dependencies/expat"]
+	path = kbe/src/lib/dependencies/expat
+	url = https://github.com/libexpat/libexpat.git
