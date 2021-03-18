@@ -70,3 +70,13 @@ else()
 endif()
 
 add_subdirectory(dependencies/log4cxx)
+
+ExternalProject_Add(python
+  PREFIX ${KBE_ROOT}/lib/python
+  SOURCE_DIR ${KBE_ROOT}/lib/python
+  CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR}/lib/python --enable-optimizations
+  BUILD_COMMAND make
+  BUILD_IN_SOURCE 1
+  # INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory ${KBE_ROOT}/lib/dependencies/jemalloc/lib ${CMAKE_BINARY_DIR}/lib/dependencies/jemalloc
+  INSTALL_COMMAND make install
+)
