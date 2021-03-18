@@ -25,3 +25,6 @@
 [submodule "kbe/src/lib/dependencies/tmxparser"]
 	path = kbe/src/lib/dependencies/tmxparser
 	url =https://github.com/CasinoHe/tmxparser.git
+[submodule "kbe/src/lib/dependencies/jwsmtp"]
+	path = kbe/src/lib/dependencies/jwsmtp
+	url = https://github.com/CasinoHe/jwsmtp.git
