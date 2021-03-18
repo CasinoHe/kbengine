@@ -40,3 +40,6 @@
 [submodule "kbe/src/lib/dependencies/log4cxx"]
 	path = kbe/src/lib/dependencies/log4cxx
 	url = https://github.com/apache/logging-log4cxx.git
+[submodule "kbe/src/lib/python"]
+	path = kbe/src/lib/python
+	url = https://github.com/python/cpython.git
