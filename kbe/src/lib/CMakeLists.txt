@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.16.0)
 
 include(ExternalProject)
 
+# ------------------------------------------ build all thirdparty dependencies start --------------------------------------------------------------------
 add_subdirectory(dependencies/zlib)
 set(ZLIB_LIBRARIES zlib)
 
@@ -75,8 +76,25 @@ ExternalProject_Add(python
   PREFIX ${KBE_ROOT}/lib/python
   SOURCE_DIR ${KBE_ROOT}/lib/python
   CONFIGURE_COMMAND ./configure --prefix=${CMAKE_BINARY_DIR}/lib/python --enable-optimizations
-  BUILD_COMMAND make
+  BUILD_COMMAND make clean COMMAND make
   BUILD_IN_SOURCE 1
-  # INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory ${KBE_ROOT}/lib/dependencies/jemalloc/lib ${CMAKE_BINARY_DIR}/lib/dependencies/jemalloc
   INSTALL_COMMAND make install
 )
+
+# ------------------------------------------ build all thirdparty dependencies finished --------------------------------------------------------------------
+
+# common include directory
+include_directories(${KBE_ROOT})
+include_directories(${KBE_ROOT}/lib)
+include_directories(${KBE_ROOT}/server)
+include_directories(${KBE_ROOT}/lib/dependencies)
+include_directories(${KBE_ROOT}/lib/dependencies/zlib)
+include_directories(${KBE_ROOT}/lib/dependencies/tinyxml)
+include_directories(${KBE_ROOT}/lib/dependencies/fmt/include)
+include_directories(${KBE_ROOT}/lib/dependencies/curl/include)
+include_directories(${CMAKE_BINARY_DIR}/lib/python/include/python3.9)
+
+# compile kbengine libs
+add_definitions("-DENABLE_WATCHERS")
+add_definitions("-DUSE_OPENSSL")
+add_subdirectory(client_lib)
