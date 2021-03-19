@@ -5,7 +5,7 @@ project(math)
 file(GLOB_RECURSE MATH_SRCS "*.h" "*.cpp")
 
 add_library(${PROJECT_NAME} SHARED ${MATH_SRCS})
-add_library(${PROJECT_NAME}Static SHARED ${MATH_SRCS})
+add_library(${PROJECT_NAME}Static STATIC ${MATH_SRCS})
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE "-DUSE_G3DMATH")
 target_include_directories(${PROJECT_NAME} PRIVATE ${KBE_ROOT}/lib/dependencies/g3dlite)

@@ -98,7 +98,7 @@ typedef G3D::Vector4							Vector4;
 	
 #define KBEVec2Length(v)						(v)->length()
 #define KBEVec2LengthSq(v)						(v)->squaredLength()
-#define KBEVec2Normalize(v, vv)					(v)->normalise()
+#define KBEVec2Normalize(v, vv)					(v)->direction()
 #define KBEVec2Dot(v, vv)						(v)->dot(static_cast<const G3D::Vector2 &>(*(vv)))
 #define KBEVec3Length(v)						(v)->length()
 #define KBEVec3LengthSq(v)						(v)->squaredLength()
@@ -112,7 +112,7 @@ typedef G3D::Vector4							Vector4;
 #define KBEVec4Transform(v)						D3DXVec4Transform
 #define KBEVec4Length(v)						(v)->length()
 #define KBEVec4LengthSq(v)						(v)->squaredLength()
-#define KBEVec4Normalize(v, vv)					(v)->normalise()
+#define KBEVec4Normalize(v, vv)					(v)->direction()
 #define KBEVec4Lerp(v)							(v)->lerp()
 #define KBEVec4Dot(v, vv)						(v)->dot(static_cast<const G3D::Vector4 &>(*(vv)))
 #define KBEMatrixIdentity						Matrix3::identity()
