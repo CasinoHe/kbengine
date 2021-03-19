@@ -2,3 +2,4 @@
 2. use lib python, not system python to link the library
 3. use lib ssl, not system ssl
 4. change entity_table_mysql.h file encoding
+5. fix entity_table_mysql.cpp compile warning
