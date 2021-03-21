@@ -8,7 +8,7 @@ namespace KBEngine {
 
 #ifdef HAS_EPOLL
 #include <sys/epoll.h>
-ProfileVal g_idleProfile("Idle");
+ProfileVal g_idleProfileEpoll("Idle");
 
 namespace Network
 {
@@ -93,7 +93,7 @@ int EpollPoller::processPendingEvents(double maxWait)
 	int maxWaitInMilliseconds = int(ceil(maxWait * 1000));
 
 #if ENABLE_WATCHERS
-	g_idleProfile.start();
+	g_idleProfileEpoll.start();
 #else
 	uint64 startTime = timestamp();
 #endif
@@ -104,8 +104,8 @@ int EpollPoller::processPendingEvents(double maxWait)
 
 
 #if ENABLE_WATCHERS
-	g_idleProfile.stop();
-	spareTime_ += g_idleProfile.lastTime_;
+	g_idleProfileEpoll.stop();
+	spareTime_ += g_idleProfileEpoll.lastTime_;
 #else
 	spareTime_ += timestamp() - startTime;
 #endif
