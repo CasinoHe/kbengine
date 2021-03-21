@@ -20,8 +20,8 @@ endif()
 add_library(${PROJECT_NAME} SHARED ${HELPER_SRCS})
 add_library(${PROJECT_NAME}Static STATIC ${HELPER_SRCS})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE log4cxx)
+target_link_libraries(${PROJECT_NAME} PRIVATE log4cxx sigar)
 target_include_directories(${PROJECT_NAME} PRIVATE ${KBE_ROOT}/lib/dependencies/sigar/include)
 
-target_link_libraries(${PROJECT_NAME}Static PRIVATE log4cxx)
+target_link_libraries(${PROJECT_NAME}Static PRIVATE log4cxx sigar)
 target_include_directories(${PROJECT_NAME}Static PRIVATE ${KBE_ROOT}/lib/dependencies/sigar/include)

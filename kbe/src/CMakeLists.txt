@@ -7,4 +7,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_CXX_STANDARD 17)
 
+set(PYTHON_LIBRARIES "")
+set(PYTHON_VERSION 3.9)
+
 add_subdirectory(lib)
+add_subdirectory(server)
