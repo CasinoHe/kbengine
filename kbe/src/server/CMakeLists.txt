@@ -20,3 +20,4 @@ link_directories(${CMAKE_BINARY_DIR}/lib/python/lib)
 
 add_subdirectory(baseapp)
 add_subdirectory(baseappmgr)
+add_subdirectory(cellapp)
