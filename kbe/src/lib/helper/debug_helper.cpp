@@ -19,7 +19,7 @@
 #include <syslog.h>
 #endif
 
-#include <sys/timeb.h>
+#include <sys/time.h>
 
 #ifndef NO_USE_LOG4CXX
 #include "log4cxx/logger.h"
@@ -505,10 +505,10 @@ void DebugHelper::sync()
 		return;
 	}
 
-	// ½«×ÓÏß³ÌÈÕÖ¾·ÅÈëbufferedLogPackets_
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½ï¿½ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½bufferedLogPackets_
 	while (childThreadBufferedLogPackets_.size() > 0)
 	{
-		// ´ÓÖ÷¶ÔÏó³ØÈ¡³öÒ»¸ö¶ÔÏó£¬½«×ÓÏß³ÌÖÐ¶ÔÏóvectorÄÚ´æ½»»»½øÈ¥
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ó£¬½ï¿½ï¿½ï¿½ï¿½ß³ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½vectorï¿½Ú´æ½»ï¿½ï¿½ï¿½ï¿½È¥
 		MemoryStream* pMemoryStream = childThreadBufferedLogPackets_.front();
 		childThreadBufferedLogPackets_.pop();
 
@@ -519,17 +519,17 @@ void DebugHelper::sync()
 		pBundle->finiCurrPacket();
 		pBundle->newPacket();
 
-		// ½«ËûÃÇµÄÄÚ´æ½»»»½øÈ¥
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Çµï¿½ï¿½Ú´æ½»ï¿½ï¿½ï¿½ï¿½È¥
 		pBundle->pCurrPacket()->swap(*pMemoryStream);
 		pBundle->currMsgLength(pBundle->currMsgLength() + pBundle->pCurrPacket()->length());
 
-		// ½«ËùÓÐ¶ÔÏó½»»¹¸ø¶ÔÏó³Ø
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ó½»»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		memoryStreamPool_.reclaimObject(pMemoryStream);
 	}
 
 	if (Network::Address::NONE == loggerAddr_)
 	{
-		// Èç¹û³¬¹ý300ÃëÃ»ÓÐÕÒµ½logger£¬ÄÇÃ´Ç¿ÖÆÇåÀíÄÚ´æ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½300ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Òµï¿½loggerï¿½ï¿½ï¿½ï¿½Ã´Ç¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½
 		if (timestamp() - loseLoggerTime_ > uint64(300 * stampsPerSecond()))
 		{
 			clearBufferedLog();
@@ -607,7 +607,7 @@ void DebugHelper::sync()
 		--hasBufferedLogPackets_;
 	}
 
-	// ÕâÀïÐèÒªÑÓÊ±·¢ËÍ£¬·ñÔòÔÚ·¢ËÍ¹ý³ÌÖÐ²úÉú´íÎó£¬µ¼ÖÂÈÕÖ¾Êä³ö»á³öÏÖËÀËø
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½Ê±ï¿½ï¿½ï¿½Í£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú·ï¿½ï¿½Í¹ï¿½ï¿½ï¿½ï¿½Ð²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ó£¬µï¿½ï¿½ï¿½ï¿½ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	if(bundles.size() > 0 && !pLoggerChannel->sending())
 		pLoggerChannel->delayedSend();
 
@@ -685,12 +685,13 @@ void DebugHelper::onMessage(uint32 logType, const char * str, uint32 length)
 		(*pMemoryStream) << g_componentGlobalOrder;
 		(*pMemoryStream) << g_componentGroupOrder;
 
-		struct timeb tp;
-		ftime(&tp);
+		struct timespec tpc;
+		clockid_t clockid;
+		clock_gettime(clockid, &tpc);
 
-		int64 t = tp.time;
+		int64 t = tpc.tv_nsec;
 		(*pMemoryStream) << t;
-		uint32 millitm = tp.millitm;
+		uint32 millitm = tpc.tv_nsec / 1000;
 		(*pMemoryStream) << millitm;
 		pMemoryStream->appendBlob(str, length);
 
@@ -733,12 +734,13 @@ void DebugHelper::onMessage(uint32 logType, const char * str, uint32 length)
 		(*pBundle) << g_componentGlobalOrder;
 		(*pBundle) << g_componentGroupOrder;
 
-		struct timeb tp;
-		ftime(&tp);
+		struct timespec tpc;
+		clockid_t clockid;
+		clock_gettime(clockid, &tpc);
 
-		int64 t = tp.time;
+		int64 t = tpc.tv_nsec;
 		(*pBundle) << t;
-		uint32 millitm = tp.millitm;
+		uint32 millitm = tpc.tv_nsec / 1000;
 		(*pBundle) << millitm;
 		pBundle->appendBlob(str, length);
 
@@ -788,10 +790,10 @@ void DebugHelper::printBufferedLogs()
 	KBE_LOG4CXX_PRINT(g_logger, std::string("The following logs sent to logger failed:\n"));
 #endif
 
-	// ½«×ÓÏß³ÌÈÕÖ¾·ÅÈëbufferedLogPackets_
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½ï¿½ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½bufferedLogPackets_
 	while (childThreadBufferedLogPackets_.size() > 0)
 	{
-		// ´ÓÖ÷¶ÔÏó³ØÈ¡³öÒ»¸ö¶ÔÏó£¬½«×ÓÏß³ÌÖÐ¶ÔÏóvectorÄÚ´æ½»»»½øÈ¥
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ó£¬½ï¿½ï¿½ï¿½ï¿½ß³ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½vectorï¿½Ú´æ½»ï¿½ï¿½ï¿½ï¿½È¥
 		MemoryStream* pMemoryStream = childThreadBufferedLogPackets_.front();
 		childThreadBufferedLogPackets_.pop();
 
@@ -802,11 +804,11 @@ void DebugHelper::printBufferedLogs()
 		pBundle->finiCurrPacket();
 		pBundle->newPacket();
 
-		// ½«ËûÃÇµÄÄÚ´æ½»»»½øÈ¥
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Çµï¿½ï¿½Ú´æ½»ï¿½ï¿½ï¿½ï¿½È¥
 		pBundle->pCurrPacket()->swap(*pMemoryStream);
 		pBundle->currMsgLength(pBundle->currMsgLength() + pBundle->pCurrPacket()->length());
 
-		// ½«ËùÓÐ¶ÔÏó½»»¹¸ø¶ÔÏó³Ø
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ó½»»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		memoryStreamPool_.reclaimObject(pMemoryStream);
 	}
 
@@ -1006,7 +1008,7 @@ void DebugHelper::script_info_msg(const std::string& s)
 
 	onMessage(KBELOG_TYPE_MAPPING(scriptMsgType_), s.c_str(), (uint32)s.size());
 
-	// Èç¹ûÊÇÓÃ»§ÊÖ¶¯ÉèÖÃµÄÒ²Êä³öÎª´íÎóÐÅÏ¢
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½Ö¶ï¿½ï¿½ï¿½ï¿½Ãµï¿½Ò²ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 	if(log4cxx::ScriptLevel::SCRIPT_ERR == scriptMsgType_)
 	{
 		set_errorcolor();
