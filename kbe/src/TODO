@@ -3,3 +3,4 @@
 3. use lib ssl, not system ssl
 4. change entity_table_mysql.h file encoding
 5. fix entity_table_mysql.cpp compile warning
+6. use project's mysql source code

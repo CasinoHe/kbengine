@@ -43,3 +43,6 @@
 [submodule "kbe/src/lib/python"]
 	path = kbe/src/lib/python
 	url = https://github.com/python/cpython.git
+[submodule "kbe/src/lib/dependencies/mysql"]
+	path = kbe/src/lib/dependencies/mysql
+	url = https://github.com/mysql/mysql-server.git

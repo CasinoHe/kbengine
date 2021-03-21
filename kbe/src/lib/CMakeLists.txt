@@ -81,6 +81,8 @@ ExternalProject_Add(python
   INSTALL_COMMAND make install
 )
 
+add_subdirectory(dependencies/mysql)
+
 # ------------------------------------------ build all thirdparty dependencies finished --------------------------------------------------------------------
 
 # common include directory
