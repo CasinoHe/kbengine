@@ -19,3 +19,4 @@ add_definitions("-DUSE_OPENSSL")
 link_directories(${CMAKE_BINARY_DIR}/lib/python/lib)
 
 add_subdirectory(baseapp)
+add_subdirectory(baseappmgr)

@@ -10,4 +10,4 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${KBE_ROOT}/lib/dependencies/
 # link lib libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE server entitydef pyscript network common helper resmgr thread)
 target_compile_definitions(${PROJECT_NAME} PRIVATE "-DUSE_G3DMATH")
-target_link_libraries(${PROJECT_NAME} PRIVATE g3dlite ssl python${PYTHON_VERSION} fmt tinyxml crypto pthread util dl)
+target_link_libraries(${PROJECT_NAME} PRIVATE g3dlite ssl log4cxx python${PYTHON_VERSION} fmt tinyxml crypto pthread util dl)
