@@ -1,6 +1,8 @@
-1. submodule manage mysql
-2. use lib python, not system python to link the library
-3. use lib ssl, not system ssl
-4. change entity_table_mysql.h file encoding
-5. fix entity_table_mysql.cpp compile warning
-6. use project's mysql source code
+- move all dependencies libraries to a link directory
+- use project's mysql source code
+- use lib python, not system python to link the library
+- use lib ssl, not system ssl
+- change entity_table_mysql.h file encoding
+- fix entity_table_mysql.cpp compile warning
+- finish cmake install command
+- make cmake work with windows
