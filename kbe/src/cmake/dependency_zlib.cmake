@@ -1,4 +1,4 @@
-message(STATUS "Start compile thirdparty dependeny: Zlib")
+message(STATUS "Start compile thirdparty dependeny: zlib")
 
 ExternalProject_Add(zlib
   PREFIX ${DEPENDENCIES_BUILD_DIR}/zlib

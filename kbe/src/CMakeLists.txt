@@ -30,8 +30,6 @@ if (NOT EXISTS ${DEPENDENCIES_BUILD_DIR})
   file(MAKE_DIRECTORY ${DEPENDENCIES_BUILD_DIR})
 endif()
 
-set(USE_SYSTEM_LIB TRUE CACHE BOOL "Use system library instead of lib/dependencies")
-
 list(APPEND CMAKE_MODULE_PATH ${KBE_ROOT}/cmake)
 
 set(DEPENDENCIES_LIBRARIES
@@ -41,7 +39,9 @@ set(DEPENDENCIES_LIBRARIES
   dependency_curl
   dependency_hiredis
   dependency_g3dlite
+  dependency_sigar
   dependency_tinyxml
+  dependency_tmxparser
 )
 
 include(ExternalProject)
@@ -53,3 +53,4 @@ endforeach()
 # add_subdirectory(server)
 
 message(STATUS "LIB IS : ${ZLIB_LIBRARIES}, ${FMT_LIBRARIES}, ${JEMALLOC_LIBRARIES} ${CURL_LIBRARIES} ${G3DLITE_LIBRARIES}")
+add_dependencies(tmxparser tinyxml zlib)
