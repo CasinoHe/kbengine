@@ -1,4 +1,5 @@
 - move all dependencies libraries to a link directory
+- compile optimization O3
 - use project's mysql source code
 - use lib python, not system python to link the library
 - use lib ssl, not system ssl

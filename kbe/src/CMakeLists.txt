@@ -43,6 +43,8 @@ set(DEPENDENCIES_LIBRARIES
   dependency_tinyxml
   dependency_tmxparser
   dependency_jwsmtp
+  dependency_apr
+  dependency_aprutil
 )
 
 include(ExternalProject)
@@ -55,3 +57,4 @@ endforeach()
 
 message(STATUS "LIB IS : ${ZLIB_LIBRARIES}, ${FMT_LIBRARIES}, ${JEMALLOC_LIBRARIES} ${CURL_LIBRARIES} ${G3DLITE_LIBRARIES}")
 add_dependencies(tmxparser tinyxml zlib)
+add_dependencies(aprutil apr)
