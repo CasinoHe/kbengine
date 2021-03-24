@@ -38,6 +38,9 @@ set(DEPENDENCIES_LIBRARIES
   dependency_zlib
   dependency_fmt
   dependency_jemalloc
+  dependency_curl
+  dependency_hiredis
+  dependency_g3dlite
 )
 
 include(ExternalProject)
@@ -48,4 +51,4 @@ endforeach()
 # add_subdirectory(lib)
 # add_subdirectory(server)
 
-message(STATUS "LIB IS : ${ZLIB_LIBRARIES}, ${FMT_LIBRARIES}, ${JEMALLOC_LIBRARIES}")
+message(STATUS "LIB IS : ${ZLIB_LIBRARIES}, ${FMT_LIBRARIES}, ${JEMALLOC_LIBRARIES} ${CURL_LIBRARIES} ${G3DLITE_LIBRARIES}")
