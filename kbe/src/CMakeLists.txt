@@ -42,6 +42,7 @@ set(DEPENDENCIES_LIBRARIES
   dependency_sigar
   dependency_tinyxml
   dependency_tmxparser
+  dependency_jwsmtp
 )
 
 include(ExternalProject)
