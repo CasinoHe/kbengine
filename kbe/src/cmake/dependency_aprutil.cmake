@@ -5,7 +5,7 @@ ExternalProject_Add(aprutil
   SOURCE_DIR ${DEPENDENCIES_DIR}/apr-util
   UPDATE_COMMAND ""
   PATCH_COMMAND ""
-  CONFIGURE_COMMAND ./buildconf COMMAND ./configure --prefix=${DEPENDENCIES_INSTALL_DIR} -with-apr=${DEPENDENCIES_INSTALL_DIR}/
+  CONFIGURE_COMMAND git clean -df COMMAND ./buildconf COMMAND ./configure --prefix=${DEPENDENCIES_INSTALL_DIR} -with-apr=${DEPENDENCIES_INSTALL_DIR}/
   BUILD_COMMAND make clean COMMAND make
   BUILD_IN_SOURCE 1
   INSTALL_COMMAND make install

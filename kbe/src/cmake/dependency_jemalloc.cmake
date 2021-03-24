@@ -5,7 +5,7 @@ ExternalProject_Add(jemalloc
   SOURCE_DIR ${DEPENDENCIES_DIR}/jemalloc
   UPDATE_COMMAND ""
   PATCH_COMMAND ""
-  CONFIGURE_COMMAND ./autogen.sh --prefix=${DEPENDENCIES_INSTALL_DIR}
+  CONFIGURE_COMMAND git clean -df COMMAND ./autogen.sh --prefix=${DEPENDENCIES_INSTALL_DIR}
   BUILD_COMMAND make clean COMMAND make
   BUILD_IN_SOURCE 1
   INSTALL_COMMAND make install
