@@ -41,6 +41,7 @@ set(DEPENDENCIES_LIBRARIES
   dependency_curl
   dependency_hiredis
   dependency_g3dlite
+  dependency_tinyxml
 )
 
 include(ExternalProject)
