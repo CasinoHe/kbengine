@@ -19,7 +19,8 @@ set(CMAKE_SKIP_INSTALL_RPATH TRUE)
 set(PYTHON_LIBRARIES "")
 set(PYTHON_VERSION 3.9)
 
-set(DEPENDENCIES_DIR ${KBE_ROOT}/lib/dependencies)
+set(LIB_SOURCE_DIR ${KBE_ROOT}/lib)
+set(DEPENDENCIES_DIR ${LIB_SOURCE_DIR}/dependencies)
 set(DEPENDENCIES_INSTALL_DIR ${CMAKE_BINARY_DIR}/dependencies)
 set(DEPENDENCIES_BUILD_DIR ${CMAKE_BINARY_DIR}/lib/dependencies)
 
@@ -45,6 +46,9 @@ set(DEPENDENCIES_LIBRARIES
   dependency_jwsmtp
   dependency_apr
   dependency_aprutil
+  dependency_expat
+  dependency_log4cxx
+  dependency_python
 )
 
 include(ExternalProject)
@@ -52,9 +56,10 @@ foreach (lib ${DEPENDENCIES_LIBRARIES})
   include(${lib})
 endforeach()
 
-# add_subdirectory(lib)
-# add_subdirectory(server)
-
-message(STATUS "LIB IS : ${ZLIB_LIBRARIES}, ${FMT_LIBRARIES}, ${JEMALLOC_LIBRARIES} ${CURL_LIBRARIES} ${G3DLITE_LIBRARIES}")
+# message(STATUS "LIB IS : ${ZLIB_LIBRARIES}, ${FMT_LIBRARIES}, ${JEMALLOC_LIBRARIES} ${CURL_LIBRARIES} ${G3DLITE_LIBRARIES}")
 add_dependencies(tmxparser tinyxml zlib)
 add_dependencies(aprutil apr)
+add_dependencies(log4cxx apr aprutil)
+
+# add_subdirectory(lib)
+# add_subdirectory(server)
