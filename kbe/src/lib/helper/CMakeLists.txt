@@ -18,10 +18,16 @@ endif()
 
 
 add_library(${PROJECT_NAME} SHARED ${HELPER_SRCS})
-add_library(${PROJECT_NAME}Static STATIC ${HELPER_SRCS})
+target_link_libraries(${PROJECT_NAME} ${LIBS_LINK_LIBRARIES})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE log4cxx sigar)
-target_include_directories(${PROJECT_NAME} PRIVATE ${KBE_ROOT}/lib/dependencies/sigar/include)
+# install headers
+if (NOT EXISTS ${CMAKE_INSTALL_PREFIX}/include)
+  file(MAKE_DIRECTORY ${CMAKE_INSTALL_PREFIX}/include)
+endif()
 
-target_link_libraries(${PROJECT_NAME}Static PRIVATE log4cxx sigar)
-target_include_directories(${PROJECT_NAME}Static PRIVATE ${KBE_ROOT}/lib/dependencies/sigar/include)
+install(TARGETS ${PROJECT_NAME}
+    EXPORT ${PROJECT_NAME}-targets
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)

@@ -5,6 +5,7 @@ project(db_mysql)
 file(GLOB_RECURSE DB_MYSQL_SRCS "*.h" "*.cpp")
 
 add_library(${PROJECT_NAME} SHARED ${DB_MYSQL_SRCS})
+target_link_libraries(${PROJECT_NAME} ${LIBS_LINK_LIBRARIES})
 
 # install headers
 if (NOT EXISTS ${CMAKE_INSTALL_PREFIX}/include)

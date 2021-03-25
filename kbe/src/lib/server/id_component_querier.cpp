@@ -4,7 +4,7 @@
 #include "helper/sys_info.h"
 #include "common.h"
 #include "../../server/machine/machine_interface.h"
-#include "../../network/udp_packet.h"
+#include "network/udp_packet.h"
 
 
 namespace KBEngine
@@ -107,7 +107,7 @@ COMPONENT_ID IDComponentQuerier::query(COMPONENT_TYPE componentType, int32 uid)
 
 		hasContinue = true;
 
-		// Èç¹ûÊÇÎ´ÖªÀàÐÍÔò¼ÌÐøÒ»´Î
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Î´Öªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
 		if (args.componentType == UNKNOWN_COMPONENT_TYPE)
 			continue;
 

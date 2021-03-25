@@ -5,6 +5,16 @@ project(network)
 file(GLOB_RECURSE NETWORK_SRCS "*.h" "*.cpp" "*.c")
 
 add_library(${PROJECT_NAME} SHARED ${NETWORK_SRCS})
-add_library(${PROJECT_NAME}Static STATIC ${NETWORK_SRCS})
+target_link_libraries(${PROJECT_NAME} ${LIBS_LINK_LIBRARIES})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ssl libcurl crypto dl)
+# install headers
+if (NOT EXISTS ${CMAKE_INSTALL_PREFIX}/include)
+  file(MAKE_DIRECTORY ${CMAKE_INSTALL_PREFIX}/include)
+endif()
+
+install(TARGETS ${PROJECT_NAME}
+    EXPORT ${PROJECT_NAME}-targets
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
