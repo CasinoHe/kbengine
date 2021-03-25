@@ -98,6 +98,12 @@ set(DEPENDENCIES_LIBRARIES
   ${PYTHON_LIBRARIES}
 )
 
+# touch all lib files, so the dependencies is OK
+if (NOT EXISTS ${DEPENDENCIES_INSTALL_DIR}/lib)
+  file(MAKE_DIRECTORY ${DEPENDENCIES_INSTALL_DIR}/lib)
+endif()
+file(TOUCH ${DEPENDENCIES_LIBRARIES})
+
 option(ENABLE_WATCHERS "enable watchers, default is ON" ON)
 option(USE_OPENSSL "enable openssl, default is ON" ON)
 option(USE_G3DMATH "enable use g3dmath, default is ON" ON)
