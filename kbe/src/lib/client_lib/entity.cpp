@@ -13,8 +13,8 @@
 #include "network/fixed_messages.h"
 #include "pyscript/py_gc.h"
 
-#include "../../../server/baseapp/baseapp_interface.h"
-#include "../../../server/cellapp/cellapp_interface.h"
+#include "baseapp/baseapp_interface.h"
+#include "cellapp/cellapp_interface.h"
 
 #ifndef CODE_INLINE
 #include "entity.inl"
@@ -258,7 +258,7 @@ void Entity::onRemoteMethodCall(Network::Channel* pChannel, MemoryStream& s)
 //-------------------------------------------------------------------------------------
 void Entity::onUpdatePropertys(MemoryStream& s)
 {
-	// ÓÉÓÚÔÚÊôÐÔ¸üÐÂ¹ý³ÌÖÐ¿ÉÄÜ²úÉúÐÂµÄ×é¼þÊôÐÔ£¬ÐèÒªÔÚ´ËÉèÖÃ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¸ï¿½ï¿½Â¹ï¿½ï¿½ï¿½ï¿½Ð¿ï¿½ï¿½Ü²ï¿½ï¿½ï¿½ï¿½Âµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô£ï¿½ï¿½ï¿½Òªï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½
 	EntityDef::context().currClientappID = pClientApp_->appID();
 	EntityDef::context().currEntityID = id();
 	EntityDef::context().currComponentType = CLIENT_TYPE;
@@ -302,7 +302,7 @@ void Entity::onUpdatePropertys(MemoryStream& s)
 
 		if(pScriptModule_->usePropertyDescrAlias())
 		{
-			// ¸¸ÊôÐÔID
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID
 			s >> aliasID;
 			s >> child_aliasID;
 			uid = aliasID;
@@ -310,12 +310,12 @@ void Entity::onUpdatePropertys(MemoryStream& s)
 		}
 		else
 		{
-			// ¸¸ÊôÐÔID
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID
 			s >> uid;
 			s >> child_uid;
 		}
 
-		// Èç¹ûÊÇÎ»ÖÃ»òÕß³¯ÏòÐÅÏ¢Ôò
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½Ã»ï¿½ï¿½ß³ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½
 		if (uid == 0)
 		{
 			if (child_uid == posuid)
@@ -374,7 +374,7 @@ void Entity::onUpdatePropertys(MemoryStream& s)
 		}
 		else
 		{
-			// ÏÈµÃµ½¸¸ÊôÐÔÕÒµ½ÊôÐÔÃû³Æ
+			// ï¿½ÈµÃµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			if (pScriptModule_->usePropertyDescrAlias())
 				pPropertyDescription = pScriptModule()->findAliasPropertyDescription(aliasID);
 			else
@@ -386,7 +386,7 @@ void Entity::onUpdatePropertys(MemoryStream& s)
 				return;
 			}
 
-			// È»ºóµÃµ½×é¼þÊôÐÔ£¬ÔÙ´ÓÆäÖÐÕÒµ½×ÓÊôÐÔ
+			// È»ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô£ï¿½ï¿½Ù´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			EntityComponent* pEntityComponent = static_cast<EntityComponent*>(PyObject_GetAttrString(this, pPropertyDescription->getName()));
 			if (!pEntityComponent)
 			{
@@ -626,7 +626,7 @@ void Entity::onBecomePlayer()
 
 		if(pyClass == NULL)
 		{
-			// ²»ÔÚÇ¿ÖÆÐèÒªÊµÏÖPlayer**Àà
+			// ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½ï¿½ï¿½ÒªÊµï¿½ï¿½Player**ï¿½ï¿½
 			PyErr_Clear();
 		}
 		else
@@ -716,7 +716,7 @@ PyObject* Entity::pyMoveToPoint(PyObject_ptr pyDestination, float velocity, floa
 		return 0;
 	}
 
-	// ½«×ø±êÐÅÏ¢ÌáÈ¡³öÀ´
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½
 	script::ScriptVector3::convertPyObjectToVector3(destination, pyDestination);
 	Py_INCREF(userData);
 
@@ -768,7 +768,7 @@ void Entity::cancelController(uint32 id)
 		return;
 	}
 
-	// ÔÝÊ±Ö»ÓÐ»Øµ÷, Ö÷ÒªÊÇÒòÎªÓÃÔÚÁËÒÆ¶¯ÖÐ£¬µ±Ç°¿ÉÄÜ²»ÊÇ·Ç³£ºÏÊÊ
+	// ï¿½ï¿½Ê±Ö»ï¿½Ð»Øµï¿½, ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½Ð£ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Ü²ï¿½ï¿½Ç·Ç³ï¿½ï¿½ï¿½ï¿½ï¿½
 	if(id == (uint32)pMoveHandlerID_)
 		this->stopMove();
 }

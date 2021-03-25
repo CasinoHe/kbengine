@@ -5,14 +5,16 @@ project(client_lib)
 file(GLOB_RECURSE CLIENT_LIB_SRCS "*.h" "*.cpp")
 
 add_library(${PROJECT_NAME} SHARED ${CLIENT_LIB_SRCS})
-add_library(${PROJECT_NAME}Static STATIC ${CLIENT_LIB_SRCS})
+target_link_libraries(${PROJECT_NAME} ${LIBS_LINK_LIBRARIES})
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${KBE_ROOT}/lib/dependencies/g3dlite)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_BINARY_DIR}/lib/dependencies/log4cxx/src/main/include)
-target_include_directories(${PROJECT_NAME} PUBLIC ${KBE_ROOT}/lib/dependencies/log4cxx/src/main/include)
-target_link_libraries(${PROJECT_NAME} ssl crypto pthread util dl)
+# install headers
+if (NOT EXISTS ${CMAKE_INSTALL_PREFIX}/include)
+  file(MAKE_DIRECTORY ${CMAKE_INSTALL_PREFIX}/include)
+endif()
 
-target_include_directories(${PROJECT_NAME}Static PUBLIC ${KBE_ROOT}/lib/dependencies/g3dlite)
-target_include_directories(${PROJECT_NAME}Static PUBLIC ${CMAKE_BINARY_DIR}/lib/dependencies/log4cxx/src/main/include)
-target_include_directories(${PROJECT_NAME}Static PUBLIC ${KBE_ROOT}/lib/dependencies/log4cxx/src/main/include)
-target_link_libraries(${PROJECT_NAME}Static ssl crypto pthread util dl)
+install(TARGETS ${PROJECT_NAME}
+    EXPORT ${PROJECT_NAME}-targets
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)

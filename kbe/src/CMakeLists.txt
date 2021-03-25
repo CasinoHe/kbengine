@@ -61,5 +61,53 @@ add_dependencies(tmxparser tinyxml zlib)
 add_dependencies(aprutil apr)
 add_dependencies(log4cxx apr aprutil)
 
-# add_subdirectory(lib)
+set(DEPENDENCIES_INCLUDE_DIRECTORIS 
+  ${ZLIB_INCLUDE_DIRS}
+  ${FMT_INCLUDE_DIRS}
+  ${JEMALLOC_INCLUDE_DIRS}
+  ${CURL_INCLUDE_DIRS}
+  ${HIREDIS_INCLUDE_DIRS}
+  ${G3DLITE_INCLUDE_DIRS}
+  ${SIGAR_INCLUDE_DIRS}
+  ${TINYXML_INCLUDE_DIRS}
+  ${JWSMTP_INCLUDE_DIRS}
+  ${APR_INCLUDE_DIRS}
+  ${APR_UTIL_INCLUDE_DIRS}
+  ${EXPAT_INCLUDE_DIRS}
+  ${LOG4CXX_INCLUDE_DIRS}
+  ${PYTHON_INCLUDE_DIRS}
+)
+include_directories(${DEPENDENCIES_INCLUDE_DIRECTORIS} ${DEPENDENCIES_INSTALL_DIR}/include ${LIB_SOURCE_DIR} ${KBE_ROOT}/server)
+
+set(DEPENDENCIES_LIBRARIES
+  ${ZLIB_LIBRARIES}
+  ${FMT_LIBRARIES}  
+  ${JEMALLOC_LIBRARIES}
+  ${CURL_LIBRARIES}
+  ${HIREDIS_LIBRARIES}
+  ${G3DLITE_LIBRARIES}
+  ${SIGAR_LIBRARIES}
+  ${TINYXML_LIBRARIES}
+  ${JWSMTP_LIBRARIES}
+  ${APR_LIBRARIES}
+  ${APR_UTIL_LIBRARIES}
+  ${EXPAT_LIBRARIES}
+  ${LOG4CXX_LIBRARIES}
+  ${PYTHON_LIBRARIES}
+)
+
+option(ENABLE_WATCHERS "enable watchers, default is ON" ON)
+option(USE_OPENSSL "enable openssl, default is ON" ON)
+
+if (UNIX)
+  if (USE_OPENSSL)
+    set(LIBS_LINK_LIBRARIES ${DEPENDENCIES_LIBRARIES} crypto ssl pthread util dl)
+  else()
+    set(LIBS_LINK_LIBRARIES ${DEPENDENCIES_LIBRARIES} pthread util dl)
+  endif()
+else()
+  set(LIBS_LINK_LIBRARIES ${DEPENDENCIES_LIBRARIES})
+endif()
+
+add_subdirectory(lib)
 # add_subdirectory(server)
