@@ -77,7 +77,7 @@ set(DEPENDENCIES_INCLUDE_DIRECTORIS
   ${LOG4CXX_INCLUDE_DIRS}
   ${PYTHON_INCLUDE_DIRS}
 )
-include_directories(${DEPENDENCIES_INCLUDE_DIRECTORIS} ${DEPENDENCIES_INSTALL_DIR}/include ${LIB_SOURCE_DIR} ${KBE_ROOT}/server)
+include_directories(${DEPENDENCIES_INCLUDE_DIRECTORIS} ${DEPENDENCIES_INSTALL_DIR}/include ${LIB_SOURCE_DIR} ${KBE_ROOT}/server ${DEPENDENCIES_DIR})
 
 set(DEPENDENCIES_LIBRARIES
   ${ZLIB_LIBRARIES}
@@ -98,12 +98,18 @@ set(DEPENDENCIES_LIBRARIES
 
 option(ENABLE_WATCHERS "enable watchers, default is ON" ON)
 option(USE_OPENSSL "enable openssl, default is ON" ON)
+option(USE_G3DMATH "enable use g3dmath, default is ON" ON)
+option(USE_SYSTEM_MYSQL "enable use system mysql" ON)
 
 if (UNIX)
   if (USE_OPENSSL)
     set(LIBS_LINK_LIBRARIES ${DEPENDENCIES_LIBRARIES} crypto ssl pthread util dl)
   else()
     set(LIBS_LINK_LIBRARIES ${DEPENDENCIES_LIBRARIES} pthread util dl)
+  endif()
+
+  if (USE_SYSTEM_MYSQL)
+    list(APPEND LIBS_LINK_LIBRARIES mariadb)
   endif()
 else()
   set(LIBS_LINK_LIBRARIES ${DEPENDENCIES_LIBRARIES})
