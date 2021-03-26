@@ -190,5 +190,9 @@ add_dependencies(cellapp server client_lib common db_redis db_mysql db_interface
 add_dependencies(cellappmgr server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread navigation xml)
 add_dependencies(dbmgr server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
 add_dependencies(loginapp server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
-# add_dependencies(machine server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
-# add_dependencies(tools server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
+add_dependencies(machine server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
+# tools dependencies
+add_dependencies(bots server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
+add_dependencies(interfaces server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
+add_dependencies(logger server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
+add_dependencies(kbcmd server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
