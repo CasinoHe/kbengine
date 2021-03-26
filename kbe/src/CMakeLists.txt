@@ -104,7 +104,7 @@ if (NOT EXISTS ${DEPENDENCIES_INSTALL_DIR}/lib)
   file(MAKE_DIRECTORY ${DEPENDENCIES_INSTALL_DIR}/lib)
 endif()
 file(TOUCH ${DEPENDENCIES_LIBRARIES})
-list(APPEND ${DEPENDENCIES_LIBRARIES} Python::Python)
+list(APPEND DEPENDENCIES_LIBRARIES Python::Python)
 
 option(ENABLE_WATCHERS "enable watchers, default is ON" ON)
 option(USE_OPENSSL "enable openssl, default is ON" ON)
