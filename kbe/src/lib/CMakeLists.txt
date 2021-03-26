@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.16.0)
 
+set(CMAKE_INSTALL_PREFIX "${DEPENDENCIES_INSTALL_DIR}")
+
 add_subdirectory(client_lib)
 add_subdirectory(common)
 add_subdirectory(db_redis)
