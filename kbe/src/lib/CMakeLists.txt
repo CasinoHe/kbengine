@@ -1,22 +1,5 @@
 cmake_minimum_required(VERSION 3.16.0)
 
-# compile kbengine libs
-if (ENABLE_WATCHERS)
-  add_definitions("-DENABLE_WATCHERS")
-endif()
-
-if (USE_OPENSSL)
-  add_definitions("-DUSE_OPENSSL")
-endif()
-
-if (USE_G3DMATH)
-  add_definitions("-DUSE_G3DMATH")
-endif()
-
-if (USE_SYSTEM_MYSQL)
-  include_directories(/usr/include/mariadb/server)
-endif()
-
 add_subdirectory(client_lib)
 add_subdirectory(common)
 add_subdirectory(db_redis)

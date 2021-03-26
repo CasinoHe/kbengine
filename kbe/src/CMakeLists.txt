@@ -15,9 +15,9 @@ set(CMAKE_SKIP_RPATH TRUE)
 set(CMAKE_SKIP_BUILD_RPATH TRUE)
 set(CMAKE_SKIP_INSTALL_RPATH TRUE)
 
-# global definitions
-set(PYTHON_LIBRARIES "")
-set(PYTHON_VERSION 3.9)
+# # global definitions
+# set(PYTHON_LIBRARIES "")
+# set(PYTHON_VERSION 3.9)
 
 set(LIB_SOURCE_DIR ${KBE_ROOT}/lib)
 set(DEPENDENCIES_DIR ${LIB_SOURCE_DIR}/dependencies)
@@ -48,13 +48,15 @@ set(DEPENDENCIES_LIBRARIES
   dependency_aprutil
   dependency_expat
   dependency_log4cxx
-  dependency_python
+  # dependency_python
 )
 
 include(ExternalProject)
 foreach (lib ${DEPENDENCIES_LIBRARIES})
   include(${lib})
 endforeach()
+
+find_package(Python REQUIRED COMPONENTS Development)
 
 # message(STATUS "LIB IS : ${ZLIB_LIBRARIES}, ${FMT_LIBRARIES}, ${JEMALLOC_LIBRARIES} ${CURL_LIBRARIES} ${G3DLITE_LIBRARIES}")
 add_dependencies(tmxparser tinyxml zlib)
@@ -76,7 +78,7 @@ set(DEPENDENCIES_INCLUDE_DIRECTORIS
   ${APR_UTIL_INCLUDE_DIRS}
   ${EXPAT_INCLUDE_DIRS}
   ${LOG4CXX_INCLUDE_DIRS}
-  ${PYTHON_INCLUDE_DIRS}
+  # ${PYTHON_INCLUDE_DIRS}
 )
 include_directories(${DEPENDENCIES_INCLUDE_DIRECTORIS} ${DEPENDENCIES_INSTALL_DIR}/include ${LIB_SOURCE_DIR} ${KBE_ROOT}/server ${DEPENDENCIES_DIR})
 
@@ -95,7 +97,6 @@ set(DEPENDENCIES_LIBRARIES
   ${APR_UTIL_LIBRARIES}
   ${EXPAT_LIBRARIES}
   ${LOG4CXX_LIBRARIES}
-  ${PYTHON_LIBRARIES}
 )
 
 # touch all lib files, so the dependencies is OK
@@ -103,6 +104,7 @@ if (NOT EXISTS ${DEPENDENCIES_INSTALL_DIR}/lib)
   file(MAKE_DIRECTORY ${DEPENDENCIES_INSTALL_DIR}/lib)
 endif()
 file(TOUCH ${DEPENDENCIES_LIBRARIES})
+list(APPEND ${DEPENDENCIES_LIBRARIES} Python::Python)
 
 option(ENABLE_WATCHERS "enable watchers, default is ON" ON)
 option(USE_OPENSSL "enable openssl, default is ON" ON)
@@ -123,22 +125,69 @@ else()
   set(LIBS_LINK_LIBRARIES ${DEPENDENCIES_LIBRARIES})
 endif()
 
-add_subdirectory(lib)
-# add_subdirectory(server)
+# compile kbengine libs
+if (ENABLE_WATCHERS)
+  add_definitions("-DENABLE_WATCHERS")
+endif()
 
-add_dependencies(client_lib zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx python)
-add_dependencies(common zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx python)
-add_dependencies(db_redis zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx python)
-add_dependencies(db_mysql zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx python)
-add_dependencies(db_interface zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx python)
-add_dependencies(entitydef zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx python)
-add_dependencies(math zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx python)
-add_dependencies(resmgr zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx python)
-add_dependencies(pyscript zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx python)
-add_dependencies(server zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx python)
-add_dependencies(network zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx python)
-add_dependencies(helper zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx python)
-add_dependencies(thread zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx python)
-add_dependencies(xml zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx python)
-add_dependencies(navigation zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx python)
+if (USE_OPENSSL)
+  add_definitions("-DUSE_OPENSSL")
+endif()
+
+if (USE_G3DMATH)
+  add_definitions("-DUSE_G3DMATH")
+endif()
+
+if (USE_SYSTEM_MYSQL)
+  include_directories(/usr/include/mariadb/server)
+endif()
+
+add_subdirectory(lib)
+
+set(EXECUTABLE_LINK_LIBRARIES 
+  server
+  client_lib 
+  common 
+  db_redis 
+  db_mysql 
+  db_interface 
+  entitydef
+  math
+  resmgr
+  pyscript
+  network
+  helper
+  thread
+  xml
+  ${LIBS_LINK_LIBRARIES}
+)
+
+add_subdirectory(server)
+
+# add lib dependencies
+add_dependencies(client_lib zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
+add_dependencies(common zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
+add_dependencies(db_redis zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
+add_dependencies(db_mysql zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
+add_dependencies(db_interface zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
+add_dependencies(entitydef zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
+add_dependencies(math zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
+add_dependencies(resmgr zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
+add_dependencies(pyscript zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
+add_dependencies(server zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
+add_dependencies(network zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
+add_dependencies(helper zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
+add_dependencies(thread zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
+add_dependencies(xml zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
+add_dependencies(navigation zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
 add_dependencies(server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
+
+# add executable dependencies
+add_dependencies(baseapp server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
+# add_dependencies(baseappmgr server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
+# add_dependencies(cellapp server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
+# add_dependencies(cellappmgr server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
+# add_dependencies(dbmgr server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
+# add_dependencies(loginapp server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
+# add_dependencies(machine server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
+# add_dependencies(tools server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
