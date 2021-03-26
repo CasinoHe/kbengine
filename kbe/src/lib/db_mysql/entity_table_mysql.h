@@ -2,7 +2,7 @@
 
 #ifndef KBE_ENTITY_TABLE_MYSQL_H
 #define KBE_ENTITY_TABLE_MYSQL_H
-#include "mysql.h"
+#include "mysql/mysql.h"
 #include "db_interface_mysql.h"
 #include "common.h"
 #include "common/common.h"
