@@ -33,7 +33,7 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH ${KBE_ROOT}/cmake)
 
-set(DEPENDENCIES_LIBRARIES
+set(DEPENDENCIES_EXTERNAL_LIBRARIES
   dependency_zlib
   dependency_fmt
   dependency_jemalloc
@@ -52,7 +52,7 @@ set(DEPENDENCIES_LIBRARIES
 )
 
 include(ExternalProject)
-foreach (lib ${DEPENDENCIES_LIBRARIES})
+foreach (lib ${DEPENDENCIES_EXTERNAL_LIBRARIES})
   include(${lib})
 endforeach()
 

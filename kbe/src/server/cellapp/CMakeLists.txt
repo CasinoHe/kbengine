@@ -6,6 +6,6 @@ file(GLOB_RECURSE CELLAPP_SRCS "*.h" "*.cpp")
 
 add_executable(${PROJECT_NAME} ${CELLAPP_SRCS})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${EXECUTABLE_LINK_LIBRARIES} Python::Python)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${EXECUTABLE_LINK_LIBRARIES})
 target_compile_definitions(${PROJECT_NAME} PRIVATE "-DUSE_TMXPARSER")
 target_compile_definitions(${PROJECT_NAME} PRIVATE "-DKBE_CELLAPP")

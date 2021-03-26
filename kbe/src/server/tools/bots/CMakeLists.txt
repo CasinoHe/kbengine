@@ -7,5 +7,5 @@ file(GLOB_RECURSE BOTS_SRCS "*.h" "*.cpp")
 add_executable(${PROJECT_NAME} ${BOTS_SRCS})
 
 # link lib libraries
-target_link_libraries(${PROJECT_NAME} PRIVATE ${EXECUTABLE_LINK_LIBRARIES} Python::Python)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${EXECUTABLE_LINK_LIBRARIES})
 target_compile_definitions(${PROJECT_NAME} PRIVATE "-DKBE_BOTS")
