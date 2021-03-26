@@ -5,7 +5,7 @@ project(db_interface)
 file(GLOB_RECURSE DB_INTERFACE_SRCS "*.h" "*.cpp")
 
 add_library(${PROJECT_NAME} SHARED ${DB_INTERFACE_SRCS})
-target_link_libraries(${PROJECT_NAME} ${LIBS_LINK_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} db_mysql db_redis ${LIBS_LINK_LIBRARIES})
 
 # install headers
 if (NOT EXISTS ${CMAKE_INSTALL_PREFIX}/include)
