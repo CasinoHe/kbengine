@@ -5,7 +5,7 @@ project(entitydef)
 file(GLOB_RECURSE ENTITYDEF_SRCS "*.h" "*.cpp")
 
 add_library(${PROJECT_NAME} SHARED ${ENTITYDEF_SRCS})
-target_link_libraries(${PROJECT_NAME} ${LIBS_LINK_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} client_lib ${LIBS_LINK_LIBRARIES})
 
 # install headers
 if (NOT EXISTS ${CMAKE_INSTALL_PREFIX}/include)

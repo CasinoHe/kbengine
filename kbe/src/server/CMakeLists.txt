@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16.0)
 
 add_subdirectory(baseapp)
-# add_subdirectory(baseappmgr)
+add_subdirectory(baseappmgr)
 # add_subdirectory(cellapp)
 # add_subdirectory(cellappmgr)
 # add_subdirectory(dbmgr)

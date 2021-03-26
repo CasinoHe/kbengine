@@ -11,9 +11,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 17)
 
 # do not set rpath
-set(CMAKE_SKIP_RPATH TRUE)
-set(CMAKE_SKIP_BUILD_RPATH TRUE)
-set(CMAKE_SKIP_INSTALL_RPATH TRUE)
+# set(CMAKE_SKIP_RPATH TRUE)
+# set(CMAKE_SKIP_BUILD_RPATH TRUE)
+# set(CMAKE_SKIP_INSTALL_RPATH TRUE)
 
 # # global definitions
 # set(PYTHON_LIBRARIES "")
@@ -170,7 +170,7 @@ add_dependencies(common zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmx
 add_dependencies(db_redis zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
 add_dependencies(db_mysql zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
 add_dependencies(db_interface zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
-add_dependencies(entitydef zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
+add_dependencies(entitydef client_lib zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
 add_dependencies(math zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
 add_dependencies(resmgr zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
 add_dependencies(pyscript zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
@@ -184,7 +184,7 @@ add_dependencies(server client_lib common db_redis db_mysql db_interface entityd
 
 # add executable dependencies
 add_dependencies(baseapp server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
-# add_dependencies(baseappmgr server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
+add_dependencies(baseappmgr server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
 # add_dependencies(cellapp server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
 # add_dependencies(cellappmgr server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
 # add_dependencies(dbmgr server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)

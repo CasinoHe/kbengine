@@ -5,4 +5,5 @@ project(baseapp)
 file(GLOB_RECURSE BASEAPP_SRCS "*.h" "*.cpp")
 
 add_executable(${PROJECT_NAME} ${BASEAPP_SRCS})
-target_include_directories(${PROJECT_NAME} PRIVATE ${EXECUTABLE_LINK_LIBRARIES})
+
+target_link_libraries(${PROJECT_NAME} PRIVATE ${EXECUTABLE_LINK_LIBRARIES} Python::Python)
