@@ -127,6 +127,8 @@ else()
   set(LIBS_LINK_LIBRARIES ${DEPENDENCIES_LIBRARIES})
 endif()
 
+message(STATUS "link libraries ${LIBS_LINK_LIBRARIES}")
+
 # compile kbengine libs
 if (ENABLE_WATCHERS)
   add_definitions("-DENABLE_WATCHERS")
