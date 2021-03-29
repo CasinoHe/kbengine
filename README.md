@@ -5,6 +5,11 @@ KBEngine
 
 ![ubuntu latest](https://github.com/CasinoHe/kbengine/actions/workflows/linux.yml/badge.svg)
 
+## Build Dependencies
+
+### Ubuntu
+ - apt-get install libssl-dev libcrypt-dev libtool-bin libmysqlclient21 zlib1g-dev zlib1g librhash0 libmysqlclient-dev
+
 ## Homepage
 
 	https://kbengine.github.io/
