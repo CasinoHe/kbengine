@@ -1,9 +1,9 @@
 KBEngine
 ========
 
-[![Build Status](https://travis-ci.org/kbengine/kbengine.svg)](https://travis-ci.org/kbengine/kbengine)
-[![Appveyor (Windows) Build  Status](https://ci.appveyor.com/api/projects/status/github/kbengine/kbengine?branch=master&svg=true)](https://ci.appveyor.com/project/kbengine/kbengine/branch/master)
+## build status
 
+	![ubuntu latest](https://github.com/CasinoHe/kbengine/actions/workflows/linux/badge.svg)
 
 ## Homepage
 
