@@ -1,9 +1,9 @@
 KBEngine
 ========
 
-## build status
+## Build Status
 
-![ubuntu latest](https://github.com/CasinoHe/kbengine/actions/workflows/linux/badge.svg)
+![ubuntu latest](https://github.com/CasinoHe/kbengine/actions/workflows/linux.yml/badge.svg)
 
 ## Homepage
 
