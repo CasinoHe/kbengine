@@ -3,7 +3,7 @@ KBEngine
 
 ## build status
 
-	![ubuntu latest](https://github.com/CasinoHe/kbengine/actions/workflows/linux/badge.svg)
+![ubuntu latest](https://github.com/CasinoHe/kbengine/actions/workflows/linux/badge.svg)
 
 ## Homepage
 
