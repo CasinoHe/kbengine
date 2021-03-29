@@ -6,6 +6,7 @@ file(GLOB_RECURSE BASEAPP_SRCS "*.h" "*.cpp")
 
 add_executable(${PROJECT_NAME} ${BASEAPP_SRCS})
 
+message(STATUS "baseapp link ${EXECUTABLE_LINK_LIBRARIES}")
 target_link_libraries(${PROJECT_NAME} PRIVATE ${EXECUTABLE_LINK_LIBRARIES})
 
 install(TARGETS ${PROJECT_NAME}

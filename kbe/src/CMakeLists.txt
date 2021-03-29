@@ -95,10 +95,10 @@ set(DEPENDENCIES_LIBRARIES
   ${TINYXML_LIBRARIES}
   ${TMXPARSER_LIBRARIES}
   ${JWSMTP_LIBRARIES}
+  ${LOG4CXX_LIBRARIES}
   ${APR_LIBRARIES}
   ${APR_UTIL_LIBRARIES}
   ${EXPAT_LIBRARIES}
-  ${LOG4CXX_LIBRARIES}
 )
 
 # touch all lib files, so the dependencies is OK
@@ -185,7 +185,7 @@ add_dependencies(helper zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmx
 add_dependencies(thread zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
 add_dependencies(xml zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
 add_dependencies(navigation zlib fmt jemalloc curl hiredis g3dlite sigar tinyxml tmxparser jwsmtp apr aprutil expat log4cxx)
-add_dependencies(server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
+add_dependencies(server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml log4cxx)
 
 # add executable dependencies
 add_dependencies(baseapp server client_lib common db_redis db_mysql db_interface entitydef math resmgr pyscript network helper thread xml)
