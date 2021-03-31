@@ -5,3 +5,4 @@
 - fix entity_table_mysql.cpp compile warning
 - cmake work with windows
 - singleton implementation. the implementation now is outdated, use c++17 to replace it.
+- replace log4cxx by spdlog, simpler and faster
