@@ -1,7 +1,7 @@
-- compile optimization O3
 - use project's mysql source code
 - use lib python, not system python to link the library
 - use lib ssl, not system ssl
 - change entity_table_mysql.h file encoding
 - fix entity_table_mysql.cpp compile warning
 - cmake work with windows
+- singleton implementation. the implementation now is outdated, use c++17 to replace it.
