@@ -64,7 +64,7 @@ bool ServerConfig::loadConfig(std::string fileName)
 	
 	if(xml->getRootNode() == NULL)
 	{
-		// root节点下没有子节点了
+		// no child node on root
 		return true;
 	}
 
@@ -107,7 +107,7 @@ bool ServerConfig::loadConfig(std::string fileName)
 					{
 						Network::g_trace_packet_disables.push_back(c);
 						
-						// 不debug加密包
+						// not debug on encrypted packet
 						if(c == "Encrypted::packets")
 							Network::g_trace_encrypted_packet = false;
 					}
@@ -981,7 +981,7 @@ bool ServerConfig::loadConfig(std::string fileName)
 					else
 						missingFields.push_back("pure");
 
-					// 默认库不允许是纯净库，引擎需要创建实体表
+					// pure library is not permitted on default library, engine needs to create an entity table
 					if (name == "default")
 						pDBInfo->isPure = false;
 
@@ -1094,7 +1094,7 @@ bool ServerConfig::loadConfig(std::string fileName)
 	
 					if (pDBInfo == &dbinfo)
 					{
-						// 检查不能在不同的接口中使用相同的数据库与相同的表
+						// the same database and same table cannot be used in different interface
 						std::vector<DBInterfaceInfo>::iterator dbinfo_iter = _dbmgrInfo.dbInterfaceInfos.begin();
 						for (; dbinfo_iter != _dbmgrInfo.dbInterfaceInfos.end(); ++dbinfo_iter)
 						{
@@ -1669,7 +1669,7 @@ uint32 ServerConfig::tcp_SOMAXCONN(COMPONENT_TYPE componentType)
 //-------------------------------------------------------------------------------------	
 void ServerConfig::_updateEmailInfos()
 {
-	// 如果小于64则表示目前还是明文密码
+	// it's a text password if its size is less than 64
 	if(emailServerInfo_.password.size() < 64)
 	{
 		WARNING_MSG(fmt::format("ServerConfig::loadConfig: email password(email_service.xml) is not encrypted!\nplease use password(rsa):\n{}\n"
