@@ -99,7 +99,7 @@ void Resmgr::updatePaths()
 	char splitFlag = ';';
 	strutil::kbe_split<char>(tbuf, splitFlag, respaths_);
 
-	// windows用户不能分割冒号， 可能会把盘符给分割了
+	// we cannot use colon on windows, because it maybe a driver path
 #if KBE_PLATFORM != PLATFORM_WIN32
 	if(respaths_.size() < 2)
 	{
@@ -133,13 +133,13 @@ void Resmgr::updatePaths()
 //-------------------------------------------------------------------------------------
 bool Resmgr::initialize()
 {
-	//if(isInit())
-	//	return true;
+	// if(isInit())
+	// 	return true;
 
-	// 获取引擎环境配置
+	// get engine environment
 	kb_env_.root_path		= getenv("KBE_ROOT") == NULL ? "" : getenv("KBE_ROOT");
-	kb_env_.res_path		= getenv("KBE_RES_PATH") == NULL ? "" : getenv("KBE_RES_PATH"); 
-	kb_env_.bin_path		= getenv("KBE_BIN_PATH") == NULL ? "" : getenv("KBE_BIN_PATH"); 
+	kb_env_.res_path		= getenv("KBE_RES_PATH") == NULL ? "" : getenv("KBE_RES_PATH");
+	kb_env_.bin_path		= getenv("KBE_BIN_PATH") == NULL ? "" : getenv("KBE_BIN_PATH");
 
 	//kb_env_.root			= "/home/kbengine/";
 	//kb_env_.res_path		= "/home/kbengine/kbe/res/;/home/kbengine/assets/;/home/kbengine/assets/scripts/;/home/kbengine/assets/res/"; 
