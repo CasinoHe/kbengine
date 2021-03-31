@@ -2,11 +2,11 @@
 
 
 /*
-	用法:
+	usage:
 		class A:public Singleton<A>
 		{
 		};
-		在cpp文件中:
+		in cpp:
 		template<> A* Singleton<A>::singleton_ = 0;
 */
 #ifndef KBE_SINGLETON_H
