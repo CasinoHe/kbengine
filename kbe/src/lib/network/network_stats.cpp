@@ -6,12 +6,10 @@
 
 namespace KBEngine { 
 
-KBE_SINGLETON_INIT(Network::NetworkStats);
-
 namespace Network
 {
 
-NetworkStats g_networkStats;
+NetworkStats &g_networkStats = NetworkStats::getSingleton();
 
 //-------------------------------------------------------------------------------------
 NetworkStats::NetworkStats():

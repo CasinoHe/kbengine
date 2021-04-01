@@ -13,7 +13,6 @@
 #endif
 
 namespace KBEngine{
-KBE_SINGLETON_INIT(ServerConfig);
 
 static bool g_dbmgr_addDefaultAddress = true;
 

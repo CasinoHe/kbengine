@@ -20,7 +20,7 @@ namespace KBEngine{
 
 inline void START_MSG(const char * name, uint64 appuid)
 {
-	MachineInfos machineInfo;
+	MachineInfos &machineInfo = MachineInfos::getSingleton();
 
 	std::string s = (fmt::format("---- {} "
 			"Version: {}. "
@@ -258,7 +258,7 @@ int kbeMainT(int argc, char * argv[], COMPONENT_TYPE componentType,
 		extlisteningTcpPort_min, extlisteningTcpPort_max, extlisteningUdpPort_min, extlisteningUdpPort_max, extlisteningInterface, 0, 0,
 		intlisteningPort_min, intlisteningPort_max, intlisteningInterface, 0, 0);
 	
-	KBEngine::script::Script script;
+	KBEngine::script::Script &script = KBEngine::script::Script::getSingleton();
 	if(!installPyScript(script, componentType))
 	{
 		ERROR_MSG("app::initialize error!\n");

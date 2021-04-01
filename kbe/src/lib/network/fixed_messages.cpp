@@ -5,8 +5,6 @@
 
 namespace KBEngine { 
 
-KBE_SINGLETON_INIT(Network::FixedMessages);
-
 namespace Network
 {
 
@@ -15,7 +13,6 @@ FixedMessages::FixedMessages():
 _infomap(),
 _loaded(false)
 {
-	new Resmgr();
 	Resmgr::getSingleton().initialize();
 }
 
@@ -57,7 +54,7 @@ bool FixedMessages::loadConfig(std::string fileName, bool notFoundError)
 	rootNode = xml->getRootNode();
 	if(rootNode == NULL)
 	{
-		// root╫з╣Цобц╩спвс╫з╣Цак
+		// rootХ┼┌Г┌╧Д╦▀Ф╡║Ф°┴Е╜░Х┼┌Г┌╧Д╨├
 		return true;
 	}
 

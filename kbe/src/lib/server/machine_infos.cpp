@@ -44,7 +44,6 @@ const char* szFeatures[] =
 #endif
 
 namespace KBEngine{
-KBE_SINGLETON_INIT(MachineInfos);
 
 //-------------------------------------------------------------------------------------
 MachineInfos::MachineInfos()

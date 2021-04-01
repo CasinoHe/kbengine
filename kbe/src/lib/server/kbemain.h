@@ -27,7 +27,7 @@ namespace KBEngine{
 
 inline void START_MSG(const char * name, uint64 appuid)
 {
-	MachineInfos machineInfo;
+	MachineInfos &machineInfo = MachineInfos::getSingleton();
 	
 	std::string s = (fmt::format("---- {} "
 			"Version: {}. "
@@ -168,7 +168,7 @@ int kbeMainT(int argc, char * argv[], COMPONENT_TYPE componentType,
 		privateKeyPath = Resmgr::getSingleton().matchPath("key/") + "kbengine_private.key";
 	}
 	
-	KBEKey kbekey(publicKeyPath, privateKeyPath);
+	KBEKey &kbekey = KBEKey::getSingleton(publicKeyPath, privateKeyPath);
 
 	Resmgr::getSingleton().print();
 
@@ -197,7 +197,7 @@ int kbeMainT(int argc, char * argv[], COMPONENT_TYPE componentType,
 
 	Components::getSingleton().initialize(&networkInterface, componentType, g_componentID);
 	
-	SERVER_APP app(dispatcher, networkInterface, componentType, g_componentID);
+	SERVER_APP &app = SERVER_APP::getSingleton(dispatcher, networkInterface, componentType, g_componentID);
 	Components::getSingleton().findLogger();
 	START_MSG(COMPONENT_NAME_EX(componentType), g_componentID);
 

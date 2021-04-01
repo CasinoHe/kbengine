@@ -8,8 +8,6 @@
 #include "network/network_interface.h"
 
 namespace KBEngine { 
-KBE_SINGLETON_INIT(ForwardComponent_MessageBuffer);
-KBE_SINGLETON_INIT(ForwardAnywhere_MessageBuffer);
 //-------------------------------------------------------------------------------------
 ForwardComponent_MessageBuffer::ForwardComponent_MessageBuffer(Network::NetworkInterface & networkInterface) :
 	Task(),
@@ -79,7 +77,7 @@ bool ForwardComponent_MessageBuffer::process()
 		if(cinfos == NULL || cinfos->pChannel == NULL)
 			return true;
 
-		// Èç¹ûÊÇmgrÀà×é¼şĞèÒªÅĞ¶ÏÊÇ·ñÒÑ¾­³õÊ¼»¯Íê³É
+		// å¦‚æœæ˜¯mgrç±»ç»„ä»¶éœ€è¦åˆ¤æ–­æ˜¯å¦å·²ç»åˆå§‹åŒ–å®Œæˆ
 		if(g_componentType == CELLAPPMGR_TYPE || g_componentType == BASEAPPMGR_TYPE)
 		{
 			if(cinfos->state != COMPONENT_STATE_RUN)
@@ -195,7 +193,7 @@ bool ForwardAnywhere_MessageBuffer::process()
 		Components::COMPONENTS::iterator ctiter = cts.begin();
 		for(; ctiter != cts.end(); ++ctiter)
 		{
-			// ±ØĞëËùÓĞµÄ×é¼şÆµµÀ¶¼±»ÉèÖÃ£¬Èç¹û²»ÊÇÔòµÈ´ı¡£
+			// å¿…é¡»æ‰€æœ‰çš„ç»„ä»¶é¢‘é“éƒ½è¢«è®¾ç½®ï¼Œå¦‚æœä¸æ˜¯åˆ™ç­‰å¾…ã€‚
 			if((*ctiter).pChannel == NULL)
 				return true;
 
@@ -203,11 +201,11 @@ bool ForwardAnywhere_MessageBuffer::process()
 				hasEnabled = true;
 		}
 
-		// ±ØĞëÓĞ¿ÉÓÃµÄ½ø³Ì
+		// å¿…é¡»æœ‰å¯ç”¨çš„è¿›ç¨‹
 		if(!hasEnabled)
 			return true;
 
-		// ×î¶àÃ¿¸ötick´¦Àí5¸ö
+		// æœ€å¤šæ¯ä¸ªtickå¤„ç†5ä¸ª
 		int icount = 5;
 
 		std::vector<ForwardItem*>::iterator iter = pBundles_.begin();
@@ -217,8 +215,8 @@ bool ForwardAnywhere_MessageBuffer::process()
 				break;
 		}
 		
-		// ±ØĞëËùÓĞµÄForwardItem¶¼´¦ÓÚok×´Ì¬
-		// ºÎÊ±²»´¦ÓÚok×´Ì¬£¿ÀıÈç£ºcellappmgrÖĞµÄForwardItemĞèÒªµÈ´ıcellapp³õÊ¼»¯Íê±ÏÖ®ºó²Åok
+		// å¿…é¡»æ‰€æœ‰çš„ForwardIteméƒ½å¤„äºokçŠ¶æ€
+		// ä½•æ—¶ä¸å¤„äºokçŠ¶æ€ï¼Ÿä¾‹å¦‚ï¼šcellappmgrä¸­çš„ForwardIteméœ€è¦ç­‰å¾…cellappåˆå§‹åŒ–å®Œæ¯•ä¹‹åæ‰ok
 		if (iter == pBundles_.end())
 			return true;
 

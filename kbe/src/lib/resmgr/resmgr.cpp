@@ -15,7 +15,6 @@
 #endif
 
 namespace KBEngine{
-KBE_SINGLETON_INIT(Resmgr);
 
 uint64 Resmgr::respool_timeout = 0;
 uint32 Resmgr::respool_buffersize = 0;

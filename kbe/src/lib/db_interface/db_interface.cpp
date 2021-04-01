@@ -11,9 +11,8 @@
 #include "thread/threadpool.h"
 
 namespace KBEngine { 
-KBE_SINGLETON_INIT(DBUtil);
 
-DBUtil g_DBUtil;
+DBUtil &g_DBUtil = DBUtil::getSingleton();
 
 DBUtil::DBThreadPoolMap DBUtil::pThreadPoolMaps_;
 
@@ -87,7 +86,7 @@ bool DBUtil::initialize()
 
 		if ((*dbinfo_iter).db_passwordEncrypt)
 		{
-			// 如果小于64则表明当前是明文密码配置
+			// 濡傛灉灏忎簬64鍒欒〃鏄庡綋鍓嶆槸鏄庢枃瀵嗙爜閰嶇疆
 			if (strlen((*dbinfo_iter).db_password) < 64)
 			{
 				WARNING_MSG(fmt::format("DBUtil::initialize: db({}) password is not encrypted!\nplease use password(rsa):\n{}\n",

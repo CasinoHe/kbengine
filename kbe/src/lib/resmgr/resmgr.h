@@ -36,10 +36,12 @@ public:
 	static uint32 respool_buffersize;
 	static uint32 respool_checktick;
 
-public:
+private:
+	friend Singleton<Resmgr>;
 	Resmgr();
 	~Resmgr();
-	
+
+public:
 	bool initialize();
 
 	void autoSetPaths();

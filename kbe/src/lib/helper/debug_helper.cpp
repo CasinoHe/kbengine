@@ -42,9 +42,7 @@
 
 namespace KBEngine{
 	
-KBE_SINGLETON_INIT(DebugHelper);
-
-DebugHelper dbghelper;
+DebugHelper &dbghelper = DebugHelper::getSingleton();
 ProfileVal g_syncLogProfile("syncLog");
 
 #ifndef NO_USE_LOG4CXX
@@ -257,7 +255,6 @@ memoryStreamPool_("DebugHelperMemoryStream")
 {
 	g_pDebugHelperSyncHandler = new DebugHelperSyncHandler();
 	loseLoggerTime_ = timestamp();
-	log4cxx::BasicConfigurator::configure();
 }
 
 //-------------------------------------------------------------------------------------
@@ -506,10 +503,10 @@ void DebugHelper::sync()
 		return;
 	}
 
-	// �����߳���־����bufferedLogPackets_
+	// 锟斤拷锟斤拷锟竭筹拷锟斤拷志锟斤拷锟斤拷bufferedLogPackets_
 	while (childThreadBufferedLogPackets_.size() > 0)
 	{
-		// ���������ȡ��һ�����󣬽����߳��ж���vector�ڴ潻����ȥ
+		// 锟斤拷锟斤拷锟斤拷锟斤拷锟饺★拷锟揭伙拷锟斤拷锟斤拷螅锟斤拷锟斤拷叱锟斤拷卸锟斤拷锟絭ector锟节存交锟斤拷锟斤拷去
 		MemoryStream* pMemoryStream = childThreadBufferedLogPackets_.front();
 		childThreadBufferedLogPackets_.pop();
 
@@ -520,17 +517,17 @@ void DebugHelper::sync()
 		pBundle->finiCurrPacket();
 		pBundle->newPacket();
 
-		// �����ǵ��ڴ潻����ȥ
+		// 锟斤拷锟斤拷锟角碉拷锟节存交锟斤拷锟斤拷去
 		pBundle->pCurrPacket()->swap(*pMemoryStream);
 		pBundle->currMsgLength(pBundle->currMsgLength() + pBundle->pCurrPacket()->length());
 
-		// �����ж��󽻻��������
+		// 锟斤拷锟斤拷锟叫讹拷锟襟交伙拷锟斤拷锟斤拷锟斤拷锟�
 		memoryStreamPool_.reclaimObject(pMemoryStream);
 	}
 
 	if (Network::Address::NONE == loggerAddr_)
 	{
-		// �������300��û���ҵ�logger����ôǿ�������ڴ�
+		// 锟斤拷锟斤拷锟斤拷锟�300锟斤拷没锟斤拷锟揭碉拷logger锟斤拷锟斤拷么强锟斤拷锟斤拷锟斤拷锟节达拷
 		if (timestamp() - loseLoggerTime_ > uint64(300 * stampsPerSecond()))
 		{
 			clearBufferedLog();
@@ -608,7 +605,7 @@ void DebugHelper::sync()
 		--hasBufferedLogPackets_;
 	}
 
-	// ������Ҫ��ʱ���ͣ������ڷ��͹����в������󣬵�����־������������
+	// 锟斤拷锟斤拷锟斤拷要锟斤拷时锟斤拷锟酵ｏ拷锟斤拷锟斤拷锟节凤拷锟酵癸拷锟斤拷锟叫诧拷锟斤拷锟斤拷锟襟，碉拷锟斤拷锟斤拷志锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷
 	if(bundles.size() > 0 && !pLoggerChannel->sending())
 		pLoggerChannel->delayedSend();
 
@@ -791,10 +788,10 @@ void DebugHelper::printBufferedLogs()
 	KBE_LOG4CXX_PRINT(g_logger, std::string("The following logs sent to logger failed:\n"));
 #endif
 
-	// �����߳���־����bufferedLogPackets_
+	// 锟斤拷锟斤拷锟竭筹拷锟斤拷志锟斤拷锟斤拷bufferedLogPackets_
 	while (childThreadBufferedLogPackets_.size() > 0)
 	{
-		// ���������ȡ��һ�����󣬽����߳��ж���vector�ڴ潻����ȥ
+		// 锟斤拷锟斤拷锟斤拷锟斤拷锟饺★拷锟揭伙拷锟斤拷锟斤拷螅锟斤拷锟斤拷叱锟斤拷卸锟斤拷锟絭ector锟节存交锟斤拷锟斤拷去
 		MemoryStream* pMemoryStream = childThreadBufferedLogPackets_.front();
 		childThreadBufferedLogPackets_.pop();
 
@@ -805,11 +802,11 @@ void DebugHelper::printBufferedLogs()
 		pBundle->finiCurrPacket();
 		pBundle->newPacket();
 
-		// �����ǵ��ڴ潻����ȥ
+		// 锟斤拷锟斤拷锟角碉拷锟节存交锟斤拷锟斤拷去
 		pBundle->pCurrPacket()->swap(*pMemoryStream);
 		pBundle->currMsgLength(pBundle->currMsgLength() + pBundle->pCurrPacket()->length());
 
-		// �����ж��󽻻��������
+		// 锟斤拷锟斤拷锟叫讹拷锟襟交伙拷锟斤拷锟斤拷锟斤拷锟�
 		memoryStreamPool_.reclaimObject(pMemoryStream);
 	}
 
@@ -1009,7 +1006,7 @@ void DebugHelper::script_info_msg(const std::string& s)
 
 	onMessage(KBELOG_TYPE_MAPPING(scriptMsgType_), s.c_str(), (uint32)s.size());
 
-	// ������û��ֶ����õ�Ҳ���Ϊ������Ϣ
+	// 锟斤拷锟斤拷锟斤拷没锟斤拷侄锟斤拷锟斤拷玫锟揭诧拷锟斤拷为锟斤拷锟斤拷锟斤拷息
 	if(log4cxx::ScriptLevel::SCRIPT_ERR == scriptMsgType_)
 	{
 		set_errorcolor();

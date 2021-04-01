@@ -19,10 +19,12 @@ public:
 
 class SignalHandlers : public Singleton<SignalHandlers>, public Task
 {
-public:
+private:
+	friend Singleton<SignalHandlers>;
 	SignalHandlers();
 	~SignalHandlers();
-	
+
+public:
 	SignalHandler* addSignal(int sigNum, 
 		SignalHandler* pSignalHandler, int flags = 0);
 	

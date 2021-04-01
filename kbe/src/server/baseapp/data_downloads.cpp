@@ -59,7 +59,11 @@ int16 DataDownloads::pushDownload(DataDownload* pdl)
 
 	pdl->pDataDownloads(this);
 
-	Baseapp::getSingleton().threadPool().addTask(pdl);
+	auto singleton_ptr = Baseapp::getSingletonPtr();
+	if (singleton_ptr)
+	{
+		singleton_ptr->threadPool().addTask(pdl);
+	}
 	return pdl->id();
 }
 

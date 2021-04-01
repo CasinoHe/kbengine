@@ -23,9 +23,8 @@ extern "C"
 
 namespace KBEngine
 {
-KBE_SINGLETON_INIT(SystemInfo);
 
-SystemInfo g_SystemInfo;
+SystemInfo &g_SystemInfo = SystemInfo::getSingleton();
 
 sigar_t *_g_sigarproclist = NULL;
 sigar_proc_list_t _g_proclist;
@@ -58,7 +57,7 @@ SystemInfo::SystemInfo()
 {
 	totalmem_ = 0;
 
-	// ²»ÒªÔÚ³õÊ¼»¯ÖĞ×öÕâ¼şÊÂÇé£¬ÒòÎªÈ«¾Ö¾²Ì¬±äÁ¿ÕâÀï¿ÉÄÜÔÚmainÖ®Ç°±»µ÷ÓÃÒ»´Î
+	// ä¸è¦åœ¨åˆå§‹åŒ–ä¸­åšè¿™ä»¶äº‹æƒ…ï¼Œå› ä¸ºå…¨å±€é™æ€å˜é‡è¿™é‡Œå¯èƒ½åœ¨mainä¹‹å‰è¢«è°ƒç”¨ä¸€æ¬¡
 	//_autocreate();
 	//getCPUPer();
 	//getProcessInfo();

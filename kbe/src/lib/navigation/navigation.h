@@ -12,14 +12,17 @@
 namespace KBEngine
 {
 /*
-	µ¼º½Àà
+	å¯¼èˆªç±»
 */
 class Navigation : public Singleton<Navigation>
 {
-public:
+	friend Singleton<Navigation>;
+
+private:
 	Navigation();
 	virtual ~Navigation();
-	
+
+public:
 	void finalise();
 
 	NavigationHandlePtr loadNavigation(std::string resPath, const std::map< int, std::string >& params);

@@ -10,7 +10,6 @@
 #include "common/kbeversion.h"
 
 namespace KBEngine{
-KBE_SINGLETON_INIT(Config);
 
 //-------------------------------------------------------------------------------------
 Config::Config():
@@ -51,7 +50,7 @@ bool Config::loadConfig(std::string fileName)
 	
 	if(xml->getRootNode() == NULL)
 	{
-		// root½ÚµãÏÂÃ»ÓĞ×Ó½ÚµãÁË
+		// rootèŠ‚ç‚¹ä¸‹æ²¡æœ‰å­èŠ‚ç‚¹äº†
 		return true;
 	}
 
@@ -87,7 +86,7 @@ bool Config::loadConfig(std::string fileName)
 					{
 						Network::g_trace_packet_disables.push_back(c);
 
-						// ²»debug¼ÓÃÜ°ü
+						// ä¸debugåŠ å¯†åŒ…
 						if(c == "Encrypted::packets")
 							Network::g_trace_encrypted_packet = false;
 					}

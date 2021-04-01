@@ -17,8 +17,6 @@ namespace Network
 Network::MessageHandlers* MessageHandlers::pMainMessageHandlers = 0;
 std::vector<MessageHandlers*>* g_pMessageHandlers;
 
-static Network::FixedMessages* g_fm;
-
 //-------------------------------------------------------------------------------------
 MessageHandlers::MessageHandlers(const std::string& name):
 msgHandlers_(),
@@ -26,10 +24,6 @@ msgID_(1),
 exposedMessages_(),
 name_(name)
 {
-	g_fm = Network::FixedMessages::getSingletonPtr();
-	if(g_fm == NULL)
-		g_fm = new Network::FixedMessages;
-
 	Network::FixedMessages::getSingleton().loadConfig("server/messages_fixed_defaults.xml");
 	Network::FixedMessages::getSingleton().loadConfig("server/messages_fixed.xml", false);
 	messageHandlers().push_back(this);
@@ -247,7 +241,7 @@ std::string MessageHandlers::getDigestStr()
 			rootNode = xml->getRootNode();
 			if (rootNode == NULL)
 			{
-				// root½ÚµãÏÂÃ»ÓĞ×Ó½ÚµãÁË
+				// rootèŠ‚ç‚¹ä¸‹æ²¡æœ‰å­èŠ‚ç‚¹äº†
 				return "";
 			}
 
@@ -372,7 +366,6 @@ std::vector<MessageHandlers*>& MessageHandlers::messageHandlers()
 //-------------------------------------------------------------------------------------
 void MessageHandlers::finalise(void)
 {
-	SAFE_RELEASE(g_fm);
 	SAFE_RELEASE(g_pMessageHandlers);
 }
 

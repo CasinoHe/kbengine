@@ -4,28 +4,51 @@
 #define KBENGINE_KEY_H
 
 #include "rsa.h"
-#include "common/singleton.h"
 
 namespace KBEngine
 {
 
 
 /**
- *	引擎的key管理
+ *	寮曟搸鐨刱ey绠＄悊
  */
-class KBEKey : public KBE_RSA, public Singleton<KBEKey>
+class KBEKey : public KBE_RSA
 {
-public:
+
+private:
 	KBEKey(const std::string& pubkeyname, 
 		const std::string& prikeyname);
 
-	KBEKey();
 	virtual ~KBEKey();
 
+	KBEKey(KBEKey &) = delete;
+	void operator=(KBEKey &) = delete;
+
+	inline static KBEKey *singleton_ = nullptr;
+
+public:
 	virtual bool isGood() const;
+
+	static KBEKey &getSingleton(const std::string &pubkeyname,
+															const std::string &prikeyname)
+	{
+		if (!singleton_)
+		{
+			singleton_ = new KBEKey(pubkeyname, prikeyname);
+		}
+		return *singleton_;
+	}
+
+	static KBEKey &getSingleton()
+	{
+		return *singleton_;
+	}
+
+	static KBEKey *getSingletonPtr()
+	{
+		return singleton_;
+	}
 };
-
-
 }
 
 #endif // KBENGINE_KEY_H

@@ -30,10 +30,10 @@ void Archiver::tick()
 		this->createArchiveTable();
 	}
 
-	// Ëã·¨ÈçÏÂ:
-	// baseEntityµÄÊıÁ¿ * idx / tickÖÜÆÚ = Ã¿´ÎÔÚvectorÖĞÒÆ¶¯µÄÒ»¸öÇø¶Î
-	// Õâ¸öÇø¶ÎÔÚÃ¿¸ögametick½øĞĞ´¦Àí, ¸ÕºÃÆ½»¬µÄÔÚperiodInTicksÖĞ´¦ÀíÍêÈÎÎñ
-	// Èç¹ûarchiveIndex_ >= periodInTicksÔòÖØĞÂ²úÉúÒ»´ÎËæ»úĞòÁĞ
+	// ç®—æ³•å¦‚ä¸‹:
+	// baseEntityçš„æ•°é‡ * idx / tickå‘¨æœŸ = æ¯æ¬¡åœ¨vectorä¸­ç§»åŠ¨çš„ä¸€ä¸ªåŒºæ®µ
+	// è¿™ä¸ªåŒºæ®µåœ¨æ¯ä¸ªgametickè¿›è¡Œå¤„ç†, åˆšå¥½å¹³æ»‘çš„åœ¨periodInTicksä¸­å¤„ç†å®Œä»»åŠ¡
+	// å¦‚æœarchiveIndex_ >= periodInTicksåˆ™é‡æ–°äº§ç”Ÿä¸€æ¬¡éšæœºåºåˆ—
 	int size = (int)arEntityIDs_.size();
 	int startIndex = size * archiveIndex_ / periodInTicks;
 
@@ -43,8 +43,14 @@ void Archiver::tick()
 
 	for (int i = startIndex; i < endIndex; ++i)
 	{
-		Entity* pEntity = Baseapp::getSingleton().findEntity(arEntityIDs_[i]);
+		auto singleton = Baseapp::getSingletonPtr();
+		Entity *pEntity;
 		
+		if (singleton)
+		{
+			pEntity = singleton->findEntity(arEntityIDs_[i]);
+		}
+
 		if(pEntity && pEntity->hasDB())
 		{
 			this->archive(*pEntity);
@@ -67,9 +73,14 @@ void Archiver::createArchiveTable()
 	archiveIndex_ = 0;
 	arEntityIDs_.clear();
 
-	Entities<Entity>::ENTITYS_MAP::const_iterator iter = Baseapp::getSingleton().pEntities()->getEntities().begin();
+	auto singleton_ptr = Baseapp::getSingletonPtr();
+	Entities<Entity>::ENTITYS_MAP::const_iterator iter;
+	if (singleton_ptr)
+	{
+		iter = singleton_ptr->pEntities()->getEntities().begin();
+	}
 
-	for(; iter != Baseapp::getSingleton().pEntities()->getEntities().end(); ++iter)
+	for(; iter != singleton_ptr->pEntities()->getEntities().end(); ++iter)
 	{
 		Entity* pEntity = static_cast<Entity*>(iter->second.get());
 
@@ -79,7 +90,7 @@ void Archiver::createArchiveTable()
 		}
 	}
 
-	// Ëæ»úÒ»ÏÂĞòÁĞ
+	// éšæœºä¸€ä¸‹åºåˆ—
 	std::random_shuffle(arEntityIDs_.begin(), arEntityIDs_.end());
 }
 

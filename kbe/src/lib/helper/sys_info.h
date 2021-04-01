@@ -12,10 +12,13 @@ namespace KBEngine
 
 class SystemInfo : public Singleton<SystemInfo>
 {
-public:
+	friend Singleton<SystemInfo>;
+
+private:
 	SystemInfo();
 	~SystemInfo();
 
+public:
 	struct PROCESS_INFOS
 	{
 		float cpu;

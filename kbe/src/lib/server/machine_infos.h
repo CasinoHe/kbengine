@@ -7,9 +7,11 @@
 namespace KBEngine{
 class MachineInfos : public Singleton<MachineInfos>
 {
-public:
+private:
+	friend Singleton<MachineInfos>;
 	MachineInfos();
 
+public:
 	const std::string & machineName() const { return machineName_; }
 	const std::string & cpuInfo() const { return cpuInfo_; }
 	const std::vector<float>& cpuSpeeds() const { return cpuSpeeds_; }

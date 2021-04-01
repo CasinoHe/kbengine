@@ -32,7 +32,7 @@ DataDownload::~DataDownload()
 {
 	SAFE_RELEASE_ARRAY(stream_);
 
-	Proxy* proxy = static_cast<Proxy*>(Baseapp::getSingleton().findEntity(entityID_));
+	Proxy* proxy = static_cast<Proxy*>(Baseapp::getSingletonPtr()->findEntity(entityID_));
 
 	if(proxy)
 	{
@@ -43,7 +43,7 @@ DataDownload::~DataDownload()
 //-------------------------------------------------------------------------------------
 bool DataDownload::send(const Network::MessageHandler& msgHandler, Network::Bundle* pBundle)
 {
-	Proxy* proxy = static_cast<Proxy*>(Baseapp::getSingleton().findEntity(entityID_));
+	Proxy* proxy = static_cast<Proxy*>(Baseapp::getSingletonPtr()->findEntity(entityID_));
 	
 	if(proxy && proxy->clientEntityCall())
 	{

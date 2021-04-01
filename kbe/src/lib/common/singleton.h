@@ -1,52 +1,76 @@
-// Copyright 2008-2018 Yolo Technologies, Inc. All Rights Reserved. https://www.comblockengine.com
+// Created: 2021.3.31
+// Author: CasinoHe
+// Purpose: a singleton c++ template class implementation with no parameter constructor
 
+// all modern c++ compiler supported pragma once
+#pragma once
 
 /*
+	motivation:
+		It's desinged to avoid creating two singleton instance
+
 	usage:
 		class A:public Singleton<A>
 		{
+			friend Singleton<A>;  // required, Singleton class need to create a static instance
+		private:
+			A();  // required, derived class need to declare a private constructor
+			~A();
+
+	 	protected: (optinal, if not implement in derived class, the class factory will use singletonInit in base class)
+			virtual void singletonInit() override { ... }
 		};
-		in cpp:
-		template<> A* Singleton<A>::singleton_ = 0;
+
+		A::getSingleton().xxx();
+
+		There is no A instance outside, only static instance insdie class A
 */
-#ifndef KBE_SINGLETON_H
-#define KBE_SINGLETON_H
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
-
-#include "common/platform.h"
-
-namespace KBEngine{
-	
-template <typename T> 
-class Singleton
+namespace KBEngine
 {
-protected:
-	static T* singleton_;
 
-public:
-	Singleton(void)
+	template <typename T>
+	class Singleton
 	{
-		assert(!singleton_);
-#if defined(_MSC_VER) && _MSC_VER < 1200	 
-		int offset = (int)(T*)1 - (int)(Singleton <T>*)(T*)1;
-		singleton_ = (T*)((int)this + offset);
-#else
-		singleton_ = static_cast< T* >(this);
-#endif
-	}
-	
-	
-	~Singleton(void){  assert(singleton_);  singleton_ = 0; }
-	
-	static T& getSingleton(void) { assert(singleton_);  return (*singleton_); }
-	static T* getSingletonPtr(void){ return singleton_; }
-};
+	private:
+		inline static T *singleton_ = nullptr;
 
-#define KBE_SINGLETON_INIT( TYPE )							\
-template <>	 TYPE * Singleton< TYPE >::singleton_ = 0;	\
-	
+	protected:
+		virtual void singletonInit() {}
+
+	public:
+		static T &getSingleton(void)
+		{
+			if (!singleton_)
+			{
+				singleton_ = new T;
+				singleton_->singletonInit();
+			}
+
+			return (*singleton_);
+		}
+
+		static T *getSingletonPtr(void)
+		{
+			if (!singleton_)
+			{
+				singleton_ = new T;
+				singleton_->singletonInit();
+			}
+
+			return singleton_;
+		}
+
+		~Singleton(void)
+		{
+			if (singleton_)
+			{
+				delete singleton_;
+			}
+			singleton_ = nullptr;
+		}
+
+	protected:
+		Singleton(void) {}
+	};
 }
-#endif // KBE_SINGLETON_H
