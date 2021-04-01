@@ -370,34 +370,34 @@ inline void parseMainCommandArgs(int argc, char* argv[])
 }
 
 #if KBE_PLATFORM == PLATFORM_WIN32
-#define KBENGINE_MAIN																									\
-kbeMain(int argc, char* argv[]);																						\
-int main(int argc, char* argv[])																						\
-{																														\
-	loadConfig();																										\
-	g_componentID = genUUID64();																						\
-	parseMainCommandArgs(argc, argv);																					\
-	char dumpname[MAX_BUF] = {0};																						\
-	kbe_snprintf(dumpname, MAX_BUF, "%" PRAppID, g_componentID);														\
-	KBEngine::exception::installCrashHandler(1, dumpname);																\
-	int retcode = -1;																									\
-	THREAD_TRY_EXECUTION;																								\
-	retcode = kbeMain(argc, argv);																						\
-	THREAD_HANDLE_CRASH;																								\
-	return retcode;																										\
-}																														\
-int kbeMain
+#define KBENGINE_MAIN                                            \
+	kbeMain(int argc, char *argv[]);                               \
+	int main(int argc, char *argv[])                               \
+	{                                                              \
+		loadConfig();                                                \
+		g_componentID = genUUID64();                                 \
+		parseMainCommandArgs(argc, argv);                            \
+		char dumpname[MAX_BUF] = {0};                                \
+		kbe_snprintf(dumpname, MAX_BUF, "%" PRAppID, g_componentID); \
+		KBEngine::exception::installCrashHandler(1, dumpname);       \
+		int retcode = -1;                                            \
+		THREAD_TRY_EXECUTION;                                        \
+		retcode = kbeMain(argc, argv);                               \
+		THREAD_HANDLE_CRASH;                                         \
+		return retcode;                                              \
+	}                                                              \
+	int kbeMain
 #else
-#define KBENGINE_MAIN																									\
-kbeMain(int argc, char* argv[]);																						\
-int main(int argc, char* argv[])																						\
-{																														\
-	loadConfig();																										\
-	g_componentID = genUUID64();																						\
-	parseMainCommandArgs(argc, argv);																					\
-	return kbeMain(argc, argv);																							\
-}																														\
-int kbeMain
+#define KBENGINE_MAIN                 \
+	kbeMain(int argc, char *argv[]);    \
+	int main(int argc, char *argv[])    \
+	{                                   \
+		loadConfig();                     \
+		g_componentID = genUUID64();      \
+		parseMainCommandArgs(argc, argv); \
+		return kbeMain(argc, argv);       \
+	}                                   \
+	int kbeMain
 #endif
 }
 

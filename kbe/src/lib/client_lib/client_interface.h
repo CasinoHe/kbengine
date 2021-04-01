@@ -18,211 +18,211 @@
 #include "entitydef/common.h"
 #include "common.h"
 	
-namespace KBEngine{
+namespace KBEngine
+{
+	/**
+	CLIENTÊâÄÊúâÊ∂àÊÅØÊé•Âè£Âú®Ê≠§ÂÆö‰πâ
+	*/
+	NETWORK_INTERFACE_DECLARE_BEGIN(ClientInterface)
+	// ÊúçÂä°Á´ØhelloËøîÂõû„ÄÇ
+	CLIENT_MESSAGE_DECLARE_STREAM(onHelloCB, NETWORK_VARIABLE_MESSAGE)
 
-/**
-	CLIENTÀ˘”–œ˚œ¢Ω”ø⁄‘⁄¥À∂®“Â
-*/
-NETWORK_INTERFACE_DECLARE_BEGIN(ClientInterface)
-	// ∑˛ŒÒ∂Àhello∑µªÿ°£
-	CLIENT_MESSAGE_DECLARE_STREAM(onHelloCB,								NETWORK_VARIABLE_MESSAGE)
+	// ÂíåÊúçÂä°Á´ØÁöÑÁâàÊú¨‰∏çÂåπÈÖç
+	CLIENT_MESSAGE_DECLARE_STREAM(onVersionNotMatch, NETWORK_VARIABLE_MESSAGE)
 
-	// ∫Õ∑˛ŒÒ∂Àµƒ∞Ê±æ≤ª∆•≈‰
-	CLIENT_MESSAGE_DECLARE_STREAM(onVersionNotMatch,						NETWORK_VARIABLE_MESSAGE)
+	// ÂíåÊúçÂä°Á´ØÁöÑËÑöÊú¨Â±ÇÁâàÊú¨‰∏çÂåπÈÖç
+	CLIENT_MESSAGE_DECLARE_STREAM(onScriptVersionNotMatch, NETWORK_VARIABLE_MESSAGE)
 
-	// ∫Õ∑˛ŒÒ∂ÀµƒΩ≈±æ≤„∞Ê±æ≤ª∆•≈‰
-	CLIENT_MESSAGE_DECLARE_STREAM(onScriptVersionNotMatch,					NETWORK_VARIABLE_MESSAGE)
+	// ÂàõÂª∫Ë¥¶Âè∑Â§±Ë¥•„ÄÇ
+	CLIENT_MESSAGE_DECLARE_STREAM(onCreateAccountResult, NETWORK_VARIABLE_MESSAGE)
 
-	// ¥¥Ω®’À∫≈ ß∞‹°£
-	CLIENT_MESSAGE_DECLARE_STREAM(onCreateAccountResult,					NETWORK_VARIABLE_MESSAGE)
+	// ÁôªÂΩïÊàêÂäü„ÄÇ
+	CLIENT_MESSAGE_DECLARE_STREAM(onLoginSuccessfully, NETWORK_VARIABLE_MESSAGE)
 
-	// µ«¬º≥…π¶°£
-	CLIENT_MESSAGE_DECLARE_STREAM(onLoginSuccessfully,						NETWORK_VARIABLE_MESSAGE)
+	// ÁôªÂΩïÂ§±Ë¥•„ÄÇ
+	CLIENT_MESSAGE_DECLARE_STREAM(onLoginFailed, NETWORK_VARIABLE_MESSAGE)
 
-	// µ«¬º ß∞‹°£
-	CLIENT_MESSAGE_DECLARE_STREAM(onLoginFailed,							NETWORK_VARIABLE_MESSAGE)
+	// ÊúçÂä°Âô®Á´ØÂ∑≤ÁªèÂàõÂª∫‰∫Ü‰∏Ä‰∏™‰∏éÂÆ¢Êà∑Á´ØÂÖ≥ËÅîÁöÑ‰ª£ÁêÜEntity || ÁôªÂΩïÁΩëÂÖ≥ÊàêÂäü„ÄÇ
+	CLIENT_MESSAGE_DECLARE_ARGS3(onCreatedProxies, NETWORK_VARIABLE_MESSAGE,
+															 uint64, rndUUID,
+															 ENTITY_ID, eid,
+															 std::string, entityType)
 
-	// ∑˛ŒÒ∆˜∂À“—æ≠¥¥Ω®¡À“ª∏ˆ”ÎøÕªß∂Àπÿ¡™µƒ¥˙¿ÌEntity || µ«¬ºÕ¯πÿ≥…π¶°£
-	CLIENT_MESSAGE_DECLARE_ARGS3(onCreatedProxies,							NETWORK_VARIABLE_MESSAGE,
-								uint64,										rndUUID,
-								ENTITY_ID,									eid,
-								std::string,								entityType)
+	// ÁôªÂΩïÁΩëÂÖ≥Â§±Ë¥•„ÄÇ
+	CLIENT_MESSAGE_DECLARE_ARGS1(onLoginBaseappFailed, NETWORK_FIXED_MESSAGE,
+															 SERVER_ERROR_CODE, failedcode)
 
-	// µ«¬ºÕ¯πÿ ß∞‹°£
-	CLIENT_MESSAGE_DECLARE_ARGS1(onLoginBaseappFailed,						NETWORK_FIXED_MESSAGE,
-								SERVER_ERROR_CODE,							failedcode)
+	// ÁôªÂΩïÁΩëÂÖ≥Â§±Ë¥•„ÄÇ
+	CLIENT_MESSAGE_DECLARE_ARGS1(onReloginBaseappFailed, NETWORK_FIXED_MESSAGE,
+															 SERVER_ERROR_CODE, failedcode)
 
-	// µ«¬ºÕ¯πÿ ß∞‹°£
-	CLIENT_MESSAGE_DECLARE_ARGS1(onReloginBaseappFailed,					NETWORK_FIXED_MESSAGE,
-								SERVER_ERROR_CODE,							failedcode)
+	// ÊúçÂä°Âô®‰∏äÁöÑentityÂ∑≤ÁªèËøõÂÖ•Ê∏∏Êàè‰∏ñÁïå‰∫Ü„ÄÇ
+	CLIENT_MESSAGE_DECLARE_STREAM(onEntityEnterWorld, NETWORK_VARIABLE_MESSAGE)
 
-	// ∑˛ŒÒ∆˜…œµƒentity“—æ≠Ω¯»Î”Œœ∑ ¿ΩÁ¡À°£
-	CLIENT_MESSAGE_DECLARE_STREAM(onEntityEnterWorld,						NETWORK_VARIABLE_MESSAGE)
+	// ÊúçÂä°Âô®‰∏äÁöÑentityÂ∑≤ÁªèÁ¶ªÂºÄÊ∏∏Êàè‰∏ñÁïå‰∫Ü„ÄÇ
+	CLIENT_MESSAGE_DECLARE_ARGS1(onEntityLeaveWorld, NETWORK_FIXED_MESSAGE,
+															 ENTITY_ID, eid)
 
-	// ∑˛ŒÒ∆˜…œµƒentity“—æ≠¿Îø™”Œœ∑ ¿ΩÁ¡À°£
-	CLIENT_MESSAGE_DECLARE_ARGS1(onEntityLeaveWorld,						NETWORK_FIXED_MESSAGE,
-								ENTITY_ID,									eid)
+	// ÊúçÂä°Âô®‰∏äÁöÑentityÂ∑≤ÁªèÁ¶ªÂºÄÊ∏∏Êàè‰∏ñÁïå‰∫Ü„ÄÇ
+	CLIENT_MESSAGE_DECLARE_STREAM(onEntityLeaveWorldOptimized, NETWORK_VARIABLE_MESSAGE)
 
-	// ∑˛ŒÒ∆˜…œµƒentity“—æ≠¿Îø™”Œœ∑ ¿ΩÁ¡À°£
-	CLIENT_MESSAGE_DECLARE_STREAM(onEntityLeaveWorldOptimized,				NETWORK_VARIABLE_MESSAGE)
+	// ÂëäËØâÂÆ¢Êà∑Á´ØÊüê‰∏™entityÈîÄÊØÅ‰∫ÜÔºå Ê≠§Á±ªentityÈÄöÂ∏∏ÊòØËøòÊú™onEntityEnterWorld„ÄÇ
+	CLIENT_MESSAGE_DECLARE_ARGS1(onEntityDestroyed, NETWORK_FIXED_MESSAGE,
+															 ENTITY_ID, eid)
 
-	// ∏ÊÀﬂøÕªß∂Àƒ≥∏ˆentityœ˙ªŸ¡À£¨ ¥À¿‡entityÕ®≥£ «ªπŒ¥onEntityEnterWorld°£
-	CLIENT_MESSAGE_DECLARE_ARGS1(onEntityDestroyed,							NETWORK_FIXED_MESSAGE,
-								ENTITY_ID,									eid)
+	// ÊúçÂä°Âô®‰∏äÁöÑentityÂ∑≤ÁªèËøõÂÖ•space‰∫Ü„ÄÇ
+	CLIENT_MESSAGE_DECLARE_STREAM(onEntityEnterSpace, NETWORK_VARIABLE_MESSAGE)
 
-	// ∑˛ŒÒ∆˜…œµƒentity“—æ≠Ω¯»Îspace¡À°£
-	CLIENT_MESSAGE_DECLARE_STREAM(onEntityEnterSpace,						NETWORK_VARIABLE_MESSAGE)
+	// ÊúçÂä°Âô®‰∏äÁöÑentityÂ∑≤ÁªèÁ¶ªÂºÄspace‰∫Ü„ÄÇ
+	CLIENT_MESSAGE_DECLARE_ARGS1(onEntityLeaveSpace, NETWORK_FIXED_MESSAGE,
+															 ENTITY_ID, eid)
 
-	// ∑˛ŒÒ∆˜…œµƒentity“—æ≠¿Îø™space¡À°£
-	CLIENT_MESSAGE_DECLARE_ARGS1(onEntityLeaveSpace,						NETWORK_FIXED_MESSAGE,
-								ENTITY_ID,									eid)
+	// ËøúÁ®ãÂëºÂè´entityÊñπÊ≥ï
+	CLIENT_MESSAGE_DECLARE_STREAM(onRemoteMethodCall, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onRemoteMethodCallOptimized, NETWORK_VARIABLE_MESSAGE)
 
-	// ‘∂≥Ã∫ÙΩ–entity∑Ω∑®
-	CLIENT_MESSAGE_DECLARE_STREAM(onRemoteMethodCall,						NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onRemoteMethodCallOptimized,				NETWORK_VARIABLE_MESSAGE)
+	// Ë¢´Ë∏¢Âá∫ÊúçÂä°Âô®
+	CLIENT_MESSAGE_DECLARE_ARGS1(onKicked, NETWORK_FIXED_MESSAGE,
+															 SERVER_ERROR_CODE, failedcode)
 
-	// ±ªÃﬂ≥ˆ∑˛ŒÒ∆˜
-	CLIENT_MESSAGE_DECLARE_ARGS1(onKicked,									NETWORK_FIXED_MESSAGE,
-								SERVER_ERROR_CODE,							failedcode)
+	// ÊúçÂä°Âô®Êõ¥Êñ∞entityÂ±ûÊÄß
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdatePropertys, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdatePropertysOptimized, NETWORK_VARIABLE_MESSAGE)
 
-	// ∑˛ŒÒ∆˜∏¸–¬entity Ù–‘
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdatePropertys,						NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdatePropertysOptimized,				NETWORK_VARIABLE_MESSAGE)
+	// ÊúçÂä°Âô®Âº∫Âà∂ËÆæÁΩÆentityÁöÑ‰ΩçÁΩÆ‰∏éÊúùÂêë
+	CLIENT_MESSAGE_DECLARE_STREAM(onSetEntityPosAndDir, NETWORK_VARIABLE_MESSAGE)
 
-	// ∑˛ŒÒ∆˜«ø÷∆…Ë÷√entityµƒŒª÷√”Î≥ØœÚ
-	CLIENT_MESSAGE_DECLARE_STREAM(onSetEntityPosAndDir,						NETWORK_VARIABLE_MESSAGE)
+	// ÊúçÂä°Âô®Êõ¥Êñ∞ÂåÖ
+	CLIENT_MESSAGE_DECLARE_ARGS3(onUpdateBasePos, NETWORK_FIXED_MESSAGE,
+															 float, x,
+															 float, y,
+															 float, z)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateBaseDir, NETWORK_VARIABLE_MESSAGE)
 
-	// ∑˛ŒÒ∆˜∏¸–¬∞¸
-	CLIENT_MESSAGE_DECLARE_ARGS3(onUpdateBasePos,							NETWORK_FIXED_MESSAGE,
-								float,										x,
-								float,										y,
-								float,										z)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateBaseDir,							NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_ARGS2(onUpdateBasePosXZ, NETWORK_FIXED_MESSAGE,
+															 float, x,
+															 float, z)
 
-	CLIENT_MESSAGE_DECLARE_ARGS2(onUpdateBasePosXZ,							NETWORK_FIXED_MESSAGE,
-								float,										x,
-								float,										z)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData, NETWORK_VARIABLE_MESSAGE)
 
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData,								NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_ypr, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_yp, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_yr, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_pr, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_y, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_p, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_r, NETWORK_VARIABLE_MESSAGE)
 
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_ypr,							NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_yp,							NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_yr,							NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_pr,							NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_y,							NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_p,							NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_r,							NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_ypr, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_yp, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_yr, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_pr, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_y, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_p, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_r, NETWORK_VARIABLE_MESSAGE)
 
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz,							NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_ypr,						NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_yp,						NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_yr,						NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_pr,						NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_y,						NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_p,						NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_r,						NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_ypr, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_yp, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_yr, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_pr, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_y, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_p, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_r, NETWORK_VARIABLE_MESSAGE)
 
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz,							NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_ypr,						NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_yp,						NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_yr,						NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_pr,						NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_y,						NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_p,						NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_r,						NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_ypr_optimized, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_yp_optimized, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_yr_optimized, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_pr_optimized, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_y_optimized, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_p_optimized, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_r_optimized, NETWORK_VARIABLE_MESSAGE)
 
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_ypr_optimized,				NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_yp_optimized,				NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_yr_optimized,				NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_pr_optimized,				NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_y_optimized,					NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_p_optimized,					NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_r_optimized,					NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_optimized, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_ypr_optimized, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_yp_optimized, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_yr_optimized, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_pr_optimized, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_y_optimized, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_p_optimized, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_r_optimized, NETWORK_VARIABLE_MESSAGE)
 
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_optimized,				NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_ypr_optimized,			NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_yp_optimized,				NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_yr_optimized,				NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_pr_optimized,				NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_y_optimized,				NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_p_optimized,				NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xz_r_optimized,				NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_optimized, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_ypr_optimized, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_yp_optimized, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_yr_optimized, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_pr_optimized, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_y_optimized, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_p_optimized, NETWORK_VARIABLE_MESSAGE)
+	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_r_optimized, NETWORK_VARIABLE_MESSAGE)
 
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_optimized,				NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_ypr_optimized,			NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_yp_optimized,			NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_yr_optimized,			NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_pr_optimized,			NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_y_optimized,				NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_p_optimized,				NETWORK_VARIABLE_MESSAGE)
-	CLIENT_MESSAGE_DECLARE_STREAM(onUpdateData_xyz_r_optimized,				NETWORK_VARIABLE_MESSAGE)
+	// download streamÂºÄÂßã‰∫Ü
+	CLIENT_MESSAGE_DECLARE_ARGS3(onStreamDataStarted, NETWORK_VARIABLE_MESSAGE,
+															 int16, id,
+															 uint32, datasize,
+															 std::string, descr)
 
-	// download streamø™ º¡À 
-	CLIENT_MESSAGE_DECLARE_ARGS3(onStreamDataStarted,						NETWORK_VARIABLE_MESSAGE,
-								int16,										id,
-								uint32,										datasize,
-								std::string,								descr)
+	// Êé•Êî∂Âà∞streamData
+	CLIENT_MESSAGE_DECLARE_STREAM(onStreamDataRecv, NETWORK_VARIABLE_MESSAGE)
 
-	// Ω” ’µΩstreamData
-	CLIENT_MESSAGE_DECLARE_STREAM(onStreamDataRecv,							NETWORK_VARIABLE_MESSAGE)
+	// download streamÂÆåÊàê‰∫Ü
+	CLIENT_MESSAGE_DECLARE_ARGS1(onStreamDataCompleted, NETWORK_FIXED_MESSAGE,
+															 int16, id)
 
-	// download streamÕÍ≥…¡À 
-	CLIENT_MESSAGE_DECLARE_ARGS1(onStreamDataCompleted,						NETWORK_FIXED_MESSAGE,
-								int16,										id)
+	// ÂØºÂÖ•ÂçèËÆÆ
+	CLIENT_MESSAGE_DECLARE_STREAM(onImportClientMessages, NETWORK_VARIABLE_MESSAGE)
 
-	// µº»Î–≠“È
-	CLIENT_MESSAGE_DECLARE_STREAM(onImportClientMessages,					NETWORK_VARIABLE_MESSAGE)
-	
-	// µº»Îentitydef
-	CLIENT_MESSAGE_DECLARE_STREAM(onImportClientEntityDef,					NETWORK_VARIABLE_MESSAGE)
+	// ÂØºÂÖ•entitydef
+	CLIENT_MESSAGE_DECLARE_STREAM(onImportClientEntityDef, NETWORK_VARIABLE_MESSAGE)
 
-	// ¥ÌŒÛ¬Î√Ë ˆµº≥ˆ
-	CLIENT_MESSAGE_DECLARE_STREAM(onImportServerErrorsDescr,				NETWORK_VARIABLE_MESSAGE)
+	// ÈîôËØØÁ†ÅÊèèËø∞ÂØºÂá∫
+	CLIENT_MESSAGE_DECLARE_STREAM(onImportServerErrorsDescr, NETWORK_VARIABLE_MESSAGE)
 
-	// Ω” ’µº»Îsdkœ˚œ¢
-	CLIENT_MESSAGE_DECLARE_STREAM(onImportClientSDK,						NETWORK_VARIABLE_MESSAGE)
+	// Êé•Êî∂ÂØºÂÖ•sdkÊ∂àÊÅØ
+	CLIENT_MESSAGE_DECLARE_STREAM(onImportClientSDK, NETWORK_VARIABLE_MESSAGE)
 
-	// ∑˛ŒÒ∂À≥ı ºªØspacedata
-	CLIENT_MESSAGE_DECLARE_STREAM(initSpaceData,							NETWORK_VARIABLE_MESSAGE)
+	// ÊúçÂä°Á´ØÂàùÂßãÂåñspacedata
+	CLIENT_MESSAGE_DECLARE_STREAM(initSpaceData, NETWORK_VARIABLE_MESSAGE)
 
-	// ∑˛ŒÒ∂À…Ë÷√¡Àspacedata
-	CLIENT_MESSAGE_DECLARE_ARGS3(setSpaceData,								NETWORK_VARIABLE_MESSAGE,
-								SPACE_ID,									spaceID,
-								std::string,								key,
-								std::string,								val)
+	// ÊúçÂä°Á´ØËÆæÁΩÆ‰∫Üspacedata
+	CLIENT_MESSAGE_DECLARE_ARGS3(setSpaceData, NETWORK_VARIABLE_MESSAGE,
+															 SPACE_ID, spaceID,
+															 std::string, key,
+															 std::string, val)
 
-	// ∑˛ŒÒ∂À…æ≥˝¡Àspacedata
-	CLIENT_MESSAGE_DECLARE_ARGS2(delSpaceData,								NETWORK_VARIABLE_MESSAGE,
-								SPACE_ID,									spaceID,
-								std::string,								key)
+	// ÊúçÂä°Á´ØÂà†Èô§‰∫Üspacedata
+	CLIENT_MESSAGE_DECLARE_ARGS2(delSpaceData, NETWORK_VARIABLE_MESSAGE,
+															 SPACE_ID, spaceID,
+															 std::string, key)
 
-	// ÷ÿ÷√’À∫≈√‹¬Î«Î«Û∑µªÿ
-	CLIENT_MESSAGE_DECLARE_ARGS1(onReqAccountResetPasswordCB,				NETWORK_FIXED_MESSAGE,
-								SERVER_ERROR_CODE,							failedcode)
+	// ÈáçÁΩÆË¥¶Âè∑ÂØÜÁ†ÅËØ∑Ê±ÇËøîÂõû
+	CLIENT_MESSAGE_DECLARE_ARGS1(onReqAccountResetPasswordCB, NETWORK_FIXED_MESSAGE,
+															 SERVER_ERROR_CODE, failedcode)
 
-	// ÷ÿ÷√’À∫≈√‹¬Î«Î«Û∑µªÿ
-	CLIENT_MESSAGE_DECLARE_ARGS1(onReqAccountBindEmailCB,					NETWORK_FIXED_MESSAGE,
-								SERVER_ERROR_CODE,							failedcode)
+	// ÈáçÁΩÆË¥¶Âè∑ÂØÜÁ†ÅËØ∑Ê±ÇËøîÂõû
+	CLIENT_MESSAGE_DECLARE_ARGS1(onReqAccountBindEmailCB, NETWORK_FIXED_MESSAGE,
+															 SERVER_ERROR_CODE, failedcode)
 
-	// ÷ÿ÷√’À∫≈√‹¬Î«Î«Û∑µªÿ
-	CLIENT_MESSAGE_DECLARE_ARGS1(onReqAccountNewPasswordCB,					NETWORK_FIXED_MESSAGE,
-								SERVER_ERROR_CODE,							failedcode)
+	// ÈáçÁΩÆË¥¶Âè∑ÂØÜÁ†ÅËØ∑Ê±ÇËøîÂõû
+	CLIENT_MESSAGE_DECLARE_ARGS1(onReqAccountNewPasswordCB, NETWORK_FIXED_MESSAGE,
+															 SERVER_ERROR_CODE, failedcode)
 
-	// ÷ÿµ«¬ΩÕ¯πÿ≥…π¶ 
-	CLIENT_MESSAGE_DECLARE_STREAM(onReloginBaseappSuccessfully,				NETWORK_VARIABLE_MESSAGE)
-									
-	// ∏ÊÀﬂøÕªß∂À£∫ƒ„µ±«∞∏∫‘£®ªÚ»°œ˚£©øÿ÷∆À≠µƒŒª“∆Õ¨≤Ω
-	CLIENT_MESSAGE_DECLARE_ARGS2(onControlEntity,							NETWORK_FIXED_MESSAGE,
-									ENTITY_ID,								eid,
-									int8,									isControlled)
+	// ÈáçÁôªÈôÜÁΩëÂÖ≥ÊàêÂäü
+	CLIENT_MESSAGE_DECLARE_STREAM(onReloginBaseappSuccessfully, NETWORK_VARIABLE_MESSAGE)
 
-	// ∑˛ŒÒ∆˜–ƒÃ¯ªÿµ˜
-	CLIENT_MESSAGE_DECLARE_ARGS0(onAppActiveTickCB,							NETWORK_FIXED_MESSAGE)
+	// ÂëäËØâÂÆ¢Êà∑Á´ØÔºö‰Ω†ÂΩìÂâçË¥üË¥£ÔºàÊàñÂèñÊ∂àÔºâÊéßÂà∂Ë∞ÅÁöÑ‰ΩçÁßªÂêåÊ≠•
+	CLIENT_MESSAGE_DECLARE_ARGS2(onControlEntity, NETWORK_FIXED_MESSAGE,
+															 ENTITY_ID, eid,
+															 int8, isControlled)
+
+	// ÊúçÂä°Âô®ÂøÉË∑≥ÂõûË∞É
+	CLIENT_MESSAGE_DECLARE_ARGS0(onAppActiveTickCB, NETWORK_FIXED_MESSAGE)
 
 	NETWORK_INTERFACE_DECLARE_END()
 
 #ifdef DEFINE_IN_INTERFACE
-	#undef DEFINE_IN_INTERFACE
+#undef DEFINE_IN_INTERFACE
 #endif
 
 }
