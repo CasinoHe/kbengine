@@ -269,6 +269,7 @@ memoryStreamPool_("DebugHelperMemoryStream")
 {
 	g_pDebugHelperSyncHandler = new DebugHelperSyncHandler();
 	loseLoggerTime_ = timestamp();
+	log4cxx::BasicConfigurator::configure();
 }
 
 //-------------------------------------------------------------------------------------
