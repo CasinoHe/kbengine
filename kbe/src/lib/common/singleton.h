@@ -52,12 +52,6 @@ namespace KBEngine
 
 		static T *getSingletonPtr(void)
 		{
-			if (!singleton_)
-			{
-				singleton_ = new T;
-				singleton_->singletonInit();
-			}
-
 			return singleton_;
 		}
 
