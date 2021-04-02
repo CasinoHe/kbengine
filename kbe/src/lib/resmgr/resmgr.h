@@ -1,19 +1,27 @@
 // Copyright 2008-2018 Yolo Technologies, Inc. All Rights Reserved. https://www.comblockengine.com
+// Refactored: 2021.04.01
+// Refactored by: CasinoHe
+// Purpose: Manager all resource paths, redesign res manager by c++ 11/14/17 features
 
-/*
-	resource manager
-*/
-#ifndef KBE_RESMGR_H
-#define KBE_RESMGR_H
+// all modern c++ compiler supported pragma once
+#pragma once
 
 #include "resourceobject.h"
 #include "common/common.h"
 #include "common/singleton.h"
-#include "common/timer.h"
 #include "xml/xml.h"	
-#include "common/smartpointer.h"
+#include "common/timer.h"
+
+#include <filesystem>
+#include <vector>
+#include <unordered_map>
+#include <string>
+#include <initializer_list>
+#include <thread>
+#include <mutex>
 	
-namespace KBEngine{
+namespace smallgames
+{
 
 #define RESOURCE_NORMAL	0x00000000
 #define RESOURCE_RESIDENT 0x00000001
@@ -21,115 +29,93 @@ namespace KBEngine{
 #define RESOURCE_WRITE 0x00000004
 #define RESOURCE_APPEND 0x00000008
 
-class Resmgr : public Singleton<Resmgr>, public TimerHandler
-{
-public:
-	// engine environment variables
-	struct KBEEnv
+	class PathMgr final: public Singleton<PathMgr>
 	{
-		std::string root_path;
-		std::string res_path;
-		std::string bin_path;
+		friend Singleton<PathMgr>;
+
+	private:
+		PathMgr() = default;
+		~PathMgr() = default;
+
+		PathMgr(PathMgr &) = delete;
+		void operator=(PathMgr &) = delete;
+
+	public:
+		inline static const std::filesystem::path DEFAULT_BIN_PATH{"bin"};
+		inline static const std::filesystem::path DEFAULT_ASSETS_PATH{"assets"};
+		inline static const std::filesystem::path DEFAULT_RES_PATH{"assets/res"};
+		inline static const std::filesystem::path DEFAULT_SCRIPT_PATH{"assets/res/scripts"};
+		inline static const char *const ROOT_PATH_VAR{"SMG_ROOT"};
+		inline static const char *const BIN_PATH_VAR{"SMG_BIN_PATH"};
+		inline static const char *const RES_PATH_VAR{"SMG_RES_PATH"};
+		inline static const char *const SCRIPT_PATH_VAR{"SMG_SCRIPT_PATH"};
+
+	private:
+		void set_env_paths();
+		void set_default_paths();
+
+	protected:
+		virtual void singletonInit() override;
+
+	// interface
+	public:
+		void print(const char *extra_msg = nullptr);
+		inline bool is_inited() { return is_inited_; }
+
+		std::string get_full_path(const std::initializer_list<std::string> path_nodes);
+		bool exists(const std::initializer_list<std::string> path_nodes);
+
+		std::string get_file_content(const std::initializer_list<std::string> path_notes);
+		std::string get_file_content(const std::string &file_path);
+
+		const std::string &get_res_path();
+		const std::string &get_script_path();
+		const std::string get_component_script_path(KBEngine::COMPONENT_TYPE component_type);
+
+	public:
+		struct SMGPaths
+		{
+			std::filesystem::path root_path;
+			std::filesystem::path bin_path;
+			std::filesystem::path script_path;
+			std::vector<std::filesystem::path> res_paths;
+		};
+
+	private:
+		SMGPaths smg_paths_;
+		bool is_inited_;
 	};
 
-	static uint64 respool_timeout;
-	static uint32 respool_buffersize;
-	static uint32 respool_checktick;
+	class Resmgr : public Singleton<Resmgr>, public KBEngine::TimerHandler
+	{
+	public:
+		inline static std::uint64_t respool_timeout{0};
+		inline static std::uint32_t respool_buffersize{0};
+		inline static std::uint32_t respool_checktick{0};
 
-private:
-	friend Singleton<Resmgr>;
-	Resmgr();
-	~Resmgr();
+	private:
+		friend Singleton<Resmgr>;
+		Resmgr();
+		~Resmgr();
 
-public:
-	bool initialize();
+		virtual void singletonInit() override;
 
-	void autoSetPaths();
-	void updatePaths();
+	public:
+		inline bool is_inited() { return is_inited_; }
 
-	const Resmgr::KBEEnv& getEnv() { return kb_env_; }
+		KBEngine::ResourceObjectPtr openResource(std::initializer_list<std::string> path_list, std::ios::openmode mode = std::ios::in,
+																	 std::uint32_t flags = RESOURCE_NORMAL);
 
-	/*
-		match the full resource path from environment variable
-	*/
-	std::string matchRes(const std::string& res);
-	std::string matchRes(const char* res);
-	
-	bool hasRes(const std::string& res);
-	
-	FILE* openRes(std::string res, const char* mode = "r");
+		bool initializeWatcher();
 
-	/*
-		list all resources in a directory
-	*/
-	bool listPathRes(std::wstring path, const std::wstring& extendName, std::vector<std::wstring>& results);
+		void update();
 
-	/*
-		从资源路径中(环境变量中指定的)匹配到目录
-	*/
-	std::string matchPath(const std::string& path);
-	std::string matchPath(const char* path);
+	private:
+		virtual void handleTimeout(KBEngine::TimerHandle handle, void *arg);
 
-	const std::vector<std::string>& respaths() { 
-		return respaths_; 
-	}
-
-	void print(void);
-
-	bool isInit(){ 
-		return isInit_; 
-	}
-
-	/**
-		获得引擎系统级资源目录
-		kbe\\res\\*
-	*/
-	std::string getPySysResPath();
-
-	/**
-		获得用户级资源目录
-		assets\\res\\*
-	*/
-	std::string getPyUserResPath();
-
-	/**
-		获得用户级脚本目录
-		assets\\scripts\\*
-	*/
-	std::string getPyUserScriptsPath();
-
-	/**
-		获得用户级进程脚本目录
-		assets\\scripts\\cell、base、client
-	*/
-	std::string getPyUserComponentScriptsPath(COMPONENT_TYPE componentType = UNKNOWN_COMPONENT_TYPE);
-
-	/**
-		获得用户级库目录
-		assets\\*
-	*/
-	std::string getPyUserAssetsPath();
-
-	ResourceObjectPtr openResource(const char* res, const char* model, 
-		uint32 flags = RESOURCE_NORMAL);
-
-	bool initializeWatcher();
-
-	void update();
-
-private:
-
-	virtual void handleTimeout(TimerHandle handle, void * arg);
-
-	KBEEnv kb_env_;
-	std::vector<std::string> respaths_;
-	bool isInit_;
-
-	KBEUnordered_map< std::string, ResourceObjectPtr > respool_;
-
-	KBEngine::thread::ThreadMutex mutex_;
-};
-
+	private:
+		bool is_inited_;
+		std::unordered_map<std::string, KBEngine::ResourceObjectPtr> respool_;
+		std::mutex mutex_;
+	};
 }
-
-#endif // KBE_RESMGR_H
