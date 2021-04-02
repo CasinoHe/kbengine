@@ -16,7 +16,7 @@ class MessageHandler;
 /*
 	记录network流量等信息
 */
-class NetworkStats : public Singleton<NetworkStats>
+class NetworkStats : public smallgames::Singleton<NetworkStats>
 {
 public:
 	enum S_OP{
@@ -45,7 +45,7 @@ public:
 	typedef KBEUnordered_map<std::string, Stats> STATS;
 
 private:
-	friend Singleton<NetworkStats>;
+	friend smallgames::Singleton<NetworkStats>;
 	NetworkStats();
 	~NetworkStats();
 

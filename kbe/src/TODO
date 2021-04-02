@@ -4,3 +4,4 @@
 - fix entity_table_mysql.cpp compile warning
 - cmake work with windows
 - replace log4cxx by spdlog, simpler and faster
+- use filesystem to rewrite resmgr

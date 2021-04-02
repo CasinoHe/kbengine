@@ -84,10 +84,10 @@ inline PyObject * PyTuple_FromIntVector<uint64>(const std::vector< uint64 > & v)
 	return t;
 }
 
-class Script: public Singleton<Script>
+class Script: public smallgames::Singleton<Script>
 {						
 private:
-	friend Singleton<Script>;
+	friend smallgames::Singleton<Script>;
 	Script();
 	virtual ~Script();
 

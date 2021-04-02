@@ -15,7 +15,7 @@ namespace Network
 	用来对中间协议(前端与后端之间)进行强制约定。
 	没有使用到kbe整套协议自动绑定机制的前端可以使用此处来强制约定协议。
 */
-class FixedMessages : public Singleton<FixedMessages>
+class FixedMessages : public smallgames::Singleton<FixedMessages>
 {
 public:
 
@@ -27,7 +27,7 @@ public:
 		//std::wstring descr;
 	};
 
-	friend Singleton<FixedMessages>;
+	friend smallgames::Singleton<FixedMessages>;
 
 private:
 	FixedMessages();

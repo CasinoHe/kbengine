@@ -48,7 +48,7 @@ struct LOG_ITEM
 };
 
 class Logger:	public PythonApp, 
-				public AppSingleton<Logger>
+				public smallgames::AppSingleton<Logger>
 {
 public:
 	typedef std::map<Network::Address, LogWatcher> LOG_WATCHERS;
@@ -60,7 +60,7 @@ public:
 	};
 
 private:
-	friend AppSingleton<Logger>;
+	friend smallgames::AppSingleton<Logger>;
 	Logger(Network::EventDispatcher &dispatcher,
 				 Network::NetworkInterface &ninterface,
 				 COMPONENT_TYPE componentType,

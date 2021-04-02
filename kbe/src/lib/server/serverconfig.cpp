@@ -51,7 +51,7 @@ ServerConfig::~ServerConfig()
 bool ServerConfig::loadConfig(std::string fileName)
 {
 	TiXmlNode* node = NULL, *rootNode = NULL;
-	SmartPointer<XML> xml(new XML(Resmgr::getSingleton().matchRes(fileName).c_str()));
+	SmartPointer<XML> xml(new XML(smallgames::Resmgr::getSingleton().matchRes(fileName).c_str()));
 
 	if(!xml->isGood())
 	{
@@ -60,7 +60,11 @@ bool ServerConfig::loadConfig(std::string fileName)
 
 		return false;
 	}
-	
+	else
+	{
+		INFO_MSG(fmt::format("ServerConfig::loadConfig: load {} succeed!\n", fileName.c_str()));
+	}
+
 	if(xml->getRootNode() == NULL)
 	{
 		// no child node on root

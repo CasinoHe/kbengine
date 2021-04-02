@@ -12,9 +12,9 @@
 namespace KBEngine{ 
 
 class SqlStatement;
-class EntitySqlStatementMapping : public Singleton<EntitySqlStatementMapping>
+class EntitySqlStatementMapping : public smallgames::Singleton<EntitySqlStatementMapping>
 {
-	friend Singleton<EntitySqlStatementMapping>;
+	friend smallgames::Singleton<EntitySqlStatementMapping>;
 
 private:
 	EntitySqlStatementMapping() = default;

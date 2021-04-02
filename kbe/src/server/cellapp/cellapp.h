@@ -20,7 +20,7 @@ class TelnetServer;
 class InitProgressHandler;
 
 class Cellapp:	public EntityApp<Entity>, 
-				public AppSingleton<Cellapp>
+				public smallgames::AppSingleton<Cellapp>
 {
 public:
 	enum TimeOutType
@@ -29,7 +29,7 @@ public:
 	};
 	
 private:
-	friend AppSingleton<Cellapp>;
+	friend smallgames::AppSingleton<Cellapp>;
 	Cellapp(Network::EventDispatcher& dispatcher, 
 		Network::NetworkInterface& ninterface, 
 		COMPONENT_TYPE componentType,

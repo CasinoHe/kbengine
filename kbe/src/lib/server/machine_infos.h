@@ -5,10 +5,10 @@
 
 #include "common/common.h"
 namespace KBEngine{
-class MachineInfos : public Singleton<MachineInfos>
+class MachineInfos : public smallgames::Singleton<MachineInfos>
 {
 private:
-	friend Singleton<MachineInfos>;
+	friend smallgames::Singleton<MachineInfos>;
 	MachineInfos();
 
 public:

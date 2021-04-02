@@ -29,7 +29,7 @@ class TCPPacketSender;
 class TCPPacketReceiver;
 }
 
-class ClientApp : public AppSingleton<ClientApp>,
+class ClientApp : public smallgames::AppSingleton<ClientApp>,
 									public ClientObjectBase,
 									public TimerHandler,
 									public Network::ChannelTimeOutHandler,
@@ -52,7 +52,7 @@ public:
 	};
 
 protected:
-	friend AppSingleton<ClientApp>;
+	friend smallgames::AppSingleton<ClientApp>;
 
 	ClientApp(Network::EventDispatcher & dispatcher,
 						Network::NetworkInterface & ninterface,

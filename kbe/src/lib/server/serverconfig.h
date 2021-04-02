@@ -235,10 +235,10 @@ namespace KBEngine
 		bool isOnInitCallPropertysSetMethods; // 机器人(bots)专用：在Entity初始化时是否触发属性的set_*事件
 	} ENGINE_COMPONENT_INFO;
 
-	class ServerConfig : public Singleton<ServerConfig>
+	class ServerConfig : public smallgames::Singleton<ServerConfig>
 	{
 	private:
-		friend Singleton<ServerConfig>;
+		friend smallgames::Singleton<ServerConfig>;
 		ServerConfig();
 		~ServerConfig();
 

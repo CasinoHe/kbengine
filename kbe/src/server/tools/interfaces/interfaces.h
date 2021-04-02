@@ -23,7 +23,7 @@ class TelnetServer;
 
 
 class Interfaces :	public PythonApp, 
-					public AppSingleton<Interfaces>
+					public smallgames::AppSingleton<Interfaces>
 {
 public:
 	enum TimeOutType
@@ -32,7 +32,7 @@ public:
 	};
 
 private:
-	friend AppSingleton<Interfaces>;
+	friend smallgames::AppSingleton<Interfaces>;
 	Interfaces(Network::EventDispatcher &dispatcher,
 						 Network::NetworkInterface &ninterface,
 						 COMPONENT_TYPE componentType,

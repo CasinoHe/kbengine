@@ -24,7 +24,7 @@ class NetworkInterface;
 #define COMPONENT_FLAG_NORMAL 0x00000000
 #define COMPONENT_FLAG_SHUTTINGDOWN 0x00000001
 
-class Components : public Task, public Singleton<Components>
+class Components : public Task, public smallgames::Singleton<Components>
 {
 public:
 	static int32 ANY_UID; 
@@ -91,7 +91,7 @@ public:
 	};
 
 private:
-	friend Singleton<Components>;
+	friend smallgames::Singleton<Components>;
 	Components();
 	~Components();
 

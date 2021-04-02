@@ -18,7 +18,7 @@
 namespace KBEngine{
 
 	class Cellappmgr : public ServerApp,
-										 public AppSingleton<Cellappmgr>
+										 public smallgames::AppSingleton<Cellappmgr>
 	{
 	public:
 		enum TimeOutType
@@ -27,7 +27,7 @@ namespace KBEngine{
 		};
 
 private:
-	friend AppSingleton<Cellappmgr>;
+	friend smallgames::AppSingleton<Cellappmgr>;
 	Cellappmgr(Network::EventDispatcher &dispatcher,
 						 Network::NetworkInterface &ninterface,
 						 COMPONENT_TYPE componentType,

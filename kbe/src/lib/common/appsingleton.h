@@ -1,5 +1,6 @@
-// Created: 2021.3.31
-// Author: CasinoHe
+// Copyright 2008-2018 Yolo Technologies, Inc. All Rights Reserved. https://www.comblockengine.com
+// Refactored: 2021.03.31
+// Refactored by: CasinoHe
 // Purpose: a singleton c++ template class implementation with app parameter constructor
 
 // all modern c++ compiler supported pragma once
@@ -28,7 +29,7 @@
 		There is no A instance outside, only static instance insdie class A
 */
 
-namespace KBEngine
+namespace smallgames
 {
   namespace Network
   {

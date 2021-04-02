@@ -36,7 +36,7 @@ class RestoreEntityHandler;
 class InitProgressHandler;
 
 class Baseapp : public EntityApp<Entity>,
-								public AppSingleton<Baseapp>
+								public smallgames::AppSingleton<Baseapp>
 {
 public:
 	enum TimeOutType
@@ -46,7 +46,7 @@ public:
 	};
 
 private:
-	friend AppSingleton<Baseapp>;
+	friend smallgames::AppSingleton<Baseapp>;
 	Baseapp(Network::EventDispatcher &dispatcher,
 					Network::NetworkInterface &ninterface,
 					COMPONENT_TYPE componentType,

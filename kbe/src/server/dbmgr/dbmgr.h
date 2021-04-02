@@ -31,7 +31,7 @@ class SyncAppDatasHandler;
 class UpdateDBServerLogHandler;
 
 class Dbmgr :	public PythonApp, 
-				public AppSingleton<Dbmgr>
+				public smallgames::AppSingleton<Dbmgr>
 {
 public:
 	enum TimeOutType
@@ -41,7 +41,7 @@ public:
 	};
 	
 private:
-	friend AppSingleton<Dbmgr>;
+	friend smallgames::AppSingleton<Dbmgr>;
 	Dbmgr(Network::EventDispatcher& dispatcher, 
 		Network::NetworkInterface& ninterface, 
 		COMPONENT_TYPE componentType,

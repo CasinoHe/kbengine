@@ -100,9 +100,9 @@ inline const char* KBELOG_TYPE_NAME_EX(uint32 CTYPE)
 
 int KBELOG_TYPE_MAPPING(int type);
 
-class DebugHelper  : public Singleton<DebugHelper>
+class DebugHelper  : public smallgames::Singleton<DebugHelper>
 {
-	friend Singleton<DebugHelper>;
+	friend smallgames::Singleton<DebugHelper>;
 
 private:
 	DebugHelper();

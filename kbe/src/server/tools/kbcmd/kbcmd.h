@@ -15,7 +15,7 @@
 namespace KBEngine{
 
 class KBCMD : public PythonApp,
-	public AppSingleton<KBCMD>
+	public smallgames::AppSingleton<KBCMD>
 {
 public:
 	enum TimeOutType
@@ -24,7 +24,7 @@ public:
 	};
 
 private:
-	friend AppSingleton<KBCMD>;
+	friend smallgames::AppSingleton<KBCMD>;
 	KBCMD(Network::EventDispatcher &dispatcher,
 				Network::NetworkInterface &ninterface,
 				COMPONENT_TYPE componentType,

@@ -16,9 +16,9 @@
 	
 namespace KBEngine{
 
-class Config : public Singleton<Config>
+class Config : public smgallgames::Singleton<Config>
 {
-	friend Singleton<Config>;
+	friend smallgames::Singleton<Config>;
 
 private:
 	Config();

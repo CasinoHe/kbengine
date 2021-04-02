@@ -17,7 +17,7 @@
 namespace KBEngine{
 
 class Baseappmgr :	public ServerApp, 
-					public AppSingleton<Baseappmgr>
+					public smallgames::AppSingleton<Baseappmgr>
 {
 public:
 	enum TimeOutType

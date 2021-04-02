@@ -160,9 +160,9 @@ protected:
 /*
 	数据库操作单元
 */
-class DBUtil : public Singleton<DBUtil>
+class DBUtil : public smallgames::Singleton<DBUtil>
 {
-	friend Singleton<DBUtil>;
+	friend smallgames::Singleton<DBUtil>;
 
 private:
 	DBUtil();

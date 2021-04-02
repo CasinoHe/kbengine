@@ -14,9 +14,9 @@ namespace KBEngine
 /*
 	导航类
 */
-class Navigation : public Singleton<Navigation>
+class Navigation : public smallgames::Singleton<Navigation>
 {
-	friend Singleton<Navigation>;
+	friend smallgames::Singleton<Navigation>;
 
 private:
 	Navigation();

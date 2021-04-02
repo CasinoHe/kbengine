@@ -21,7 +21,7 @@ class HTTPCBHandler;
 class TelnetServer;
 
 class Loginapp :	public PythonApp, 
-					public AppSingleton<Loginapp>
+					public smallgames::AppSingleton<Loginapp>
 {
 public:
 	enum TimeOutType
@@ -30,7 +30,7 @@ public:
 	};
 
 private:
-	friend AppSingleton<Loginapp>;
+	friend smallgames::AppSingleton<Loginapp>;
 	Loginapp(Network::EventDispatcher &dispatcher,
 					 Network::NetworkInterface &ninterface,
 					 COMPONENT_TYPE componentType,

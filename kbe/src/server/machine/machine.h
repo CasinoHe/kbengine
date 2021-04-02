@@ -26,7 +26,7 @@
 namespace KBEngine{
 
 class Machine:	public ServerApp, 
-				public AppSingleton<Machine>
+				public smallgames::AppSingleton<Machine>
 {
 public:
 	enum TimeOutType
@@ -35,7 +35,7 @@ public:
 	};
 	
 private:
-	friend AppSingleton<Machine>;
+	friend smallgames::AppSingleton<Machine>;
 	Machine(Network::EventDispatcher &dispatcher,
 					Network::NetworkInterface &ninterface,
 					COMPONENT_TYPE componentType,

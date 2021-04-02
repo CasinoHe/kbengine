@@ -10,9 +10,9 @@
 namespace KBEngine
 {
 
-class SystemInfo : public Singleton<SystemInfo>
+class SystemInfo : public smallgames::Singleton<SystemInfo>
 {
-	friend Singleton<SystemInfo>;
+	friend smallgames::Singleton<SystemInfo>;
 
 private:
 	SystemInfo();
