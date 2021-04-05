@@ -97,8 +97,8 @@ NavigationHandlePtr Navigation::loadNavigation(std::string resPath, const std::m
 	NavigationHandle* pNavigationHandle_ = NULL;
 
 	std::string path = resPath;
-	path = Resmgr::getSingleton().matchPath(path);
-	if(path.size() == 0)
+	path = smallgames::g_pathmgr.get_full_path(path);
+	if (path.size() == 0)
 		return NULL;
 		
 	wchar_t* wpath = strutil::char2wchar(path.c_str());
@@ -106,8 +106,8 @@ NavigationHandlePtr Navigation::loadNavigation(std::string resPath, const std::m
 	free(wpath);
 
 	std::vector<std::wstring> results;
-	Resmgr::getSingleton().listPathRes(wspath, L"tmx", results);
-	
+	smallgames::g_pathmgr.list_res(wspath, L"tmx", results);
+
 	if(results.size() > 0)
 	{
 		pNavigationHandle_ = NavTileHandle::create(resPath, params);
@@ -115,7 +115,7 @@ NavigationHandlePtr Navigation::loadNavigation(std::string resPath, const std::m
 	else 	
 	{
 		results.clear();
-		Resmgr::getSingleton().listPathRes(wspath, L"navmesh", results);
+		smallgames::g_pathmgr.list_res(wspath, L"navmesh", results);
 
 		if(results.size() == 0)
 		{

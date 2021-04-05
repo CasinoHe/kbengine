@@ -65,7 +65,8 @@ inline void START_MSG(const char * name, uint64 appuid)
 
 inline void loadConfig()
 {
-	Resmgr::getSingleton().initialize();
+	smallgames::Resmgr::getSingleton();
+	smallgames::PathMgr::getSingleton();
 
 	// "../../res/server/kbengine_defaults.xml"
 	g_kbeSrvConfig.loadConfig("server/kbengine_defaults.xml");
@@ -158,19 +159,19 @@ int kbeMainT(int argc, char * argv[], COMPONENT_TYPE componentType,
 
 	INFO_MSG( "-----------------------------------------------------------------------------------------\n\n\n");
 
-	std::string publicKeyPath = Resmgr::getSingleton().getPyUserResPath() + "key/" + "kbengine_public.key";
-	std::string privateKeyPath = Resmgr::getSingleton().getPyUserResPath() + "key/" + "kbengine_private.key";
+	std::string publicKeyPath = smallgames::g_pathmgr.get_full_path({"key", "kbengine_public.key"});
+	std::string privateKeyPath = smallgames::g_pathmgr.get_full_path({"key", "kbengine_private.key"});
 
 	bool isExsit = access(publicKeyPath.c_str(), 0) == 0 && access(privateKeyPath.c_str(), 0) == 0;
 	if (!isExsit)
 	{
-		publicKeyPath = Resmgr::getSingleton().matchPath("key/") + "kbengine_public.key";
-		privateKeyPath = Resmgr::getSingleton().matchPath("key/") + "kbengine_private.key";
+		publicKeyPath = smallgames::g_pathmgr.get_full_path({"key", "kbengine_public.key"});
+		privateKeyPath = smallgames::g_pathmgr.get_full_path({"key", "kbengine_private.key"});
 	}
 	
 	KBEKey &kbekey = KBEKey::getSingleton(publicKeyPath, privateKeyPath);
 
-	Resmgr::getSingleton().print();
+	smallgames::g_pathmgr.print();
 
 	Network::EventDispatcher dispatcher;
 	DebugHelper::getSingleton().pDispatcher(&dispatcher);

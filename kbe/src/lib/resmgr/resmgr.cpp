@@ -20,7 +20,7 @@ namespace smallgames
 	{
 	}
 
-	void PathMgr::singletonInit()
+	void PathMgr::singleton_init()
 	{
 		set_default_paths();
 		set_env_paths();
@@ -94,13 +94,13 @@ namespace smallgames
 		{
 			KBEngine::INFO_MSG(fmt::format("{}\n", extra_msg));
 		}
-		KBEngine::INFO_MSG(fmt::format("Root path {}\n", smg_paths_.root_path));
-		KBEngine::INFO_MSG(fmt::format("Bin path {}\n", smg_paths_.bin_path));
+		KBEngine::INFO_MSG(fmt::format("Root path {}\n", smg_paths_.root_path.c_str()));
+		KBEngine::INFO_MSG(fmt::format("Bin path {}\n", smg_paths_.bin_path.c_str()));
 		KBEngine::INFO_MSG("Res path: ");
 
 		for (auto &path : smg_paths_.res_paths)
 		{
-			KBEngine::INFO_MSG(fmt::format("{};", path));
+			KBEngine::INFO_MSG(fmt::format("{};", path.c_str()));
 		}
 		KBEngine::INFO_MSG("\n");
 	}
@@ -116,9 +116,14 @@ namespace smallgames
 			res_path /= item;
 		}
 
+		return get_full_path(res_path);
+	}
+
+	std::string PathMgr::get_full_path(const std::string &path)
+	{
 		for (auto &res_dir : smg_paths_.res_paths)
 		{
-			fs::path fpath = res_dir / res_path;
+			fs::path fpath = res_dir / path;
 
 			if (fs::exists(fpath))
 			{
@@ -126,7 +131,7 @@ namespace smallgames
 			}
 		}
 
-		return res_path;
+		return path;
 	}
 
 	bool PathMgr::exists(const std::initializer_list<std::string> path_nodes)
@@ -138,9 +143,14 @@ namespace smallgames
 			res_path /= item;
 		}
 
+		return exists(res_path);
+	}
+
+	bool PathMgr::exists(const std::string &path)
+	{
 		for (auto &res_dir : smg_paths_.res_paths)
 		{
-			fs::path fpath = res_dir / res_path;
+			fs::path fpath = res_dir / path;
 
 			if (fs::exists(fpath))
 			{
@@ -148,6 +158,11 @@ namespace smallgames
 			}
 		}
 
+		return false;
+	}
+
+	bool PathMgr::list_res(const std::wstring &path, const std::wstring &extensions, std::vector<std::wstring> &results)
+	{
 		return false;
 	}
 
@@ -168,7 +183,7 @@ namespace smallgames
 	{
 		if (!fs::exists(file_path) || !fs::is_regular_file(file_path))
 		{
-			KBEngine::ERROR_MSG(fmt::format("Cannot open file: {}", file_path));
+			KBEngine::ERROR_MSG(fmt::format("Cannot open file: {}", file_path.c_str()));
 			return {};
 		}
 
@@ -191,7 +206,7 @@ namespace smallgames
 		}
 	}
 
-	const std::string &PathMgr::get_res_path()
+	const std::string PathMgr::get_res_path()
 	{
 		if (smg_paths_.res_paths.empty())
 		{
@@ -201,7 +216,7 @@ namespace smallgames
 		return smg_paths_.res_paths[0];
 	}
 
-	const std::string &PathMgr::get_script_path()
+	const std::string PathMgr::get_script_path()
 	{
 		return smg_paths_.script_path;
 	}
@@ -260,7 +275,7 @@ namespace smallgames
 	}
 
 	//-------------------------------------------------------------------------------------
-	bool Resmgr::initializeWatcher()
+	bool Resmgr::initialize_watcher()
 	{
 		// WATCH_OBJECT("syspaths/KBE_ROOT", kb_env_.root_path);
 		// WATCH_OBJECT("syspaths/KBE_RES_PATH", kb_env_.res_path);
@@ -269,14 +284,14 @@ namespace smallgames
 	}
 
 	//-------------------------------------------------------------------------------------
-	void Resmgr::singletonInit()
+	void Resmgr::singleton_init()
 	{
 		respool_.clear();
 		is_inited_ = true;
 	}
 
 	//-------------------------------------------------------------------------------------
-	KBEngine::ResourceObjectPtr Resmgr::openResource(std::initializer_list<std::string> path_list, std::ios::openmode mode = std::ios::in, std::uint32_t flags)
+	KBEngine::ResourceObjectPtr Resmgr::open_resource(std::initializer_list<std::string> path_list, std::ios::openmode mode, std::uint32_t flags)
 	{
 		if (!g_pathmgr.exists(path_list))
 		{
@@ -286,9 +301,14 @@ namespace smallgames
 
 		std::string full_path = g_pathmgr.get_full_path(path_list);
 
+		return open_resource(full_path, mode, flags);
+	}
+
+	KBEngine::ResourceObjectPtr Resmgr::open_resource(const std::string &full_path, std::ios::openmode mode, std::uint32_t flags)
+	{
 		if (Resmgr::respool_checktick == 0)
 		{
-			return new KBEngine::FileObject(full_path.c_str(), flags, "r");
+			return new KBEngine::FileObject(full_path.c_str(), flags, "rb");
 		}
 
 		std::lock_guard lock(mutex_);

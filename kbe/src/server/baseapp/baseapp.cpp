@@ -616,13 +616,13 @@ bool Baseapp::initializeEnd()
 	loopCheckTimerHandle_ = this->dispatcher().addTimer(1000000, this,
 							reinterpret_cast<void *>(TIMEOUT_CHECK_STATUS));
 
-	if(Resmgr::respool_checktick > 0)
+	if(smallgames::Resmgr::respool_checktick > 0)
 	{
-		pResmgrTimerHandle_ = this->dispatcher().addTimer(int(Resmgr::respool_checktick * 1000000),
-			Resmgr::getSingletonPtr(), NULL);
+		pResmgrTimerHandle_ = this->dispatcher().addTimer(int(smallgames::Resmgr::respool_checktick * 1000000),
+			smallgames::Resmgr::getSingletonPtr(), NULL);
 
 		INFO_MSG(fmt::format("Baseapp::initializeEnd: started resmgr tick({}s)!\n", 
-			Resmgr::respool_checktick));
+			smallgames::Resmgr::respool_checktick));
 	}
 
 	pBackuper_.reset(new Backuper());

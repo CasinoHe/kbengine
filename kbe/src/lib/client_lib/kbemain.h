@@ -56,17 +56,14 @@ inline void START_MSG(const char * name, uint64 appuid)
 
 inline bool installPyScript(KBEngine::script::Script& script, COMPONENT_TYPE componentType)
 {
-	if(Resmgr::getSingleton().respaths().size() <= 0 || 
-		Resmgr::getSingleton().getPyUserResPath().size() == 0 || 
-		Resmgr::getSingleton().getPySysResPath().size() == 0 ||
-		Resmgr::getSingleton().getPyUserScriptsPath().size() == 0)
+	if (!smallgames::g_pathmgr.is_inited())
 	{
 		ERROR_MSG("EntityApp::installPyScript: KBE_RES_PATH error!\n");
 		return false;
 	}
 
 	std::wstring user_scripts_path = L"";
-	wchar_t* tbuf = KBEngine::strutil::char2wchar(const_cast<char*>(Resmgr::getSingleton().getPyUserScriptsPath().c_str()));
+	wchar_t* tbuf = KBEngine::strutil::char2wchar(const_cast<char*>(smallgames::g_pathmgr.get_script_path().c_str()));
 	if(tbuf != NULL)
 	{
 		user_scripts_path += tbuf;
@@ -95,7 +92,7 @@ inline bool installPyScript(KBEngine::script::Script& script, COMPONENT_TYPE com
 		pyPaths += user_scripts_path + L"bots/components;";
 	}
 
-	std::string kbe_res_path = Resmgr::getSingleton().getPySysResPath();
+	std::string kbe_res_path(smallgames::g_pathmgr.get_res_path());
 	kbe_res_path += "scripts/common";
 
 	tbuf = KBEngine::strutil::char2wchar(const_cast<char*>(kbe_res_path.c_str()));
@@ -126,8 +123,10 @@ inline bool uninstallPyScript(KBEngine::script::Script& script)
 
 inline bool loadConfig()
 {
-	Resmgr::getSingleton().initialize();
-	
+	// init path mgr and res mgr
+	smallgames::PathMgr::getSingleton();
+	smallgames::Resmgr::getSingleton();
+
 	if(g_componentType == BOTS_TYPE)
 	{
 		// "../../res/server/kbengine_defaults.xml"

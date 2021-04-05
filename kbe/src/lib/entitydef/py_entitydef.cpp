@@ -766,804 +766,799 @@ static bool isRefEntityDefModule(PyObject *pyObj)
 //-------------------------------------------------------------------------------------
 #define PY_RETURN_ERROR { DefContext::allScriptDefContextLineMaps.clear(); DefContext::allScriptDefContextMaps.clear(); while(!g_callContexts.empty()) g_callContexts.pop(); return NULL; }
 
-#define PYOBJECT_SOURCEFILE(PYOBJ, OUT)	\
-{	\
-	PyObject* pyInspectModule =	\
-	PyImport_ImportModule(const_cast<char*>("inspect"));	\
-	\
-	PyObject* pyGetsourcefile = NULL;	\
-	PyObject* pyGetLineno = NULL;	\
-	PyObject* pyGetCurrentFrame = NULL;	\
-	\
-	if (pyInspectModule)	\
-	{	\
-		pyGetsourcefile =	\
-			PyObject_GetAttrString(pyInspectModule, const_cast<char *>("getsourcefile"));	\
-		pyGetLineno =	\
-			PyObject_GetAttrString(pyInspectModule, const_cast<char *>("getlineno"));	\
-		pyGetCurrentFrame =	\
-			PyObject_GetAttrString(pyInspectModule, const_cast<char *>("currentframe"));	\
-		\
-		Py_DECREF(pyInspectModule);	\
-	}	\
-	else	\
-	{	\
-		PY_RETURN_ERROR;	\
-	}	\
-	\
-	if (pyGetsourcefile)	\
-	{	\
-		PyObject* pyFile = PyObject_CallFunction(pyGetsourcefile, \
-			const_cast<char*>("(O)"), PYOBJ);	\
-		\
-		Py_DECREF(pyGetsourcefile);	\
-		\
-		if (!pyFile)	\
-		{	\
-			Py_XDECREF(pyGetLineno);	\
-			Py_XDECREF(pyGetCurrentFrame);	\
-			PY_RETURN_ERROR;	\
-		}	\
-		else	\
-		{	\
-			/* 防止不同系统造成的路径不一致，剔除系统相关路径 */		\
-			OUT = PyUnicode_AsUTF8AndSize(pyFile, NULL);	\
-			strutil::kbe_replace(OUT, "\\\\", "/");	\
-			strutil::kbe_replace(OUT, "\\", "/");	\
-			strutil::kbe_replace(OUT, "//", "/");	\
-			std::string kbe_root = Resmgr::getSingleton().getPyUserScriptsPath();	\
-			strutil::kbe_replace(kbe_root, "\\\\", "/");	\
-			strutil::kbe_replace(kbe_root, "\\", "/");	\
-			strutil::kbe_replace(kbe_root, "/", "/");	\
-			strutil::kbe_replace(OUT, kbe_root, "");	\
-			Py_DECREF(pyFile);	\
-		}	\
-	}	\
-	else	\
-	{	\
-		Py_XDECREF(pyGetLineno);	\
-		Py_XDECREF(pyGetCurrentFrame);	\
-		PY_RETURN_ERROR;	\
-	}	\
-	\
-	if (pyGetLineno)	\
-	{	\
-		if(!pyGetCurrentFrame)	\
-		{	\
-			Py_DECREF(pyGetLineno);	\
-		}	\
-		\
-		PyObject* pyCurrentFrame = PyObject_CallFunction(pyGetCurrentFrame, \
-				const_cast<char*>("()"));	\
-		\
-		PyObject* pyLine = PyObject_CallFunction(pyGetLineno, \
-			const_cast<char*>("(O)"), pyCurrentFrame);	\
-		\
-		Py_DECREF(pyGetLineno);	\
-		Py_DECREF(pyGetCurrentFrame);	\
-		Py_DECREF(pyCurrentFrame);	\
-		\
-		if (!pyLine)	\
-		{	\
-			PY_RETURN_ERROR;	\
-		}	\
-		else	\
-		{	\
-			/* 加上行号，避免同文件中多次定义 */		\
-			OUT += fmt::format("#{}",  PyLong_AsLong(pyLine));	\
-			Py_DECREF(pyLine);	\
-		}	\
-	}	\
-	else	\
-	{	\
-		Py_XDECREF(pyGetCurrentFrame);	\
-		PY_RETURN_ERROR;	\
-	}	\
-}
-
-static PyObject* __py_def_parse(PyObject *self, PyObject* args)
-{
-	CallContext cc = g_callContexts.top();
-	g_callContexts.pop();
-	
-	DefContext defContext;
-	defContext.optionName = cc.optionName;
-
-	PyObject* kbeModule = PyImport_AddModule("KBEngine");
-	KBE_ASSERT(kbeModule);
-
-	PyObject* pyComponentName = PyObject_GetAttrString(kbeModule, "component");
-	if (!pyComponentName)
-	{
-		PyErr_Format(PyExc_AssertionError, "EntityDef.__py_def_call(): get KBEngine.component error!\n");
-		PY_RETURN_ERROR;
+#define PYOBJECT_SOURCEFILE(PYOBJ, OUT)                                                    \
+	{                                                                                        \
+		PyObject *pyInspectModule =                                                            \
+				PyImport_ImportModule(const_cast<char *>("inspect"));                              \
+                                                                                           \
+		PyObject *pyGetsourcefile = NULL;                                                      \
+		PyObject *pyGetLineno = NULL;                                                          \
+		PyObject *pyGetCurrentFrame = NULL;                                                    \
+                                                                                           \
+		if (pyInspectModule)                                                                   \
+		{                                                                                      \
+			pyGetsourcefile =                                                                    \
+					PyObject_GetAttrString(pyInspectModule, const_cast<char *>("getsourcefile"));    \
+			pyGetLineno =                                                                        \
+					PyObject_GetAttrString(pyInspectModule, const_cast<char *>("getlineno"));        \
+			pyGetCurrentFrame =                                                                  \
+					PyObject_GetAttrString(pyInspectModule, const_cast<char *>("currentframe"));     \
+                                                                                           \
+			Py_DECREF(pyInspectModule);                                                          \
+		}                                                                                      \
+		else                                                                                   \
+		{                                                                                      \
+			PY_RETURN_ERROR;                                                                     \
+		}                                                                                      \
+                                                                                           \
+		if (pyGetsourcefile)                                                                   \
+		{                                                                                      \
+			PyObject *pyFile = PyObject_CallFunction(pyGetsourcefile,                            \
+																							 const_cast<char *>("(O)"), PYOBJ);          \
+                                                                                           \
+			Py_DECREF(pyGetsourcefile);                                                          \
+                                                                                           \
+			if (!pyFile)                                                                         \
+			{                                                                                    \
+				Py_XDECREF(pyGetLineno);                                                           \
+				Py_XDECREF(pyGetCurrentFrame);                                                     \
+				PY_RETURN_ERROR;                                                                   \
+			}                                                                                    \
+			else                                                                                 \
+			{                                                                                    \
+				/* 防止不同系统造成的路径不一致，剔除系统相关路径 */        \
+				OUT = PyUnicode_AsUTF8AndSize(pyFile, NULL);                                       \
+				strutil::kbe_replace(OUT, "\\\\", "/");                                            \
+				strutil::kbe_replace(OUT, "\\", "/");                                              \
+				strutil::kbe_replace(OUT, "//", "/");                                              \
+				std::string kbe_root = smallgames::g_pathmgr.get_script_path();                    \
+				strutil::kbe_replace(kbe_root, "\\\\", "/");                                       \
+				strutil::kbe_replace(kbe_root, "\\", "/");                                         \
+				strutil::kbe_replace(kbe_root, "/", "/");                                          \
+				strutil::kbe_replace(OUT, kbe_root, "");                                           \
+				Py_DECREF(pyFile);                                                                 \
+			}                                                                                    \
+		}                                                                                      \
+		else                                                                                   \
+		{                                                                                      \
+			Py_XDECREF(pyGetLineno);                                                             \
+			Py_XDECREF(pyGetCurrentFrame);                                                       \
+			PY_RETURN_ERROR;                                                                     \
+		}                                                                                      \
+                                                                                           \
+		if (pyGetLineno)                                                                       \
+		{                                                                                      \
+			if (!pyGetCurrentFrame)                                                              \
+			{                                                                                    \
+				Py_DECREF(pyGetLineno);                                                            \
+			}                                                                                    \
+                                                                                           \
+			PyObject *pyCurrentFrame = PyObject_CallFunction(pyGetCurrentFrame,                  \
+																											 const_cast<char *>("()"));          \
+                                                                                           \
+			PyObject *pyLine = PyObject_CallFunction(pyGetLineno,                                \
+																							 const_cast<char *>("(O)"), pyCurrentFrame); \
+                                                                                           \
+			Py_DECREF(pyGetLineno);                                                              \
+			Py_DECREF(pyGetCurrentFrame);                                                        \
+			Py_DECREF(pyCurrentFrame);                                                           \
+                                                                                           \
+			if (!pyLine)                                                                         \
+			{                                                                                    \
+				PY_RETURN_ERROR;                                                                   \
+			}                                                                                    \
+			else                                                                                 \
+			{                                                                                    \
+				/* 加上行号，避免同文件中多次定义 */                                \
+				OUT += fmt::format("#{}", PyLong_AsLong(pyLine));                                  \
+				Py_DECREF(pyLine);                                                                 \
+			}                                                                                    \
+		}                                                                                      \
+		else                                                                                   \
+		{                                                                                      \
+			Py_XDECREF(pyGetCurrentFrame);                                                       \
+			PY_RETURN_ERROR;                                                                     \
+		}                                                                                      \
 	}
 
-	defContext.componentType = ComponentName2ComponentType(PyUnicode_AsUTF8AndSize(pyComponentName, NULL));
-	Py_DECREF(pyComponentName);
-
-	if (!args || PyTuple_Size(args) < 1)
-	{
-		PyErr_Format(PyExc_AssertionError, "EntityDef.__py_def_call(EntityDef.%s): error!\n", defContext.optionName.c_str());
-		PY_RETURN_ERROR;
-	}
-
-	PyObject* pyFunc = PyTuple_GET_ITEM(args, 0);
-
-	PyObject* pyModuleQualname = PyObject_GetAttrString(pyFunc, "__qualname__");
-	if (!pyModuleQualname)
-	{
-		PY_RETURN_ERROR;
-	}
-
-	const char* moduleQualname = PyUnicode_AsUTF8AndSize(pyModuleQualname, NULL);
-	Py_DECREF(pyModuleQualname);
-
-	defContext.pyObjectPtr = PyObjectPtr(pyFunc);
-	PYOBJECT_SOURCEFILE(defContext.pyObjectPtr.get(), defContext.pyObjectSourceFile);
-	defContext.pyObjectSourceFileComponentType = defContext.componentType;
-
-	if (defContext.optionName == "method" || defContext.optionName == "clientmethod")
-	{
-		static char * keywords[] =
-		{
-			const_cast<char *> ("exposed"),
-			const_cast<char *> ("utype"),
-			NULL
-		};
-
-		PyObject* pyExposed = NULL;
-		PyObject* pyUtype = NULL;
-
-		if (!PyArg_ParseTupleAndKeywords(cc.pyArgs.get(), cc.pyKwargs.get(), "|OO",
-			keywords, &pyExposed, &pyUtype))
-		{
-			PY_RETURN_ERROR;
-		}
-
-		if (pyExposed && !PyBool_Check(pyExposed))
-		{
-			PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'exposed\' error! not a bool type.\n", defContext.optionName.c_str());
-			PY_RETURN_ERROR;
-		}
-
-		if (pyUtype && !PyLong_Check(pyUtype))
-		{
-			PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'utype\' error! not a number type.\n", defContext.optionName.c_str());
-			PY_RETURN_ERROR;
-		}
-
-		defContext.exposed = pyExposed == Py_True;
-
-		if (pyUtype)
-		{
-			defContext.utype = (int)PyLong_AsLong(pyUtype);
-
-			if (defContext.utype > 0)
+			static PyObject *__py_def_parse(PyObject *self, PyObject *args)
 			{
-				ENTITY_METHOD_UID muid = defContext.utype;
+				CallContext cc = g_callContexts.top();
+				g_callContexts.pop();
 
-				if (defContext.utype != int(muid))
+				DefContext defContext;
+				defContext.optionName = cc.optionName;
+
+				PyObject *kbeModule = PyImport_AddModule("KBEngine");
+				KBE_ASSERT(kbeModule);
+
+				PyObject *pyComponentName = PyObject_GetAttrString(kbeModule, "component");
+				if (!pyComponentName)
 				{
-					PyErr_Format(PyExc_AssertionError, "EntityDef.%s: 'Utype' has overflowed({} > 65535), is {}.{}!\n", defContext.optionName.c_str(), defContext.utype);
-					PY_RETURN_ERROR;
-				}
-			}
-		}
-	}
-	else if (defContext.optionName == "property" || defContext.optionName == "fixed_item")
-	{
-		if (defContext.optionName != "fixed_item")
-		{
-			static char * keywords[] =
-			{
-				const_cast<char *> ("flags"),
-				const_cast<char *> ("persistent"),
-				const_cast<char *> ("index"),
-				const_cast<char *> ("databaseLength"),
-				const_cast<char *> ("utype"),
-				NULL
-			};
-
-			PyObject* pyFlags = NULL;
-			PyObject* pyPersistent = NULL;
-			PyObject* pyIndex = NULL;
-			PyObject* pyDatabaseLength = NULL;
-			PyObject* pyUtype = NULL;
-
-			if (!PyArg_ParseTupleAndKeywords(cc.pyArgs.get(), cc.pyKwargs.get(), "|OOOOO",
-				keywords, &pyFlags, &pyPersistent, &pyIndex, &pyDatabaseLength, &pyUtype))
-			{
-				PY_RETURN_ERROR;
-			}
-
-			if (!pyFlags || !isRefEntityDefModule(pyFlags))
-			{
-				PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'flags\' must be referenced from the [EntityDef.ALL_CLIENTS, EntityDef.*] module!\n", defContext.optionName.c_str());
-				PY_RETURN_ERROR;
-			}
-
-			if (!isRefEntityDefModule(pyIndex))
-			{
-				PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'index\' must be referenced from the [EntityDef.UNIQUE, EntityDef.INDEX] module!\n", defContext.optionName.c_str());
-				PY_RETURN_ERROR;
-			}
-
-			if (pyDatabaseLength && !PyLong_Check(pyDatabaseLength))
-			{
-				PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'databaseLength\' error! not a number type.\n", defContext.optionName.c_str());
-				PY_RETURN_ERROR;
-			}
-
-			if (pyPersistent && !PyBool_Check(pyPersistent))
-			{
-				PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'persistent\' error! not a bool type.\n", defContext.optionName.c_str());
-				PY_RETURN_ERROR;
-			}
-
-			if(pyUtype && !PyLong_Check(pyUtype))
-			{
-				PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'utype\' error! not a number type.\n", defContext.optionName.c_str());
-				PY_RETURN_ERROR;
-			}
-
-			defContext.propertyFlags = PyUnicode_AsUTF8AndSize(pyFlags, NULL);
-
-			if (pyPersistent)
-				defContext.persistent = pyPersistent == Py_True;
-
-			if (pyIndex)
-				defContext.propertyIndex = PyUnicode_AsUTF8AndSize(pyIndex, NULL);
-
-			if (pyDatabaseLength)
-				defContext.databaseLength = (int)PyLong_AsLong(pyDatabaseLength);
-
-			if (pyUtype)
-			{
-				defContext.utype = (int)PyLong_AsLong(pyUtype);
-
-				if (defContext.utype > 0)
-				{
-					ENTITY_PROPERTY_UID muid = defContext.utype;
-
-					if (defContext.utype != int(muid))
-					{
-						PyErr_Format(PyExc_AssertionError, "EntityDef.%s: 'Utype' has overflowed({} > 65535), is {}.{}!\n", defContext.optionName.c_str(), defContext.utype);
-						PY_RETURN_ERROR;
-					}
-				}
-			}
-		}
-		else
-		{
-			static char * keywords[] =
-			{
-				const_cast<char *> ("persistent"),
-				const_cast<char *> ("databaseLength"),
-				NULL
-			};
-
-			PyObject* pyPersistent = NULL;
-			PyObject* pyDatabaseLength = NULL;
-
-			if (!PyArg_ParseTupleAndKeywords(cc.pyArgs.get(), cc.pyKwargs.get(), "|OO",
-				keywords, &pyPersistent, &pyDatabaseLength))
-			{
-				PY_RETURN_ERROR;
-			}
-
-			if (pyDatabaseLength && !PyLong_Check(pyDatabaseLength))
-			{
-				PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'databaseLength\' error! not a number type.\n", defContext.optionName.c_str());
-				PY_RETURN_ERROR;
-			}
-
-			if (pyPersistent && !PyBool_Check(pyPersistent))
-			{
-				PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'persistent\' error! not a bool type.\n", defContext.optionName.c_str());
-				PY_RETURN_ERROR;
-			}
-
-			// 如果是数据类型定义，默认应该是存储的
-			// fixed_item只有定义fixed_dict时会用到
-			defContext.persistent = true;
-
-			if (pyPersistent)
-				defContext.persistent = pyPersistent == Py_True;
-
-			if (pyDatabaseLength)
-				defContext.databaseLength = (int)PyLong_AsLong(pyDatabaseLength);
-		}
-
-		// 对于属性， 我们需要获得返回值作为默认值
-		PyObject* pyRet = PyObject_CallFunction(pyFunc,
-			const_cast<char*>("(O)"), Py_None);
-
-		if (!pyRet)
-		{
-			PY_RETURN_ERROR;
-		}
-
-		if (pyRet != Py_None)
-		{
-			PyObject* pyStrResult = PyObject_Str(pyRet);
-			Py_DECREF(pyRet);
-
-			defContext.propertyDefaultVal = PyUnicode_AsUTF8AndSize(pyStrResult, NULL);
-			Py_DECREF(pyStrResult);
-		}
-		else
-		{
-			Py_DECREF(pyRet);
-		}
-	}
-	else if (defContext.optionName == "entity")
-	{
-		defContext.isModuleScope = true;
-
-		static char * keywords[] =
-		{
-			const_cast<char *> ("hasClient"),
-			NULL
-		};
-
-		PyObject* pyHasClient = NULL;
-
-		if (!PyArg_ParseTupleAndKeywords(cc.pyArgs.get(), cc.pyKwargs.get(), "|O",
-			keywords, &pyHasClient))
-		{
-			PY_RETURN_ERROR;
-		}
-
-		defContext.hasClient = pyHasClient == Py_True;
-	}
-	else if (defContext.optionName == "interface")
-	{
-		defContext.isModuleScope = true;
-		defContext.inheritEngineModuleType = DefContext::DC_TYPE_INTERFACE;
-	}
-	else if (defContext.optionName == "component")
-	{
-		if (PyFunction_Check(pyFunc))
-		{
-			defContext.isModuleScope = false;
-
-			static char * keywords[] =
-			{
-				const_cast<char *> ("persistent"),
-				NULL
-			};
-
-			PyObject* pyPersistent = NULL;
-
-			if (!PyArg_ParseTupleAndKeywords(cc.pyArgs.get(), cc.pyKwargs.get(), "|O",
-				keywords, &pyPersistent))
-			{
-				PY_RETURN_ERROR;
-			}
-
-			if (pyPersistent && !PyBool_Check(pyPersistent))
-			{
-				PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'persistent\' error! not a bool type.\n", defContext.optionName.c_str());
-				PY_RETURN_ERROR;
-			}
-
-			// 如果是组件属性，默认应该是不存储的
-			defContext.persistent = false;
-
-			if (pyPersistent)
-				defContext.persistent = pyPersistent == Py_True;
-		}
-		else
-		{
-			defContext.isModuleScope = true;
-
-			PyObject* pyHasClient = NULL;
-
-			static char * keywords[] =
-			{
-				const_cast<char *> ("hasClient"),
-				NULL
-			};
-
-			if (!PyArg_ParseTupleAndKeywords(cc.pyArgs.get(), cc.pyKwargs.get(), "|O",
-				keywords, &pyHasClient))
-			{
-				PY_RETURN_ERROR;
-			}
-
-			defContext.hasClient = pyHasClient == Py_True;
-		}
-	}
-	else if (defContext.optionName == "fixed_dict")
-	{
-		defContext.isModuleScope = true;
-
-		if (PyObject_HasAttrString(pyFunc, "createObjFromDict") && PyObject_HasAttrString(pyFunc, "getDictFromObj") && PyObject_HasAttrString(pyFunc, "isSameType"))
-		{
-			defContext.implementedBy = pyFunc;
-
-			PyObject* pyQualname = PyObject_GetAttrString(defContext.implementedBy.get(), "__qualname__");
-			if (!pyQualname)
-			{
-				PY_RETURN_ERROR;
-			}
-
-			defContext.implementedByModuleName = PyUnicode_AsUTF8AndSize(pyQualname, NULL);
-			Py_DECREF(pyQualname);
-
-			PYOBJECT_SOURCEFILE(defContext.implementedBy.get(), defContext.implementedByModuleFile);
-		}
-	}
-	else if (defContext.optionName == "fixed_array")
-	{
-		// @Def.fixed_array() 
-		// def ENTITYID_LIST()->ENTITY_ID: pass
-		defContext.isModuleScope = false;
-	}
-	else if (defContext.optionName == "fixed_item")
-	{
-	}
-	else if (defContext.optionName == "rename")
-	{
-	}
-	else
-	{
-		PyErr_Format(PyExc_AssertionError, "EntityDef.%s: not support!\n", defContext.optionName.c_str());
-		PY_RETURN_ERROR;
-	}
-
-	if (!defContext.isModuleScope)
-	{
-		std::vector<std::string> outs;
-
-		if (moduleQualname)
-			strutil::kbe_splits(moduleQualname, ".", outs);
-
-		if (defContext.optionName != "rename" && defContext.optionName != "fixed_array")
-		{
-			if (outs.size() != 2)
-			{
-				if(PyFunction_Check(pyFunc))
-					PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'%s\' must be defined in the entity module!\n", 
-						defContext.optionName.c_str(), moduleQualname);
-				else
-					PyErr_Format(PyExc_AssertionError, "EntityDef.%s: please check the command format is: EntityDef.%s(..)\n", 
-						defContext.optionName.c_str(), defContext.optionName.c_str());
-
-				PY_RETURN_ERROR;
-			}
-
-			defContext.moduleName = outs[0];
-			defContext.attrName = outs[1];
-		}
-		else
-		{
-			if (outs.size() != 1)
-			{
-				PyErr_Format(PyExc_AssertionError, "EntityDef.%s: error! such as: @EntityDef.rename()\n\tdef ENTITY_ID() -> EntityDef.INT32: pass\n", defContext.optionName.c_str());
-				PY_RETURN_ERROR;
-			}
-
-			defContext.moduleName = outs[0];
-		}
-
-		PyObject* pyInspectModule =
-			PyImport_ImportModule(const_cast<char*>("inspect"));
-
-		PyObject* pyGetfullargspec = NULL;
-		if (pyInspectModule)
-		{
-			pyGetfullargspec =
-				PyObject_GetAttrString(pyInspectModule, const_cast<char *>("getfullargspec"));
-
-			Py_DECREF(pyInspectModule);
-		}
-		else
-		{
-			PY_RETURN_ERROR;
-		}
-
-		if (pyGetfullargspec)
-		{
-			PyObject* pyGetMethodArgs = PyObject_CallFunction(pyGetfullargspec,
-				const_cast<char*>("(O)"), pyFunc);
-
-			if (!pyGetMethodArgs)
-			{
-				PY_RETURN_ERROR;
-			}
-			else
-			{
-				PyObject* pyGetMethodArgsResult = PyObject_GetAttrString(pyGetMethodArgs, const_cast<char *>("args"));
-				PyObject* pyGetMethodAnnotationsResult = PyObject_GetAttrString(pyGetMethodArgs, const_cast<char *>("annotations"));
-
-				Py_DECREF(pyGetMethodArgs);
-
-				if (!pyGetMethodArgsResult || !pyGetMethodAnnotationsResult)
-				{
-					Py_XDECREF(pyGetMethodArgsResult);
-					Py_XDECREF(pyGetMethodAnnotationsResult);
+					PyErr_Format(PyExc_AssertionError, "EntityDef.__py_def_call(): get KBEngine.component error!\n");
 					PY_RETURN_ERROR;
 				}
 
-				PyObjectPtr pyGetMethodArgsResultPtr = pyGetMethodArgsResult;
-				PyObjectPtr pyGetMethodAnnotationsResultPtr = pyGetMethodAnnotationsResult;
-				Py_DECREF(pyGetMethodArgsResult);
-				Py_DECREF(pyGetMethodAnnotationsResult);
+				defContext.componentType = ComponentName2ComponentType(PyUnicode_AsUTF8AndSize(pyComponentName, NULL));
+				Py_DECREF(pyComponentName);
 
-				if (defContext.optionName != "rename" && defContext.optionName != "fixed_array")
+				if (!args || PyTuple_Size(args) < 1)
 				{
-					Py_ssize_t argsSize = PyList_Size(pyGetMethodArgsResult);
-					if (argsSize == 0)
-					{
-						PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'%s\' did not find \'self\' parameter!\n", defContext.optionName.c_str(), moduleQualname);
-						PY_RETURN_ERROR;
-					}
-
-					for (Py_ssize_t i = 1; i < argsSize; ++i)
-					{
-						PyObject* pyItem = PyList_GetItem(pyGetMethodArgsResult, i);
-
-						const char* ccattr = PyUnicode_AsUTF8AndSize(pyItem, NULL);
-						if (!ccattr)
-						{
-							PY_RETURN_ERROR;
-						}
-
-						defContext.argsvecs.push_back(ccattr);
-					}
+					PyErr_Format(PyExc_AssertionError, "EntityDef.__py_def_call(EntityDef.%s): error!\n", defContext.optionName.c_str());
+					PY_RETURN_ERROR;
 				}
 
-				PyObject *key, *value;
-				Py_ssize_t pos = 0;
+				PyObject *pyFunc = PyTuple_GET_ITEM(args, 0);
 
-				while (PyDict_Next(pyGetMethodAnnotationsResult, &pos, &key, &value)) {
-					const char* skey = PyUnicode_AsUTF8AndSize(key, NULL);
-					if (!skey)
-					{
-						PY_RETURN_ERROR;
-					}
+				PyObject *pyModuleQualname = PyObject_GetAttrString(pyFunc, "__qualname__");
+				if (!pyModuleQualname)
+				{
+					PY_RETURN_ERROR;
+				}
 
-					std::string svalue = "";
+				const char *moduleQualname = PyUnicode_AsUTF8AndSize(pyModuleQualname, NULL);
+				Py_DECREF(pyModuleQualname);
 
-					// 如果是EntityDef.Array则此处可能是一个tuple，参考__py_array
-					if (PyTuple_Check(value) && PyTuple_Size(value) == 2)
-					{
-						PyObject *entitydefModule = PyImport_AddModule(pyDefModuleName.c_str());
-						PyObject* pyARRAY = PyObject_GetAttrString(entitydefModule, "ARRAY");
-						PyObject* item0 = PyTuple_GET_ITEM(value, 0);
+				defContext.pyObjectPtr = PyObjectPtr(pyFunc);
+				PYOBJECT_SOURCEFILE(defContext.pyObjectPtr.get(), defContext.pyObjectSourceFile);
+				defContext.pyObjectSourceFileComponentType = defContext.componentType;
 
-						if (pyARRAY == item0)
-						{
-							value = PyTuple_GET_ITEM(value, 1);
-							defContext.optionName = "anonymous_fixed_array";
-
-							if (std::string(skey) != "return")
+				if (defContext.optionName == "method" || defContext.optionName == "clientmethod")
+				{
+					static char *keywords[] =
 							{
-								PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'EntityDef.ARRAY\' Can only be used to define property types!\n", defContext.optionName.c_str());
+									const_cast<char *>("exposed"),
+									const_cast<char *>("utype"),
+									NULL};
+
+					PyObject *pyExposed = NULL;
+					PyObject *pyUtype = NULL;
+
+					if (!PyArg_ParseTupleAndKeywords(cc.pyArgs.get(), cc.pyKwargs.get(), "|OO",
+																					 keywords, &pyExposed, &pyUtype))
+					{
+						PY_RETURN_ERROR;
+					}
+
+					if (pyExposed && !PyBool_Check(pyExposed))
+					{
+						PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'exposed\' error! not a bool type.\n", defContext.optionName.c_str());
+						PY_RETURN_ERROR;
+					}
+
+					if (pyUtype && !PyLong_Check(pyUtype))
+					{
+						PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'utype\' error! not a number type.\n", defContext.optionName.c_str());
+						PY_RETURN_ERROR;
+					}
+
+					defContext.exposed = pyExposed == Py_True;
+
+					if (pyUtype)
+					{
+						defContext.utype = (int)PyLong_AsLong(pyUtype);
+
+						if (defContext.utype > 0)
+						{
+							ENTITY_METHOD_UID muid = defContext.utype;
+
+							if (defContext.utype != int(muid))
+							{
+								PyErr_Format(PyExc_AssertionError, "EntityDef.%s: 'Utype' has overflowed({} > 65535), is {}.{}!\n", defContext.optionName.c_str(), defContext.utype);
 								PY_RETURN_ERROR;
 							}
 						}
-						else
+					}
+				}
+				else if (defContext.optionName == "property" || defContext.optionName == "fixed_item")
+				{
+					if (defContext.optionName != "fixed_item")
+					{
+						static char *keywords[] =
+								{
+										const_cast<char *>("flags"),
+										const_cast<char *>("persistent"),
+										const_cast<char *>("index"),
+										const_cast<char *>("databaseLength"),
+										const_cast<char *>("utype"),
+										NULL};
+
+						PyObject *pyFlags = NULL;
+						PyObject *pyPersistent = NULL;
+						PyObject *pyIndex = NULL;
+						PyObject *pyDatabaseLength = NULL;
+						PyObject *pyUtype = NULL;
+
+						if (!PyArg_ParseTupleAndKeywords(cc.pyArgs.get(), cc.pyKwargs.get(), "|OOOOO",
+																						 keywords, &pyFlags, &pyPersistent, &pyIndex, &pyDatabaseLength, &pyUtype))
 						{
-							Py_DECREF(pyARRAY);
 							PY_RETURN_ERROR;
 						}
 
-						Py_DECREF(pyARRAY);
-					}
+						if (!pyFlags || !isRefEntityDefModule(pyFlags))
+						{
+							PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'flags\' must be referenced from the [EntityDef.ALL_CLIENTS, EntityDef.*] module!\n", defContext.optionName.c_str());
+							PY_RETURN_ERROR;
+						}
 
-					if (PyUnicode_Check(value))
-					{
-						svalue = PyUnicode_AsUTF8AndSize(value, NULL);
+						if (!isRefEntityDefModule(pyIndex))
+						{
+							PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'index\' must be referenced from the [EntityDef.UNIQUE, EntityDef.INDEX] module!\n", defContext.optionName.c_str());
+							PY_RETURN_ERROR;
+						}
+
+						if (pyDatabaseLength && !PyLong_Check(pyDatabaseLength))
+						{
+							PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'databaseLength\' error! not a number type.\n", defContext.optionName.c_str());
+							PY_RETURN_ERROR;
+						}
+
+						if (pyPersistent && !PyBool_Check(pyPersistent))
+						{
+							PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'persistent\' error! not a bool type.\n", defContext.optionName.c_str());
+							PY_RETURN_ERROR;
+						}
+
+						if (pyUtype && !PyLong_Check(pyUtype))
+						{
+							PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'utype\' error! not a number type.\n", defContext.optionName.c_str());
+							PY_RETURN_ERROR;
+						}
+
+						defContext.propertyFlags = PyUnicode_AsUTF8AndSize(pyFlags, NULL);
+
+						if (pyPersistent)
+							defContext.persistent = pyPersistent == Py_True;
+
+						if (pyIndex)
+							defContext.propertyIndex = PyUnicode_AsUTF8AndSize(pyIndex, NULL);
+
+						if (pyDatabaseLength)
+							defContext.databaseLength = (int)PyLong_AsLong(pyDatabaseLength);
+
+						if (pyUtype)
+						{
+							defContext.utype = (int)PyLong_AsLong(pyUtype);
+
+							if (defContext.utype > 0)
+							{
+								ENTITY_PROPERTY_UID muid = defContext.utype;
+
+								if (defContext.utype != int(muid))
+								{
+									PyErr_Format(PyExc_AssertionError, "EntityDef.%s: 'Utype' has overflowed({} > 65535), is {}.{}!\n", defContext.optionName.c_str(), defContext.utype);
+									PY_RETURN_ERROR;
+								}
+							}
+						}
 					}
 					else
 					{
-						PyObject* pyQualname = PyObject_GetAttrString(value, "__qualname__");
+						static char *keywords[] =
+								{
+										const_cast<char *>("persistent"),
+										const_cast<char *>("databaseLength"),
+										NULL};
+
+						PyObject *pyPersistent = NULL;
+						PyObject *pyDatabaseLength = NULL;
+
+						if (!PyArg_ParseTupleAndKeywords(cc.pyArgs.get(), cc.pyKwargs.get(), "|OO",
+																						 keywords, &pyPersistent, &pyDatabaseLength))
+						{
+							PY_RETURN_ERROR;
+						}
+
+						if (pyDatabaseLength && !PyLong_Check(pyDatabaseLength))
+						{
+							PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'databaseLength\' error! not a number type.\n", defContext.optionName.c_str());
+							PY_RETURN_ERROR;
+						}
+
+						if (pyPersistent && !PyBool_Check(pyPersistent))
+						{
+							PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'persistent\' error! not a bool type.\n", defContext.optionName.c_str());
+							PY_RETURN_ERROR;
+						}
+
+						// 如果是数据类型定义，默认应该是存储的
+						// fixed_item只有定义fixed_dict时会用到
+						defContext.persistent = true;
+
+						if (pyPersistent)
+							defContext.persistent = pyPersistent == Py_True;
+
+						if (pyDatabaseLength)
+							defContext.databaseLength = (int)PyLong_AsLong(pyDatabaseLength);
+					}
+
+					// 对于属性， 我们需要获得返回值作为默认值
+					PyObject *pyRet = PyObject_CallFunction(pyFunc,
+																									const_cast<char *>("(O)"), Py_None);
+
+					if (!pyRet)
+					{
+						PY_RETURN_ERROR;
+					}
+
+					if (pyRet != Py_None)
+					{
+						PyObject *pyStrResult = PyObject_Str(pyRet);
+						Py_DECREF(pyRet);
+
+						defContext.propertyDefaultVal = PyUnicode_AsUTF8AndSize(pyStrResult, NULL);
+						Py_DECREF(pyStrResult);
+					}
+					else
+					{
+						Py_DECREF(pyRet);
+					}
+				}
+				else if (defContext.optionName == "entity")
+				{
+					defContext.isModuleScope = true;
+
+					static char *keywords[] =
+							{
+									const_cast<char *>("hasClient"),
+									NULL};
+
+					PyObject *pyHasClient = NULL;
+
+					if (!PyArg_ParseTupleAndKeywords(cc.pyArgs.get(), cc.pyKwargs.get(), "|O",
+																					 keywords, &pyHasClient))
+					{
+						PY_RETURN_ERROR;
+					}
+
+					defContext.hasClient = pyHasClient == Py_True;
+				}
+				else if (defContext.optionName == "interface")
+				{
+					defContext.isModuleScope = true;
+					defContext.inheritEngineModuleType = DefContext::DC_TYPE_INTERFACE;
+				}
+				else if (defContext.optionName == "component")
+				{
+					if (PyFunction_Check(pyFunc))
+					{
+						defContext.isModuleScope = false;
+
+						static char *keywords[] =
+								{
+										const_cast<char *>("persistent"),
+										NULL};
+
+						PyObject *pyPersistent = NULL;
+
+						if (!PyArg_ParseTupleAndKeywords(cc.pyArgs.get(), cc.pyKwargs.get(), "|O",
+																						 keywords, &pyPersistent))
+						{
+							PY_RETURN_ERROR;
+						}
+
+						if (pyPersistent && !PyBool_Check(pyPersistent))
+						{
+							PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'persistent\' error! not a bool type.\n", defContext.optionName.c_str());
+							PY_RETURN_ERROR;
+						}
+
+						// 如果是组件属性，默认应该是不存储的
+						defContext.persistent = false;
+
+						if (pyPersistent)
+							defContext.persistent = pyPersistent == Py_True;
+					}
+					else
+					{
+						defContext.isModuleScope = true;
+
+						PyObject *pyHasClient = NULL;
+
+						static char *keywords[] =
+								{
+										const_cast<char *>("hasClient"),
+										NULL};
+
+						if (!PyArg_ParseTupleAndKeywords(cc.pyArgs.get(), cc.pyKwargs.get(), "|O",
+																						 keywords, &pyHasClient))
+						{
+							PY_RETURN_ERROR;
+						}
+
+						defContext.hasClient = pyHasClient == Py_True;
+					}
+				}
+				else if (defContext.optionName == "fixed_dict")
+				{
+					defContext.isModuleScope = true;
+
+					if (PyObject_HasAttrString(pyFunc, "createObjFromDict") && PyObject_HasAttrString(pyFunc, "getDictFromObj") && PyObject_HasAttrString(pyFunc, "isSameType"))
+					{
+						defContext.implementedBy = pyFunc;
+
+						PyObject *pyQualname = PyObject_GetAttrString(defContext.implementedBy.get(), "__qualname__");
 						if (!pyQualname)
 						{
 							PY_RETURN_ERROR;
 						}
 
-						svalue = PyUnicode_AsUTF8AndSize(pyQualname, NULL);
+						defContext.implementedByModuleName = PyUnicode_AsUTF8AndSize(pyQualname, NULL);
 						Py_DECREF(pyQualname);
+
+						PYOBJECT_SOURCEFILE(defContext.implementedBy.get(), defContext.implementedByModuleFile);
+					}
+				}
+				else if (defContext.optionName == "fixed_array")
+				{
+					// @Def.fixed_array()
+					// def ENTITYID_LIST()->ENTITY_ID: pass
+					defContext.isModuleScope = false;
+				}
+				else if (defContext.optionName == "fixed_item")
+				{
+				}
+				else if (defContext.optionName == "rename")
+				{
+				}
+				else
+				{
+					PyErr_Format(PyExc_AssertionError, "EntityDef.%s: not support!\n", defContext.optionName.c_str());
+					PY_RETURN_ERROR;
+				}
+
+				if (!defContext.isModuleScope)
+				{
+					std::vector<std::string> outs;
+
+					if (moduleQualname)
+						strutil::kbe_splits(moduleQualname, ".", outs);
+
+					if (defContext.optionName != "rename" && defContext.optionName != "fixed_array")
+					{
+						if (outs.size() != 2)
+						{
+							if (PyFunction_Check(pyFunc))
+								PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'%s\' must be defined in the entity module!\n",
+														 defContext.optionName.c_str(), moduleQualname);
+							else
+								PyErr_Format(PyExc_AssertionError, "EntityDef.%s: please check the command format is: EntityDef.%s(..)\n",
+														 defContext.optionName.c_str(), defContext.optionName.c_str());
+
+							PY_RETURN_ERROR;
+						}
+
+						defContext.moduleName = outs[0];
+						defContext.attrName = outs[1];
+					}
+					else
+					{
+						if (outs.size() != 1)
+						{
+							PyErr_Format(PyExc_AssertionError, "EntityDef.%s: error! such as: @EntityDef.rename()\n\tdef ENTITY_ID() -> EntityDef.INT32: pass\n", defContext.optionName.c_str());
+							PY_RETURN_ERROR;
+						}
+
+						defContext.moduleName = outs[0];
 					}
 
-					if (svalue.size() == 0)
+					PyObject *pyInspectModule =
+							PyImport_ImportModule(const_cast<char *>("inspect"));
+
+					PyObject *pyGetfullargspec = NULL;
+					if (pyInspectModule)
+					{
+						pyGetfullargspec =
+								PyObject_GetAttrString(pyInspectModule, const_cast<char *>("getfullargspec"));
+
+						Py_DECREF(pyInspectModule);
+					}
+					else
 					{
 						PY_RETURN_ERROR;
 					}
 
-					if (std::string(skey) == "return")
-						defContext.returnType = svalue;
+					if (pyGetfullargspec)
+					{
+						PyObject *pyGetMethodArgs = PyObject_CallFunction(pyGetfullargspec,
+																															const_cast<char *>("(O)"), pyFunc);
+
+						if (!pyGetMethodArgs)
+						{
+							PY_RETURN_ERROR;
+						}
+						else
+						{
+							PyObject *pyGetMethodArgsResult = PyObject_GetAttrString(pyGetMethodArgs, const_cast<char *>("args"));
+							PyObject *pyGetMethodAnnotationsResult = PyObject_GetAttrString(pyGetMethodArgs, const_cast<char *>("annotations"));
+
+							Py_DECREF(pyGetMethodArgs);
+
+							if (!pyGetMethodArgsResult || !pyGetMethodAnnotationsResult)
+							{
+								Py_XDECREF(pyGetMethodArgsResult);
+								Py_XDECREF(pyGetMethodAnnotationsResult);
+								PY_RETURN_ERROR;
+							}
+
+							PyObjectPtr pyGetMethodArgsResultPtr = pyGetMethodArgsResult;
+							PyObjectPtr pyGetMethodAnnotationsResultPtr = pyGetMethodAnnotationsResult;
+							Py_DECREF(pyGetMethodArgsResult);
+							Py_DECREF(pyGetMethodAnnotationsResult);
+
+							if (defContext.optionName != "rename" && defContext.optionName != "fixed_array")
+							{
+								Py_ssize_t argsSize = PyList_Size(pyGetMethodArgsResult);
+								if (argsSize == 0)
+								{
+									PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'%s\' did not find \'self\' parameter!\n", defContext.optionName.c_str(), moduleQualname);
+									PY_RETURN_ERROR;
+								}
+
+								for (Py_ssize_t i = 1; i < argsSize; ++i)
+								{
+									PyObject *pyItem = PyList_GetItem(pyGetMethodArgsResult, i);
+
+									const char *ccattr = PyUnicode_AsUTF8AndSize(pyItem, NULL);
+									if (!ccattr)
+									{
+										PY_RETURN_ERROR;
+									}
+
+									defContext.argsvecs.push_back(ccattr);
+								}
+							}
+
+							PyObject *key, *value;
+							Py_ssize_t pos = 0;
+
+							while (PyDict_Next(pyGetMethodAnnotationsResult, &pos, &key, &value))
+							{
+								const char *skey = PyUnicode_AsUTF8AndSize(key, NULL);
+								if (!skey)
+								{
+									PY_RETURN_ERROR;
+								}
+
+								std::string svalue = "";
+
+								// 如果是EntityDef.Array则此处可能是一个tuple，参考__py_array
+								if (PyTuple_Check(value) && PyTuple_Size(value) == 2)
+								{
+									PyObject *entitydefModule = PyImport_AddModule(pyDefModuleName.c_str());
+									PyObject *pyARRAY = PyObject_GetAttrString(entitydefModule, "ARRAY");
+									PyObject *item0 = PyTuple_GET_ITEM(value, 0);
+
+									if (pyARRAY == item0)
+									{
+										value = PyTuple_GET_ITEM(value, 1);
+										defContext.optionName = "anonymous_fixed_array";
+
+										if (std::string(skey) != "return")
+										{
+											PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'EntityDef.ARRAY\' Can only be used to define property types!\n", defContext.optionName.c_str());
+											PY_RETURN_ERROR;
+										}
+									}
+									else
+									{
+										Py_DECREF(pyARRAY);
+										PY_RETURN_ERROR;
+									}
+
+									Py_DECREF(pyARRAY);
+								}
+
+								if (PyUnicode_Check(value))
+								{
+									svalue = PyUnicode_AsUTF8AndSize(value, NULL);
+								}
+								else
+								{
+									PyObject *pyQualname = PyObject_GetAttrString(value, "__qualname__");
+									if (!pyQualname)
+									{
+										PY_RETURN_ERROR;
+									}
+
+									svalue = PyUnicode_AsUTF8AndSize(pyQualname, NULL);
+									Py_DECREF(pyQualname);
+								}
+
+								if (svalue.size() == 0)
+								{
+									PY_RETURN_ERROR;
+								}
+
+								if (std::string(skey) == "return")
+									defContext.returnType = svalue;
+								else
+									defContext.annotationsMaps[skey] = svalue;
+							}
+						}
+					}
 					else
-						defContext.annotationsMaps[skey] = svalue;
+					{
+						PY_RETURN_ERROR;
+					}
 				}
-			}
-		}
-		else
-		{
-			PY_RETURN_ERROR;
-		}
-	}
-	else
-	{
-		defContext.moduleName = moduleQualname;
-
-		PyObject* pyBases = PyObject_GetAttrString(pyFunc, "__bases__");
-		if (!pyBases)
-		{
-			PY_RETURN_ERROR;
-		}
-
-		Py_ssize_t basesSize = PyTuple_Size(pyBases);
-		if (basesSize == 0)
-		{
-			PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'%s\' does not inherit the KBEngine.Entity class!\n", defContext.optionName.c_str(), moduleQualname);
-			Py_XDECREF(pyBases);
-			PY_RETURN_ERROR;
-		}
-
-		for (Py_ssize_t i = 0; i < basesSize; ++i)
-		{
-			PyObject* pyClass = PyTuple_GetItem(pyBases, i);
-
-			PyObject* pyQualname = PyObject_GetAttrString(pyClass, "__qualname__");
-			if (!pyQualname)
-			{
-				Py_XDECREF(pyBases);
-				PY_RETURN_ERROR;
-			}
-
-			std::string parentClass = PyUnicode_AsUTF8AndSize(pyQualname, NULL);
-			Py_DECREF(pyQualname);
-
-			if (parentClass == "object")
-			{
-				continue;
-			}
-			else if (parentClass == "Entity")
-			{
-				defContext.inheritEngineModuleType = DefContext::DC_TYPE_ENTITY;
-				continue;
-			}
-			else if (parentClass == "Proxy")
-			{
-				if (defContext.componentType != BASEAPP_TYPE)
+				else
 				{
-					PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'%s\' Only BASE can inherit KBEngine.Proxy!\n", defContext.optionName.c_str(), moduleQualname);
+					defContext.moduleName = moduleQualname;
+
+					PyObject *pyBases = PyObject_GetAttrString(pyFunc, "__bases__");
+					if (!pyBases)
+					{
+						PY_RETURN_ERROR;
+					}
+
+					Py_ssize_t basesSize = PyTuple_Size(pyBases);
+					if (basesSize == 0)
+					{
+						PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'%s\' does not inherit the KBEngine.Entity class!\n", defContext.optionName.c_str(), moduleQualname);
+						Py_XDECREF(pyBases);
+						PY_RETURN_ERROR;
+					}
+
+					for (Py_ssize_t i = 0; i < basesSize; ++i)
+					{
+						PyObject *pyClass = PyTuple_GetItem(pyBases, i);
+
+						PyObject *pyQualname = PyObject_GetAttrString(pyClass, "__qualname__");
+						if (!pyQualname)
+						{
+							Py_XDECREF(pyBases);
+							PY_RETURN_ERROR;
+						}
+
+						std::string parentClass = PyUnicode_AsUTF8AndSize(pyQualname, NULL);
+						Py_DECREF(pyQualname);
+
+						if (parentClass == "object")
+						{
+							continue;
+						}
+						else if (parentClass == "Entity")
+						{
+							defContext.inheritEngineModuleType = DefContext::DC_TYPE_ENTITY;
+							continue;
+						}
+						else if (parentClass == "Proxy")
+						{
+							if (defContext.componentType != BASEAPP_TYPE)
+							{
+								PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'%s\' Only BASE can inherit KBEngine.Proxy!\n", defContext.optionName.c_str(), moduleQualname);
+								PY_RETURN_ERROR;
+							}
+
+							defContext.inheritEngineModuleType = DefContext::DC_TYPE_ENTITY;
+							continue;
+						}
+						else if (parentClass == "EntityComponent")
+						{
+							defContext.inheritEngineModuleType = DefContext::DC_TYPE_COMPONENT;
+							continue;
+						}
+
+						defContext.baseClasses.push_back(parentClass);
+					}
+
+					Py_XDECREF(pyBases);
+				}
+
+				bool noerror = true;
+
+				if (defContext.optionName == "method" || defContext.optionName == "clientmethod")
+				{
+					if (defContext.annotationsMaps.size() != defContext.argsvecs.size())
+					{
+						PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'%s\' all parameters must have annotations!\n", defContext.optionName.c_str(), moduleQualname);
+						PY_RETURN_ERROR;
+					}
+
+					if (defContext.optionName == "method")
+						noerror = onDefMethod(defContext);
+					else
+						noerror = onDefClientMethod(defContext);
+				}
+				else if (defContext.optionName == "rename")
+				{
+					noerror = onDefRename(defContext);
+				}
+				else if (defContext.optionName == "property")
+				{
+					// 验证这个字符串是否可以还原成对象
+					if (defContext.propertyDefaultVal.size() > 0)
+					{
+						PyObject *module = PyImport_AddModule("__main__");
+						if (module == NULL)
+						{
+							noerror = false;
+						}
+						else
+						{
+							if (defContext.returnType != "UNICODE" && defContext.returnType != "STRING")
+							{
+								PyObject *mdict = PyModule_GetDict(module); // Borrowed reference.
+								PyObject *result = PyRun_String(const_cast<char *>(defContext.propertyDefaultVal.c_str()),
+																								Py_eval_input, mdict, mdict);
+
+								if (result == NULL)
+									noerror = false;
+								else
+									Py_DECREF(result);
+							}
+						}
+					}
+
+					noerror = onDefProperty(defContext);
+				}
+				else if (defContext.optionName == "entity")
+				{
+					noerror = onDefEntity(defContext);
+				}
+				else if (defContext.optionName == "interface")
+				{
+					noerror = onDefInterface(defContext);
+				}
+				else if (defContext.optionName == "component")
+				{
+					noerror = onDefComponent(defContext);
+				}
+				else if (defContext.optionName == "fixed_dict")
+				{
+					noerror = onDefFixedDict(defContext);
+				}
+				else if (defContext.optionName == "fixed_array")
+				{
+					noerror = onDefFixedArray(defContext);
+				}
+				else if (defContext.optionName == "anonymous_fixed_array")
+				{
+					// 创建一个新数组
+					DefContext arrayType;
+					arrayType = defContext;
+					arrayType.moduleName += ".anonymous_fixed_array";
+
+					// 防止2个源文件行数一致，底层认为重复添加
+					arrayType.pyObjectSourceFile += "(array)";
+
+					// 增加一个item类别
+					DefContext itemType;
+					itemType = arrayType;
+					itemType.optionName = "fixed_item";
+
+					// 防止2个源文件行数一致，底层认为重复添加
+					itemType.pyObjectSourceFile += "(array_item)";
+
+					noerror = onDefFixedItem(itemType);
+
+					arrayType.returnType = "";
+
+					if (noerror)
+						noerror = onDefFixedArray(arrayType);
+
+					defContext.returnType = arrayType.moduleName;
+
+					if (noerror)
+						noerror = onDefFixedItem(defContext);
+				}
+				else if (defContext.optionName == "fixed_item")
+				{
+					noerror = onDefFixedItem(defContext);
+				}
+
+				if (!noerror)
+				{
 					PY_RETURN_ERROR;
 				}
 
-				defContext.inheritEngineModuleType = DefContext::DC_TYPE_ENTITY;
-				continue;
-			}
-			else if (parentClass == "EntityComponent")
-			{
-				defContext.inheritEngineModuleType = DefContext::DC_TYPE_COMPONENT;
-				continue;
+				Py_INCREF(pyFunc);
+				return pyFunc;
 			}
 
-			defContext.baseClasses.push_back(parentClass);
-		}
-
-		Py_XDECREF(pyBases);
-	}
-
-	bool noerror = true;
-
-	if (defContext.optionName == "method" || defContext.optionName == "clientmethod")
-	{
-		if (defContext.annotationsMaps.size() != defContext.argsvecs.size())
-		{
-			PyErr_Format(PyExc_AssertionError, "EntityDef.%s: \'%s\' all parameters must have annotations!\n", defContext.optionName.c_str(), moduleQualname);
-			PY_RETURN_ERROR;
-		}
-
-		if (defContext.optionName == "method")
-			noerror = onDefMethod(defContext);
-		else
-			noerror = onDefClientMethod(defContext);
-	}
-	else if (defContext.optionName == "rename")
-	{
-		noerror = onDefRename(defContext);
-	}
-	else if (defContext.optionName == "property")
-	{
-		// 验证这个字符串是否可以还原成对象
-		if (defContext.propertyDefaultVal.size() > 0)
-		{
-			PyObject* module = PyImport_AddModule("__main__");
-			if (module == NULL)
-			{
-				noerror = false;
-			}
-			else
-			{
-				if (defContext.returnType != "UNICODE" && defContext.returnType != "STRING")
-				{
-					PyObject* mdict = PyModule_GetDict(module); // Borrowed reference.
-					PyObject* result = PyRun_String(const_cast<char*>(defContext.propertyDefaultVal.c_str()),
-						Py_eval_input, mdict, mdict);
-
-					if (result == NULL)
-						noerror = false;
-					else
-						Py_DECREF(result);
-				}
-			}
-		}
-
-		noerror = onDefProperty(defContext);
-	}
-	else if (defContext.optionName == "entity")
-	{
-		noerror = onDefEntity(defContext);
-	}
-	else if (defContext.optionName == "interface")
-	{
-		noerror = onDefInterface(defContext);
-	}
-	else if (defContext.optionName == "component")
-	{
-		noerror = onDefComponent(defContext);
-	}
-	else if (defContext.optionName == "fixed_dict")
-	{
-		noerror = onDefFixedDict(defContext);
-	}
-	else if (defContext.optionName == "fixed_array")
-	{
-		noerror = onDefFixedArray(defContext);
-	}
-	else if (defContext.optionName == "anonymous_fixed_array")
-	{
-		// 创建一个新数组
-		DefContext arrayType;
-		arrayType = defContext;
-		arrayType.moduleName += ".anonymous_fixed_array";
-
-		// 防止2个源文件行数一致，底层认为重复添加
-		arrayType.pyObjectSourceFile += "(array)";
-
-		// 增加一个item类别
-		DefContext itemType;
-		itemType = arrayType;
-		itemType.optionName = "fixed_item";
-
-		// 防止2个源文件行数一致，底层认为重复添加
-		itemType.pyObjectSourceFile += "(array_item)";
-
-		noerror = onDefFixedItem(itemType);
-
-		arrayType.returnType = "";
-
-		if(noerror)
-			noerror = onDefFixedArray(arrayType);
-
-		defContext.returnType = arrayType.moduleName;
-
-		if (noerror)
-			noerror = onDefFixedItem(defContext);
-	}
-	else if (defContext.optionName == "fixed_item")
-	{
-		noerror = onDefFixedItem(defContext);
-	}
-
-	if (!noerror)
-	{
-		PY_RETURN_ERROR;
-	}
-
-	Py_INCREF(pyFunc);
-	return pyFunc;
-}
-
-//-------------------------------------------------------------------------------------
-static PyMethodDef __call_def_parse = { "_PyEntityDefParse", (PyCFunction)&__py_def_parse, METH_VARARGS, 0 };
+			//-------------------------------------------------------------------------------------
+			static PyMethodDef __call_def_parse = {"_PyEntityDefParse", (PyCFunction)&__py_def_parse, METH_VARARGS, 0};
 
 #define PY_DEF_HOOK(NAME)	\
 	static PyObject* __py_def_##NAME(PyObject* self, PyObject* args, PyObject* kwargs)	\
@@ -1864,7 +1859,7 @@ static bool loadAllScriptForComponentType(COMPONENT_TYPE loadComponentType)
 		KBE_ASSERT(false);
 	}
 
-	std::string rootPath = Resmgr::getSingleton().getPyUserComponentScriptsPath(loadComponentType);
+	std::string rootPath = smallgames::g_pathmgr.get_component_script_path(loadComponentType);
 
 	if (rootPath.size() == 0)
 	{
@@ -1883,7 +1878,7 @@ static bool loadAllScriptForComponentType(COMPONENT_TYPE loadComponentType)
 	free(_wentryScriptFileName);
 
 	std::vector<std::wstring> results;
-	Resmgr::getSingleton().listPathRes(wpath, L"py|pyc", results);
+	smallgames::g_pathmgr.list_res(wpath, L"py|pyc", results);
 
 	// 优先执行入口脚本
 	std::vector<std::wstring>::iterator iter = results.begin();

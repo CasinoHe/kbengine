@@ -34,7 +34,7 @@ namespace smallgames
 		friend Singleton<PathMgr>;
 
 	private:
-		PathMgr() = default;
+		PathMgr();
 		~PathMgr() = default;
 
 		PathMgr(PathMgr &) = delete;
@@ -55,7 +55,7 @@ namespace smallgames
 		void set_default_paths();
 
 	protected:
-		virtual void singletonInit() override;
+		virtual void singleton_init() override;
 
 	// interface
 	public:
@@ -63,14 +63,21 @@ namespace smallgames
 		inline bool is_inited() { return is_inited_; }
 
 		std::string get_full_path(const std::initializer_list<std::string> path_nodes);
+		std::string get_full_path(const std::string &path);
 		bool exists(const std::initializer_list<std::string> path_nodes);
+		bool exists(const std::string &path);
+
+		bool list_res(const std::wstring &path, const std::wstring &extensions, std::vector<std::wstring> &results);
 
 		std::string get_file_content(const std::initializer_list<std::string> path_notes);
 		std::string get_file_content(const std::string &file_path);
 
-		const std::string &get_res_path();
-		const std::string &get_script_path();
+		const std::string get_res_path();
+		const std::string get_script_path();
 		const std::string get_component_script_path(KBEngine::COMPONENT_TYPE component_type);
+
+		const std::string get_bin_path() { return smg_paths_.bin_path; }
+		const std::string get_root_path() { return smg_paths_.root_path; }
 
 	public:
 		struct SMGPaths
@@ -98,15 +105,17 @@ namespace smallgames
 		Resmgr();
 		~Resmgr();
 
-		virtual void singletonInit() override;
+		virtual void singleton_init() override;
 
 	public:
 		inline bool is_inited() { return is_inited_; }
 
-		KBEngine::ResourceObjectPtr openResource(std::initializer_list<std::string> path_list, std::ios::openmode mode = std::ios::in,
+		KBEngine::ResourceObjectPtr open_resource(std::initializer_list<std::string> path_list, std::ios::openmode mode = std::ios::in,
+																	 std::uint32_t flags = RESOURCE_NORMAL);
+		KBEngine::ResourceObjectPtr open_resource(const std::string &full_path, std::ios::openmode mode = std::ios::in,
 																	 std::uint32_t flags = RESOURCE_NORMAL);
 
-		bool initializeWatcher();
+		bool initialize_watcher();
 
 		void update();
 
@@ -118,4 +127,6 @@ namespace smallgames
 		std::unordered_map<std::string, KBEngine::ResourceObjectPtr> respool_;
 		std::mutex mutex_;
 	};
+
+	extern PathMgr &g_pathmgr;
 }

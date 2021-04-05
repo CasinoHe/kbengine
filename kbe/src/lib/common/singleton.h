@@ -37,7 +37,7 @@ namespace smallgames
 		inline static T *singleton_ = nullptr;
 
 	protected:
-		virtual void singletonInit() {}
+		virtual void singleton_init() {}
 
 	public:
 		static T &getSingleton(void)
@@ -45,7 +45,7 @@ namespace smallgames
 			if (!singleton_)
 			{
 				singleton_ = new T;
-				singleton_->singletonInit();
+				singleton_->singleton_init();
 			}
 
 			return (*singleton_);

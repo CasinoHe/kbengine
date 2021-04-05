@@ -369,10 +369,8 @@ int EntityApp<E>::unregisterPyObjectToScript(const char* attrName)
 template<class E>
 bool EntityApp<E>::installPyScript()
 {
-	if (Resmgr::getSingleton().respaths().size() <= 0 ||
-		Resmgr::getSingleton().getPyUserResPath().size() == 0 ||
-		Resmgr::getSingleton().getPySysResPath().size() == 0 ||
-		Resmgr::getSingleton().getPyUserScriptsPath().size() == 0)
+	if (smallgames::g_pathmgr.get_res_path().size() <= 0 ||
+			smallgames::g_pathmgr.get_script_path().size() <= 0)
 	{
 		KBE_ASSERT(false && "EntityApp::installPyScript: KBE_RES_PATH error!\n");
 		return false;
@@ -970,10 +968,10 @@ PyObject* EntityApp<E>::__py_getResFullPath(PyObject* self, PyObject* args)
 		return 0;
 	}
 
-	if(!Resmgr::getSingleton().hasRes(respath))
+	if(!smallgames::g_pathmgr.exists(respath))
 		return PyUnicode_FromString("");
 
-	std::string fullpath = Resmgr::getSingleton().matchRes(respath);
+	std::string fullpath = smallgames::g_pathmgr.get_full_path(respath);
 	return PyUnicode_FromString(fullpath.c_str());
 }
 
@@ -997,7 +995,7 @@ PyObject* EntityApp<E>::__py_hasRes(PyObject* self, PyObject* args)
 		return 0;
 	}
 
-	return PyBool_FromLong(Resmgr::getSingleton().hasRes(respath));
+	return PyBool_FromLong(smallgames::g_pathmgr.exists(respath));
 }
 
 template<class E>
@@ -1022,7 +1020,7 @@ PyObject* EntityApp<E>::__py_kbeOpen(PyObject* self, PyObject* args)
 		return 0;
 	}
 
-	std::string sfullpath = Resmgr::getSingleton().matchRes(respath);
+	std::string sfullpath = smallgames::g_pathmgr.get_full_path(respath);
 
 	PyObject *ioMod = PyImport_ImportModule("io");
 
@@ -1074,7 +1072,7 @@ PyObject* EntityApp<E>::__py_matchPath(PyObject* self, PyObject* args)
 		return 0;
 	}
 
-	std::string path = Resmgr::getSingleton().matchPath(respath);
+	std::string path = smallgames::g_pathmgr.get_full_path(respath);
 	return PyUnicode_FromStringAndSize(path.c_str(), path.size());
 }
 
@@ -1186,14 +1184,14 @@ PyObject* EntityApp<E>::__py_listPathRes(PyObject* self, PyObject* args)
 	}
 
 	char* cpath = strutil::wchar2char(respath);
-	std::string foundPath = Resmgr::getSingleton().matchPath(cpath);
+	std::string foundPath = smallgames::g_pathmgr.get_full_path(cpath);
 	free(cpath);
 	PyMem_Free(respath);
 
 	respath = strutil::char2wchar(foundPath.c_str());
 
 	std::vector<std::wstring> results;
-	Resmgr::getSingleton().listPathRes(respath, wExtendName, results);
+	smallgames::g_pathmgr.list_res(respath, wExtendName, results);
 	PyObject* pyresults = PyTuple_New(results.size());
 
 	std::vector<std::wstring>::iterator iter = results.begin();

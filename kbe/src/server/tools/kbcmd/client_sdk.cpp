@@ -180,7 +180,7 @@ bool ClientSDK::create(const std::string& path)
 
 	std::string findpath = "sdk_templates/client/" + name();
 
-	std::string getpath = Resmgr::getSingleton().matchPath(findpath);
+	std::string getpath = smallgames::g_pathmgr.get_full_path(findpath);
 
 	if (getpath.size() == 0 || findpath == getpath)
 	{
@@ -250,7 +250,7 @@ bool ClientSDK::copyPluginsSourceToPath(const std::string& path)
 	free(wpath);
 	
 	std::vector<std::wstring> results;
-	if (!Resmgr::getSingleton().listPathRes(sourcePath, L"*", results))
+	if (!smallgames::g_pathmgr.list_res(sourcePath, L"*", results))
 		return false;
 
 	wchar_t* wfindpath = strutil::char2wchar(std::string("sdk_templates/client/" + name()).c_str());
@@ -338,9 +338,9 @@ bool ClientSDK::writeServerErrorDescrsModule()
 
 	{
 		TiXmlNode *rootNode = NULL;
-		SmartPointer<XML> xml(new XML(Resmgr::getSingleton().matchRes("server/server_errors_defaults.xml").c_str()));
+		SmartPointer<XML> xml(new XML(smallgames::g_pathmgr.get_full_path("server/server_errors_defaults.xml").c_str()));
 
-		if (!xml->isGood())
+				if (!xml->isGood())
 		{
 			ERROR_MSG(fmt::format("ClientSDK::writeServerErrorDescrsModule: load {} is failed!\n",
 				"server/server_errors_defaults.xml"));
@@ -364,12 +364,9 @@ bool ClientSDK::writeServerErrorDescrsModule()
 	{
 		TiXmlNode *rootNode = NULL;
 
-		FILE* f = Resmgr::getSingleton().openRes("server/server_errors.xml");
-
-		if (f)
+		if (smallgames::g_pathmgr.exists("server/server_errors.xml"))
 		{
-			fclose(f);
-			SmartPointer<XML> xml(new XML(Resmgr::getSingleton().matchRes("server/server_errors.xml").c_str()));
+			SmartPointer<XML> xml(new XML(smallgames::g_pathmgr.get_full_path("server/server_errors.xml").c_str()));
 
 			if (xml->isGood())
 			{
@@ -833,7 +830,7 @@ bool ClientSDK::writeEntityCall(ScriptDefModule* pScriptDefModule)
 
 	std::string newModuleName;
 
-	// ÏÈÐ´BaseEntityCall
+	// ï¿½ï¿½Ð´BaseEntityCall
 	if(!writeBaseEntityCallBegin(pScriptDefModule))
 		return false;
 
@@ -932,7 +929,7 @@ bool ClientSDK::writeEntityCall(ScriptDefModule* pScriptDefModule)
 	headerfileBody_ += fmt::format("\n");
 	sourcefileBody_ += fmt::format("\n");
 
-	// ÔÙÐ´CellEntityCall
+	// ï¿½ï¿½Ð´CellEntityCall
 	if (!writeCellEntityCallBegin(pScriptDefModule))
 		return false;
 

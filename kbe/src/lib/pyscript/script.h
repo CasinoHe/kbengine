@@ -9,6 +9,7 @@
 #include "scriptobject.h"
 #include "scriptstdouterr.h"
 #include "scriptstdouterrhook.h"
+#include "resmgr/resmgr.h"
 
 namespace KBEngine{ namespace script{
 
@@ -37,25 +38,24 @@ namespace KBEngine{ namespace script{
 
 #define APPEND_PYSYSPATH(PY_PATHS)									\
 	std::wstring pySysPaths = SCRIPT_PATH;							\
-	wchar_t* pwpySysResPath = strutil::char2wchar(const_cast<char*>(Resmgr::getSingleton().getPySysResPath().c_str()));	\
-	strutil::kbe_replace(pySysPaths, L"../../res/", pwpySysResPath);\
-	PY_PATHS += pySysPaths;											\
-	free(pwpySysResPath);
+		wchar_t *pwpySysResPath = strutil::char2wchar(const_cast<char *>(smallgames::PathMgr::getSingleton().get_script_path().c_str()));\
+		strutil::kbe_replace(pySysPaths, L"../../res/", pwpySysResPath);\
+		PY_PATHS += pySysPaths;\
+		free(pwpySysResPath);
 
+		PyObject *PyTuple_FromStringVector(const std::vector<std::string> &v);
 
-PyObject * PyTuple_FromStringVector(const std::vector< std::string > & v);
+		template <class T>
+		PyObject *PyTuple_FromIntVector(const std::vector<T> &v)
+		{
+			int sz = v.size();
+			PyObject *t = PyTuple_New(sz);
+			for (int i = 0; i < sz; ++i)
+			{
+				PyTuple_SetItem(t, i, PyLong_FromLong(v[i]));
+			}
 
-template<class T>
-PyObject * PyTuple_FromIntVector(const std::vector< T > & v)
-{
-	int sz = v.size();
-	PyObject * t = PyTuple_New( sz );
-	for (int i = 0; i < sz; ++i)
-	{
-		PyTuple_SetItem( t, i, PyLong_FromLong( v[i] ) );
-	}
-
-	return t;
+			return t;
 }
 
 template<>

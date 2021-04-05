@@ -138,7 +138,8 @@ using namespace KBEngine;
 
 int process_make_client_sdk(int argc, char* argv[], const std::string clientType)
 {
-	Resmgr::getSingleton().initialize();
+	smallgames::PathMgr::getSingleton();
+	smallgames::Resmgr::getSingleton();
 	setEvns();
 	loadConfig();
 
@@ -146,7 +147,7 @@ int process_make_client_sdk(int argc, char* argv[], const std::string clientType
 
 	INFO_MSG("-----------------------------------------------------------------------------------------\n\n\n");
 
-	Resmgr::getSingleton().print();
+	smallgames::g_pathmgr.print();
 
 	Network::EventDispatcher dispatcher;
 	DebugHelper::getSingleton().pDispatcher(&dispatcher);
@@ -323,7 +324,8 @@ int process_newassets(int argc, char* argv[], const std::string assetsType)
 	res_path += fmt::format("{}{}{}{}res/{}{}scripts/", splitflag, assets_sys_path_root, splitflag, assets_sys_path_root, splitflag, assets_sys_path_root);
 	setenv("KBE_RES_PATH", res_path.c_str(), 1);
 
-	Resmgr::getSingleton().initialize();
+	smallgames::PathMgr::getSingleton();
+	smallgames::Resmgr::getSingleton();
 	setEvns();
 	loadConfig();
 
@@ -331,7 +333,7 @@ int process_newassets(int argc, char* argv[], const std::string assetsType)
 
 	INFO_MSG("-----------------------------------------------------------------------------------------\n\n\n");
 
-	Resmgr::getSingleton().print();
+	smallgames::g_pathmgr.print();
 
 	Network::EventDispatcher dispatcher;
 	DebugHelper::getSingleton().pDispatcher(&dispatcher);

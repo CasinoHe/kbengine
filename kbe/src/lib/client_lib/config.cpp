@@ -38,7 +38,7 @@ bool Config::loadConfig(std::string fileName)
 {
 	fileName_ = fileName;
 	TiXmlNode* rootNode = NULL;
-	SmartPointer<XML> xml(new XML(Resmgr::getSingleton().matchRes(fileName_).c_str()));
+	SmartPointer<XML> xml(new XML(smallgames::g_pathmgr.get_full_path(fileName_).c_str()));
 
 	if(!xml->isGood())
 	{
@@ -418,7 +418,7 @@ void Config::writeAccountName(const char* name)
 		return;
 
 	TiXmlNode* rootNode = NULL;
-	XML* xml = new XML(Resmgr::getSingleton().matchRes(fileName_).c_str());
+	XML* xml = new XML(smallgames::g_pathmgr.get_full_path(fileName_).c_str());
 
 	if(!xml->isGood())
 	{

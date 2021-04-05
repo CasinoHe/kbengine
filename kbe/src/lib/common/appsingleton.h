@@ -44,18 +44,18 @@ namespace smallgames
 		inline static T *singleton_ = nullptr;
 
 	protected:
-		virtual void singletonInit() {}
+		virtual void singleton_init() {}
 
 	public:
-    static T &getSingleton(Network::EventDispatcher &dispatcher,
-                           Network::NetworkInterface &ninterface,
-                           COMPONENT_TYPE componentType,
-                           COMPONENT_ID componentID)
+    static T &getSingleton(KBEngine::Network::EventDispatcher &dispatcher,
+                           KBEngine::Network::NetworkInterface &ninterface,
+                           KBEngine::COMPONENT_TYPE componentType,
+                           KBEngine::COMPONENT_ID componentID)
     {
       if (!singleton_)
       {
         singleton_ = new T(dispatcher, ninterface, componentType, componentID);
-        singleton_->singletonInit();
+        singleton_->singleton_init();
       }
 
       return (*singleton_);

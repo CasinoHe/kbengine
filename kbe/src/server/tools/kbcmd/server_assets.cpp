@@ -60,7 +60,7 @@ bool ServerAssets::create(const std::string& path)
 
 	std::string findpath = "sdk_templates/server/" + name();
 
-	std::string getpath = Resmgr::getSingleton().matchPath(findpath);
+	std::string getpath = smallgames::g_pathmgr.get_full_path(findpath);
 
 	if (getpath.size() == 0 || findpath == getpath)
 	{
@@ -88,7 +88,7 @@ bool ServerAssets::copyAssetsSourceToPath(const std::string& path)
 	free(wpath);
 
 	std::vector<std::wstring> results;
-	if (!Resmgr::getSingleton().listPathRes(sourcePath, L"*", results))
+	if (!smallgames::g_pathmgr.list_res(sourcePath, L"*", results))
 		return false;
 
 	wchar_t* wfindpath = strutil::char2wchar(std::string("sdk_templates/server/" + name()).c_str());

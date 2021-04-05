@@ -69,7 +69,7 @@ bool PyCompression::zipCompressDirectory(const std::string& sourceDir, const std
 
 			wchar_t* wpath = strutil::char2wchar(sourceDir.c_str());
 			std::vector<std::wstring> results;
-			Resmgr::getSingleton().listPathRes(wpath, L"*", results);
+			smallgames::g_pathmgr.list_res(wpath, L"*", results);
 
 			std::vector<std::wstring>::iterator iter = results.begin();
 			for (; iter != results.end(); ++iter)
@@ -146,7 +146,7 @@ bool PyCompression::tarCompressDirectory(const std::string& sourceDir, const std
 
 			wchar_t* wpath = strutil::char2wchar(sourceDir.c_str());
 			std::vector<std::wstring> results;
-			Resmgr::getSingleton().listPathRes(wpath, L"*", results);
+			smallgames::g_pathmgr.list_res(wpath, L"*", results);
 
 			std::vector<std::wstring>::iterator iter = results.begin();
 			for (; iter != results.end(); ++iter)

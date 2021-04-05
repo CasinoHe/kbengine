@@ -19,7 +19,7 @@ timeout_(0)
 //-------------------------------------------------------------------------------------
 ResourceObject::~ResourceObject()
 {
-	if(Resmgr::respool_timeout > 0)
+	if(smallgames::Resmgr::respool_timeout > 0)
 	{
 		DEBUG_MSG(fmt::format("ResourceObject::~ResourceObject(): {}\n", resName_));
 	}
@@ -28,7 +28,7 @@ ResourceObject::~ResourceObject()
 //-------------------------------------------------------------------------------------
 void ResourceObject::update()
 {
-	timeout_ = timestamp() + uint64( Resmgr::respool_timeout * stampsPerSecond() );
+	timeout_ = timestamp() + uint64(smallgames::Resmgr::respool_timeout * stampsPerSecond());
 }
 
 //-------------------------------------------------------------------------------------

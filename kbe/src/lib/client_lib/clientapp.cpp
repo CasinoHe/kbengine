@@ -774,10 +774,10 @@ PyObject* ClientApp::__py_getResFullPath(PyObject* self, PyObject* args)
 		S_Return;
 	}
 
-	if (!Resmgr::getSingleton().hasRes(respath))
+	if (!smallgames::g_pathmgr.exists(respath))
 		return PyUnicode_FromString("");
 
-	std::string fullpath = Resmgr::getSingleton().matchRes(respath);
+	std::string fullpath = smallgames::g_pathmgr.get_full_path(respath);
 	return PyUnicode_FromString(fullpath.c_str());
 }
 
@@ -801,7 +801,7 @@ PyObject* ClientApp::__py_hasRes(PyObject* self, PyObject* args)
 		S_Return;
 	}
 
-	return PyBool_FromLong(Resmgr::getSingleton().hasRes(respath));
+	return PyBool_FromLong(smallgames::g_pathmgr.exists(respath));
 }
 
 //-------------------------------------------------------------------------------------
@@ -825,7 +825,7 @@ PyObject* ClientApp::__py_kbeOpen(PyObject* self, PyObject* args)
 		S_Return;
 	}
 
-	std::string sfullpath = Resmgr::getSingleton().matchRes(respath);
+	std::string sfullpath = smallgames::g_pathmgr.get_full_path(respath);
 
 	PyObject *ioMod = PyImport_ImportModule("io");
 
@@ -865,7 +865,7 @@ PyObject* ClientApp::__py_matchPath(PyObject* self, PyObject* args)
 		S_Return;
 	}
 
-	std::string path = Resmgr::getSingleton().matchPath(respath);
+	std::string path = smallgames::g_pathmgr.get_full_path(respath);
 	return PyUnicode_FromStringAndSize(path.c_str(), path.size());
 }
 
@@ -977,14 +977,14 @@ PyObject* ClientApp::__py_listPathRes(PyObject* self, PyObject* args)
 	}
 
 	char* cpath = strutil::wchar2char(respath);
-	std::string foundPath = Resmgr::getSingleton().matchPath(cpath);
+	std::string foundPath = smallgames::g_pathmgr.get_full_path(cpath);
 	free(cpath);
 	PyMem_Free(respath);
 
 	respath = strutil::char2wchar(foundPath.c_str());
 
 	std::vector<std::wstring> results;
-	Resmgr::getSingleton().listPathRes(respath, wExtendName, results);
+	smallgames::g_pathmgr.list_res(respath, wExtendName, results);
 	PyObject* pyresults = PyTuple_New(results.size());
 
 	std::vector<std::wstring>::iterator iter = results.begin();
