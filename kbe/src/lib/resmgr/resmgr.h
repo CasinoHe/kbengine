@@ -67,7 +67,8 @@ namespace smallgames
 		bool exists(const std::initializer_list<std::string> path_nodes);
 		bool exists(const std::string &path);
 
-		bool list_res(const std::wstring &path, const std::wstring &extensions, std::vector<std::wstring> &results);
+		bool list_res(const std::string &path, const std::string &extensions, std::vector<std::string> &results);
+		bool walk_path(const std::filesystem::path &path, const std::vector<std::string> &extensions, std::vector<std::string> &results);
 
 		std::string get_file_content(const std::initializer_list<std::string> path_notes);
 		std::string get_file_content(const std::string &file_path);

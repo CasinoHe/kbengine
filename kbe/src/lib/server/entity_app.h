@@ -1087,7 +1087,7 @@ PyObject* EntityApp<E>::__py_listPathRes(PyObject* self, PyObject* args)
 		return 0;
 	}
 
-	std::wstring wExtendName = L"*";
+	std::string ExtendName = "*";
 	PyObject* pathobj = NULL;
 	PyObject* path_argsobj = NULL;
 
@@ -1113,14 +1113,16 @@ PyObject* EntityApp<E>::__py_listPathRes(PyObject* self, PyObject* args)
 		{
 			wchar_t* fargs = NULL;
 			fargs = PyUnicode_AsWideCharString(path_argsobj, NULL);
-			wExtendName = fargs;
+			char *args = strutil::wchar2char(fargs);
+			ExtendName = args;
+			free(args);
 			PyMem_Free(fargs);
 		}
 		else
 		{
 			if(PySequence_Check(path_argsobj))
 			{
-				wExtendName = L"";
+				ExtendName = "";
 				Py_ssize_t size = PySequence_Size(path_argsobj);
 				for(int i=0; i<size; ++i)
 				{
@@ -1134,8 +1136,10 @@ PyObject* EntityApp<E>::__py_listPathRes(PyObject* self, PyObject* args)
 					
 					wchar_t* wtemp = NULL;
 					wtemp = PyUnicode_AsWideCharString(pyobj, NULL);
-					wExtendName += wtemp;
-					wExtendName += L"|";
+					char *temp = strutil::wchar2char(wtemp);
+					ExtendName += temp;
+					ExtendName += "|";
+					free(temp);
 					PyMem_Free(wtemp);
 				}
 			}
@@ -1162,18 +1166,18 @@ PyObject* EntityApp<E>::__py_listPathRes(PyObject* self, PyObject* args)
 		return 0;
 	}
 
-	if(wExtendName.size() == 0)
+	if(ExtendName.size() == 0)
 	{
 		PyErr_Format(PyExc_TypeError, "KBEngine::listPathRes(): args[pathargs] is NULL!");
 		PyErr_PrintEx(0);
 		return 0;
 	}
 
-	if(wExtendName[0] == '.')
-		wExtendName.erase(wExtendName.begin());
+	if(ExtendName[0] == '.')
+		ExtendName.erase(ExtendName.begin());
 
-	if(wExtendName.size() == 0)
-		wExtendName = L"*";
+	if(ExtendName.size() == 0)
+		ExtendName = "*";
 
 	wchar_t* respath = PyUnicode_AsWideCharString(pathobj, NULL);
 	if(respath == NULL)
@@ -1188,21 +1192,18 @@ PyObject* EntityApp<E>::__py_listPathRes(PyObject* self, PyObject* args)
 	free(cpath);
 	PyMem_Free(respath);
 
-	respath = strutil::char2wchar(foundPath.c_str());
-
-	std::vector<std::wstring> results;
-	smallgames::g_pathmgr.list_res(respath, wExtendName, results);
+	std::vector<std::string> results;
+	smallgames::g_pathmgr.list_res(foundPath, ExtendName, results);
 	PyObject* pyresults = PyTuple_New(results.size());
 
-	std::vector<std::wstring>::iterator iter = results.begin();
+	auto iter = results.cbegin();
 	int i = 0;
 
-	for(; iter != results.end(); ++iter)
+	for(; iter != results.cend(); ++iter)
 	{
-		PyTuple_SET_ITEM(pyresults, i++, PyUnicode_FromWideChar((*iter).c_str(), (*iter).size()));
+		PyTuple_SET_ITEM(pyresults, i++, PyUnicode_FromStringAndSize((*iter).c_str(), (*iter).size()));
 	}
 
-	free(respath);
 	return pyresults;
 }
 

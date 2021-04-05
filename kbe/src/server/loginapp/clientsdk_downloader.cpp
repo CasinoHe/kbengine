@@ -178,8 +178,7 @@ bool ClientSDKDownloader::loadSDKDatas()
 		if (!sysinfos.error)
 			return false;
 
-		wchar_t* wpath = strutil::char2wchar(out_.c_str());
-		smallgames::g_pathmgr.list_res(wpath, L"*", sdkFiles_);
+		smallgames::g_pathmgr.list_res(out_.c_str(), "*", sdkFiles_);
 		loadedSDK_ = true;
 	}
 
@@ -196,9 +195,7 @@ bool ClientSDKDownloader::loadSDKDatas()
 		datas_ = NULL;
 	}
 
-	char* fileName = strutil::wchar2char(currSendFile_.c_str());
-	FILE* f = fopen(fileName, "rb");
-	free(fileName);
+	FILE* f = fopen(currSendFile_.c_str(), "rb");
 
 	if (f == NULL)
 		return false;
@@ -249,9 +246,7 @@ bool ClientSDKDownloader::process()
 		int remainingFiles = sdkFiles_.size();
 		(*pNewBundle) << (int)remainingFiles;
 
-		char* fileName = strutil::wchar2char(currSendFile_.c_str());
-		std::string sendFileName = fileName;
-		free(fileName);
+		std::string sendFileName(currSendFile_.c_str());
 
 		strutil::kbe_replace(sendFileName, out_, "");
 		while (sendFileName[0] == '\\' || sendFileName[0] == '/')
@@ -275,7 +270,7 @@ bool ClientSDKDownloader::process()
 
 	if (sdkFiles_.size() > 0)
 	{
-		currSendFile_ = L"";
+		currSendFile_ = "";
 		return true;
 	}
 

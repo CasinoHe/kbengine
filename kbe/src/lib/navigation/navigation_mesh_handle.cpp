@@ -413,14 +413,11 @@ NavigationHandle* NavMeshHandle::create(std::string resPath, const std::map< int
 
 	std::string path = resPath;
 	path = smallgames::g_pathmgr.get_full_path(path);
-	wchar_t *wpath = strutil::char2wchar(path.c_str());
-	std::wstring wspath = wpath;
-	free(wpath);
 
 	if(params.size() == 0)
 	{
-		std::vector<std::wstring> results;
-		smallgames::g_pathmgr.list_res(wspath, L"navmesh", results);
+		std::vector<std::string> results;
+		smallgames::g_pathmgr.list_res(path, "navmesh", results);
 
 		if(results.size() == 0)
 		{
@@ -431,24 +428,20 @@ NavigationHandle* NavMeshHandle::create(std::string resPath, const std::map< int
 		}
 
 		pNavMeshHandle = new NavMeshHandle();
-		std::vector<std::wstring>::iterator iter = results.begin();
+		auto iter = results.cbegin();
 		int layer = 0;
 		
-		for(; iter != results.end(); ++iter)
+		for(; iter != results.cend(); ++iter)
 		{
-			char* cpath = strutil::wchar2char((*iter).c_str());
-			path = cpath;
-			free(cpath);
-			
-			_create(layer++, resPath, path, pNavMeshHandle);
+			_create(layer++, resPath, (*iter).c_str(), pNavMeshHandle);
 		}
 	}
 	else
 	{
 		pNavMeshHandle = new NavMeshHandle();
-		std::map< int, std::string >::const_iterator iter = params.begin();
+		std::map<int, std::string>::const_iterator iter = params.cbegin();
 
-		for(; iter != params.end(); ++iter)
+		for(; iter != params.cend(); ++iter)
 		{
 			_create(iter->first, resPath, path + "/" + iter->second, pNavMeshHandle);
 		}		

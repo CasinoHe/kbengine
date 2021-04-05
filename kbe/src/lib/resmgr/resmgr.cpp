@@ -161,9 +161,57 @@ namespace smallgames
 		return false;
 	}
 
-	bool PathMgr::list_res(const std::wstring &path, const std::wstring &extensions, std::vector<std::wstring> &results)
+	bool PathMgr::list_res(const std::string &path, const std::string &extensions, std::vector<std::string> &results)
 	{
-		return false;
+		if (path.empty())
+		{
+			KBEngine::ERROR_MSG("PathMgr: open dir [NULL] error!\n");
+			return false;
+		}
+
+		std::vector<std::string> extend_names;
+		if (extensions.size() <= 0 || extensions == "*" || extensions == ".")
+		{
+			extend_names.emplace_back("*");
+		}
+		else
+		{
+			KBEngine::strutil::kbe_split<char>(extensions, '|', extend_names);
+		}
+
+		fs::path dir_path(get_full_path(path));
+
+		return walk_path(dir_path, extend_names, results);
+	}
+
+	bool PathMgr::walk_path(const std::filesystem::path &path, const std::vector<std::string> &extensions, std::vector<std::string> &results)
+	{
+		for (const auto &entry : fs::directory_iterator(path))
+		{
+			if (entry.is_directory())
+			{
+				walk_path(entry.path(), extensions, results);
+			}
+			else if (entry.is_regular_file())
+			{
+				if (extensions.size() == 1 && extensions[0] == "*")
+				{
+					results.emplace_back(entry.path().c_str());
+				}
+				else
+				{
+					for (auto &ext : extensions)
+					{
+						std::string file_ext(entry.path().extension().c_str());
+						if (ext.compare(file_ext) == 0)
+						{
+							results.emplace_back(entry.path().c_str());
+						}
+					}
+				}
+			}
+		}
+		return true;
 	}
 
 	std::string PathMgr::get_file_content(const std::initializer_list<std::string> path_notes)

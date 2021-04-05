@@ -299,12 +299,9 @@ NavigationHandle* NavTileHandle::create(std::string resPath, const std::map< int
 	{
 		path = resPath;
 		path = smallgames::g_pathmgr.get_full_path(path);
-		wchar_t* wpath = strutil::char2wchar(path.c_str());
-		std::wstring wspath = wpath;
-		free(wpath);
 			
-		std::vector<std::wstring> results;
-		smallgames::g_pathmgr.list_res(wspath, L"tmx", results);
+		std::vector<std::string> results;
+		smallgames::g_pathmgr.list_res(path, "tmx", results);
 
 		if(results.size() == 0)
 		{
@@ -313,10 +310,6 @@ NavigationHandle* NavTileHandle::create(std::string resPath, const std::map< int
 
 			return NULL;
 		}
-					
-		char* cpath = strutil::wchar2char(results[0].c_str());
-		path = cpath;
-		free(cpath);
 	}
 	else
 	{

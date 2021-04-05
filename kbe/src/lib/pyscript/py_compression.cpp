@@ -67,17 +67,17 @@ bool PyCompression::zipCompressDirectory(const std::string& sourceDir, const std
 				goto _PYZIPMODULE_ERROR;
 			}
 
-			wchar_t* wpath = strutil::char2wchar(sourceDir.c_str());
-			std::vector<std::wstring> results;
-			smallgames::g_pathmgr.list_res(wpath, L"*", results);
+			std::string path(sourceDir.c_str());
+			std::vector<std::string> results;
+			smallgames::g_pathmgr.list_res(path, "*", results);
 
-			std::vector<std::wstring>::iterator iter = results.begin();
+			auto iter = results.begin();
 			for (; iter != results.end(); ++iter)
 			{
-				std::wstring wstrpath = (*iter);
-				strutil::kbe_replace(wstrpath, wpath, L"");
+				std::string strpath = (*iter);
+				strutil::kbe_replace(strpath, path, "");
 				PyObject* pyResult = PyObject_CallMethod(zipObject, const_cast<char*>("write"),
-					const_cast<char*>("u#u#"), (*iter).c_str(), (*iter).size(), wstrpath.c_str(), wstrpath.size());
+					const_cast<char*>("u#u#"), (*iter).c_str(), (*iter).size(), strpath.c_str(), strpath.size());
 
 				if (pyResult != NULL)
 					Py_DECREF(pyResult);
@@ -93,7 +93,6 @@ bool PyCompression::zipCompressDirectory(const std::string& sourceDir, const std
 			else
 				SCRIPT_ERROR_CHECK();
 
-			free(wpath);
 			Py_DECREF(zipObject);
 			return true;
 		}
@@ -144,17 +143,17 @@ bool PyCompression::tarCompressDirectory(const std::string& sourceDir, const std
 				goto _PYTARMODULE_ERROR;
 			}
 
-			wchar_t* wpath = strutil::char2wchar(sourceDir.c_str());
-			std::vector<std::wstring> results;
-			smallgames::g_pathmgr.list_res(wpath, L"*", results);
+			std::string path(sourceDir.c_str());
+			std::vector<std::string> results;
+			smallgames::g_pathmgr.list_res(path, "*", results);
 
-			std::vector<std::wstring>::iterator iter = results.begin();
-			for (; iter != results.end(); ++iter)
+			auto iter = results.cbegin();
+			for (; iter != results.cend(); ++iter)
 			{
-				std::wstring wstrpath = (*iter);
-				strutil::kbe_replace(wstrpath, wpath, L"");
+				std::string strpath = (*iter);
+				strutil::kbe_replace(strpath, path, "");
 				PyObject* pyResult = PyObject_CallMethod(tarObject, const_cast<char*>("add"),
-					const_cast<char*>("u#u#"), (*iter).c_str(), (*iter).size(), wstrpath.c_str(), wstrpath.size());
+					const_cast<char*>("u#u#"), (*iter).c_str(), (*iter).size(), strpath.c_str(), strpath.size());
 
 				if (pyResult != NULL)
 					Py_DECREF(pyResult);
@@ -170,7 +169,6 @@ bool PyCompression::tarCompressDirectory(const std::string& sourceDir, const std
 			else
 				SCRIPT_ERROR_CHECK();
 
-			free(wpath);
 			Py_DECREF(tarObject);
 			return true;
 		}

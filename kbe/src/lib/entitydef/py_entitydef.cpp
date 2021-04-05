@@ -1871,21 +1871,18 @@ static bool loadAllScriptForComponentType(COMPONENT_TYPE loadComponentType)
 
 	while (rootPath[rootPath.size() - 1] == '/' || rootPath[rootPath.size() - 1] == '\\') rootPath.pop_back();
 
-	wchar_t* wpath = strutil::char2wchar((rootPath).c_str());
+	std::string path(rootPath.c_str());
+	std::string entryScriptFilename(entryScriptFileName.c_str());
 
-	wchar_t* _wentryScriptFileName = strutil::char2wchar((entryScriptFileName).c_str());
-	std::wstring wentryScriptFileName = _wentryScriptFileName;
-	free(_wentryScriptFileName);
-
-	std::vector<std::wstring> results;
-	smallgames::g_pathmgr.list_res(wpath, L"py|pyc", results);
+	std::vector<std::string> results;
+	smallgames::g_pathmgr.list_res(rootPath.c_str(), "py|pyc", results);
 
 	// 优先执行入口脚本
-	std::vector<std::wstring>::iterator iter = results.begin();
+	auto iter = results.begin();
 	for (; iter != results.end(); )
 	{
-		std::wstring wstrpath = (*iter);
-		if (wstrpath.find(wentryScriptFileName + L".py") == std::wstring::npos && wstrpath.find(wentryScriptFileName + L".pyc") == std::wstring::npos)
+		std::string strpath = (*iter);
+		if (strpath.find(entryScriptFilename + ".py") == std::string::npos && strpath.find(entryScriptFileName + ".pyc") == std::string::npos)
 		{
 			++iter;
 			continue;
@@ -1894,42 +1891,40 @@ static bool loadAllScriptForComponentType(COMPONENT_TYPE loadComponentType)
 		iter = results.erase(iter);
 	}
 
-	results.insert(results.begin(), std::wstring(wpath) + L"/" + wentryScriptFileName + L".py");
+	results.insert(results.begin(), std::string(path) + "/" + entryScriptFileName + ".py");
 
 	iter = results.begin();
 	for (; iter != results.end(); ++iter)
 	{
-		std::wstring wstrpath = (*iter);
+		std::string strpath = (*iter);
 
-		if (wstrpath.find(L"__pycache__") != std::wstring::npos)
+		if (strpath.find("__pycache__") != std::wstring::npos)
 			continue;
 
-		if (wstrpath.find(L"__init__.") != std::wstring::npos)
+		if (strpath.find("__init__.") != std::wstring::npos)
 			continue;
 
-		std::pair<std::wstring, std::wstring> pathPair = script::PyPlatform::splitPath(wstrpath);
-		std::pair<std::wstring, std::wstring> filePair = script::PyPlatform::splitText(pathPair.second);
+		std::pair<std::string, std::string> pathPair = script::PyPlatform::splitPath(strpath);
+		std::pair<std::string, std::string> filePair = script::PyPlatform::splitText(pathPair.second);
 
 		if (filePair.first.size() == 0)
 			continue;
 
-		char* cpacketPath = strutil::wchar2char(pathPair.first.c_str());
-		std::string packetPath = cpacketPath;
-		free(cpacketPath);
+		std::string packetPath(pathPair.first.c_str());
 
 		strutil::kbe_replace(packetPath, rootPath, "");
 		while (packetPath.size() > 0 && (packetPath[0] == '/' || packetPath[0] == '\\')) packetPath.erase(0, 1);
 		strutil::kbe_replace(packetPath, "/", ".");
 		strutil::kbe_replace(packetPath, "\\", ".");
 
-		char* moduleName = strutil::wchar2char(filePair.first.c_str());
+		std::string moduleName(filePair.first.c_str());
 
 		{
 			PyObject* pyModule = NULL;
 
 			if (packetPath.size() == 0 || packetPath == "components" || packetPath == "interfaces")
 			{
-				pyModule = PyImport_ImportModule(const_cast<char*>(moduleName));
+				pyModule = PyImport_ImportModule(const_cast<char*>(moduleName.c_str()));
 			}
 			else
 			{
@@ -1939,7 +1934,6 @@ static bool loadAllScriptForComponentType(COMPONENT_TYPE loadComponentType)
 			if (!pyModule)
 			{
 				SCRIPT_ERROR_CHECK();
-				free(wpath);
 				return false;
 			}
 			else
@@ -1947,11 +1941,7 @@ static bool loadAllScriptForComponentType(COMPONENT_TYPE loadComponentType)
 				Py_DECREF(pyModule);
 			}
 		}
-
-		free(moduleName);
 	}
-
-	free(wpath);
 	
 	return true;
 }

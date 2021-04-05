@@ -79,30 +79,18 @@ bool ServerAssets::create(const std::string& path)
 //-------------------------------------------------------------------------------------
 bool ServerAssets::copyAssetsSourceToPath(const std::string& path)
 {
-	wchar_t* wpath = strutil::char2wchar(path.c_str());
-	std::wstring sourcePath = wpath;
-	free(wpath);
-
-	wpath = strutil::char2wchar(basepath_.c_str());
-	std::wstring destPath = wpath;
-	free(wpath);
-
-	std::vector<std::wstring> results;
-	if (!smallgames::g_pathmgr.list_res(sourcePath, L"*", results))
+	std::vector<std::string> results;
+	if (!smallgames::g_pathmgr.list_res(path, "*", results))
 		return false;
 
-	wchar_t* wfindpath = strutil::char2wchar(std::string("sdk_templates/server/" + name()).c_str());
-	std::wstring findpath = wfindpath;
-	free(wfindpath);
+	std::string findpath("sdk_templates/server/" + name());
 
-	std::vector<std::wstring>::iterator iter = results.begin();
-	for (; iter != results.end(); ++iter)
+	auto iter = results.cbegin();
+	for (; iter != results.cend(); ++iter)
 	{
-		std::wstring::size_type fpos = (*iter).find(findpath);
+		std::string::size_type fpos = (*iter).find(findpath);
 
-		char* ccattr = strutil::wchar2char((*iter).c_str());
-		std::string currpath = ccattr;
-		free(ccattr);
+		std::string currpath((*iter).c_str());
 
 		if (fpos == std::wstring::npos)
 		{
@@ -112,39 +100,30 @@ bool ServerAssets::copyAssetsSourceToPath(const std::string& path)
 			return false;
 		}
 
-		std::wstring targetFile = (*iter);
+		std::string targetFile = (*iter);
 		targetFile.erase(0, fpos + findpath.size() + 1);
-		targetFile = (destPath + targetFile);
+		targetFile = (basepath_ + targetFile);
 
-		std::wstring basepath = targetFile;
-		fpos = targetFile.rfind(L"/");
-
-		ccattr = strutil::wchar2char(targetFile.c_str());
-		std::string currTargetFile = ccattr;
-		free(ccattr);
+		std::string basepath(targetFile);
+		fpos = targetFile.rfind("/");
 
 		if (fpos == std::wstring::npos)
 		{
-			ERROR_MSG(fmt::format("ServerAssets::copyAssetsSourceToPath(): split basepath({}) error!\n",
-				currTargetFile));
+			ERROR_MSG(fmt::format("ServerAssets::copyAssetsSourceToPath(): split basepath({}) error!\n", targetFile));
 
 			return false;
 		}
 
 		basepath.erase(fpos, basepath.size() - fpos);
 
-		ccattr = strutil::wchar2char(basepath.c_str());
-		std::string currbasepath = ccattr;
-		free(ccattr);
-
-		if (KBCMD::creatDir(currbasepath.c_str()) == -1)
+		if (KBCMD::creatDir(basepath.c_str()) == -1)
 		{
-			ERROR_MSG(fmt::format("ServerAssets::copyAssetsSourceToPath(): creating directory error! path={}\n", currbasepath));
+			ERROR_MSG(fmt::format("ServerAssets::copyAssetsSourceToPath(): creating directory error! path={}\n", basepath));
 			return false;
 		}
 
-		std::ifstream input(currpath.c_str(), std::ios::binary);
-		std::ofstream output(currTargetFile.c_str(), std::ios::binary);
+		std::ifstream input(currpath, std::ios::binary);
+		std::ofstream output(targetFile, std::ios::binary);
 
 		std::stringstream ss;
 		std::string filebody;
