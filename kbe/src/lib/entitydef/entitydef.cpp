@@ -156,7 +156,7 @@ bool EntityDef::initialize(std::vector<PyTypeObject*>& scriptBaseTypes,
 	__loadComponentType = loadComponentType;
 	__scriptBaseTypes = scriptBaseTypes;
 
-	__entitiesPath = smallgames::g_pathmgr.get_script_path();
+	__entitiesPath = smallgames::GetPathMgr().get_script_path();
 
 	g_entityFlagMapping["CELL"]									= ED_FLAG_CELL_PUBLIC;
 	g_entityFlagMapping["CELL_AND_CLIENT"]						= ED_FLAG_CELL_PUBLIC_AND_OWN;
@@ -1952,7 +1952,7 @@ PyObject* EntityDef::loadScriptModule(std::string moduleName)
 	// 检查该模块路径是否是KBE脚本目录下的，防止因用户取名与python模块名称冲突而误导入了系统模块
 	if (pyModule)
 	{
-		std::string userScriptsPath = smallgames::g_pathmgr.get_script_path();
+		std::string userScriptsPath = smallgames::GetPathMgr().get_script_path();
 		std::string pyModulePath = "";
 
 		PyObject *fileobj = NULL;

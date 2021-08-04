@@ -51,7 +51,7 @@ ServerConfig::~ServerConfig()
 bool ServerConfig::loadConfig(std::string fileName)
 {
 	TiXmlNode* node = NULL, *rootNode = NULL;
-	SmartPointer<XML> xml(new XML(smallgames::g_pathmgr.get_full_path(fileName).c_str()));
+	SmartPointer<XML> xml(new XML(smallgames::GetPathMgr().get_full_path(fileName).c_str()));
 
 	if(!xml->isGood())
 	{
@@ -1542,7 +1542,7 @@ bool ServerConfig::loadConfig(std::string fileName)
 
 	if(email_service_config.size() > 0)
 	{
-		SmartPointer<XML> emailxml(new XML(smallgames::g_pathmgr.get_full_path(email_service_config).c_str()));
+		SmartPointer<XML> emailxml(new XML(smallgames::GetPathMgr().get_full_path(email_service_config).c_str()));
 
 		if(!emailxml->isGood())
 		{

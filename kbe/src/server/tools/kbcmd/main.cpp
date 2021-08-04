@@ -147,7 +147,7 @@ int process_make_client_sdk(int argc, char* argv[], const std::string clientType
 
 	INFO_MSG("-----------------------------------------------------------------------------------------\n\n\n");
 
-	smallgames::g_pathmgr.print();
+	smallgames::GetPathMgr().print();
 
 	Network::EventDispatcher dispatcher;
 	DebugHelper::getSingleton().pDispatcher(&dispatcher);
@@ -333,7 +333,7 @@ int process_newassets(int argc, char* argv[], const std::string assetsType)
 
 	INFO_MSG("-----------------------------------------------------------------------------------------\n\n\n");
 
-	smallgames::g_pathmgr.print();
+	smallgames::GetPathMgr().print();
 
 	Network::EventDispatcher dispatcher;
 	DebugHelper::getSingleton().pDispatcher(&dispatcher);

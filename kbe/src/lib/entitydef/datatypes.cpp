@@ -97,7 +97,7 @@ bool DataTypes::loadTypes(std::string& file)
 	if (access(file.c_str(), 0) != 0)
 		return true;
 
-	SmartPointer<XML> xml(new XML(smallgames::g_pathmgr.get_full_path(file).c_str()));
+	SmartPointer<XML> xml(new XML(smallgames::GetPathMgr().get_full_path(file).c_str()));
 	return loadTypes(xml);
 }
 

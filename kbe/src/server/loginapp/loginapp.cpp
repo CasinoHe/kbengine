@@ -1513,7 +1513,7 @@ void Loginapp::importServerErrorsDescr(Network::Channel* pChannel)
 
 		{
 			TiXmlNode *rootNode = NULL;
-			SmartPointer<XML> xml(new XML(smallgames::g_pathmgr.get_full_path("server/server_errors_defaults.xml").c_str()));
+			SmartPointer<XML> xml(new XML(smallgames::GetPathMgr().get_full_path("server/server_errors_defaults.xml").c_str()));
 
 			if (!xml->isGood())
 			{
@@ -1542,9 +1542,9 @@ void Loginapp::importServerErrorsDescr(Network::Channel* pChannel)
 		{
 			TiXmlNode *rootNode = NULL;
 
-			if (smallgames::g_pathmgr.exists("server/server_errors.xml"))
+			if (smallgames::GetPathMgr().exists("server/server_errors.xml"))
 			{
-				SmartPointer<XML> xml(new XML(smallgames::g_pathmgr.get_full_path("server/server_errors.xml").c_str()));
+				SmartPointer<XML> xml(new XML(smallgames::GetPathMgr().get_full_path("server/server_errors.xml").c_str()));
 
 				if (xml->isGood())
 				{
@@ -1608,8 +1608,8 @@ void Loginapp::importClientSDK(Network::Channel* pChannel, MemoryStream& s)
 	INFO_MSG(fmt::format("Loginapp::importClientSDK: options={}! reqaAdr={}, callbackAddr={}:{}\n",
 		options, pChannel->c_str(), callbackIP, callbackPort));
 
-	std::string assetsPath = smallgames::g_pathmgr.get_script_path();
-	std::string binPath = smallgames::g_pathmgr.get_bin_path();
+	std::string assetsPath = smallgames::GetPathMgr().get_script_path();
+	std::string binPath = smallgames::GetPathMgr().get_bin_path();
 
 	if (binPath.size() == 0)
 	{

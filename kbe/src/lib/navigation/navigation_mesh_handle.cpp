@@ -412,17 +412,17 @@ NavigationHandle* NavMeshHandle::create(std::string resPath, const std::map< int
 	NavMeshHandle* pNavMeshHandle = NULL;
 
 	std::string path = resPath;
-	path = smallgames::g_pathmgr.get_full_path(path);
+	path = smallgames::GetPathMgr().get_full_path(path);
 
 	if(params.size() == 0)
 	{
 		std::vector<std::string> results;
-		smallgames::g_pathmgr.list_res(path, "navmesh", results);
+		smallgames::GetPathMgr().list_res(path, "navmesh", results);
 
 		if(results.size() == 0)
 		{
 			ERROR_MSG(fmt::format("NavMeshHandle::create: path({}) not found navmesh.!\n",
-														smallgames::g_pathmgr.get_full_path(path)));
+														smallgames::GetPathMgr().get_full_path(path)));
 
 			return NULL;
 		}
@@ -459,7 +459,7 @@ dtNavMesh* tryReadNavmesh(uint8* data, size_t readsize, const std::string& res, 
 		if(showlog)
 		{
 			ERROR_MSG(fmt::format("NavMeshHandle::tryReadNavmesh: open({}), NavMeshSetHeader error!\n",
-														smallgames::g_pathmgr.get_full_path(res)));
+														smallgames::GetPathMgr().get_full_path(res)));
 		}
 
 		return NULL;
@@ -574,7 +574,7 @@ bool NavMeshHandle::_create(int layer, const std::string& resPath, const std::st
 	if (!fp)
 	{
 		ERROR_MSG(fmt::format("NavMeshHandle::create: open({}) error!\n",
-													smallgames::g_pathmgr.get_full_path(res)));
+													smallgames::GetPathMgr().get_full_path(res)));
 
 		return false;
 	}
@@ -590,7 +590,7 @@ bool NavMeshHandle::_create(int layer, const std::string& resPath, const std::st
 	if(data == NULL)
 	{
 		ERROR_MSG(fmt::format("NavMeshHandle::create: open({}), memory(size={}) error!\n",
-													smallgames::g_pathmgr.get_full_path(res), flen));
+													smallgames::GetPathMgr().get_full_path(res), flen));
 
 		fclose(fp);
 		SAFE_RELEASE_ARRAY(data);
@@ -601,7 +601,7 @@ bool NavMeshHandle::_create(int layer, const std::string& resPath, const std::st
 	if(readsize != flen)
 	{
 		ERROR_MSG(fmt::format("NavMeshHandle::create: open({}), read(size={} != {}) error!\n", 
-													smallgames::g_pathmgr.get_full_path(res), readsize, flen));
+													smallgames::GetPathMgr().get_full_path(res), readsize, flen));
 
 		fclose(fp);
 		SAFE_RELEASE_ARRAY(data);

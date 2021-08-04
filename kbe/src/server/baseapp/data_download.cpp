@@ -236,7 +236,7 @@ bool FileDataDownload::process()
 	if(fptr == NULL || !fptr->valid())
 	{
 		ERROR_MSG(fmt::format("FileDataDownload::process(): can't open {}.\n",
-													smallgames::g_pathmgr.get_full_path(path_).c_str()));
+													smallgames::GetPathMgr().get_full_path(path_).c_str()));
 
 		error_ = true;
 		return false;

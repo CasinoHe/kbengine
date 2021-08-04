@@ -1469,17 +1469,17 @@ uint16 Machine::startLinuxProcess(int32 uid, COMPONENT_TYPE componentType, uint6
 
 		if (KBE_ROOT == "")
 		{
-			KBE_ROOT = smallgames::g_pathmgr.get_root_path();
+			KBE_ROOT = smallgames::GetPathMgr().get_root_path();
 		}
 
 		if (KBE_RES_PATH == "")
 		{
-			KBE_RES_PATH = smallgames::g_pathmgr.get_res_path();
+			KBE_RES_PATH = smallgames::GetPathMgr().get_res_path();
 		}
 
 		if (KBE_BIN_PATH == "")
 		{
-			KBE_BIN_PATH = smallgames::g_pathmgr.get_bin_path();
+			KBE_BIN_PATH = smallgames::GetPathMgr().get_bin_path();
 		}
 
 		std::string bin_path = KBE_BIN_PATH;

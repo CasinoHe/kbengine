@@ -720,7 +720,7 @@ bool EndPoint::setupSSL(int sslVersion, Packet* pPacket)
 
 	SSL_CTX_set_options(sslContext_, SSL_OP_SINGLE_DH_USE | SSL_OP_SINGLE_ECDH_USE);
 
-	std::string pem = smallgames::g_pathmgr.get_full_path(g_sslCertificate.c_str());
+	std::string pem = smallgames::GetPathMgr().get_full_path(g_sslCertificate.c_str());
 	int use_cert = SSL_CTX_use_certificate_file(sslContext_, pem.c_str(), SSL_FILETYPE_PEM);
 	if (0 >= use_cert)
 	{
@@ -731,7 +731,7 @@ bool EndPoint::setupSSL(int sslVersion, Packet* pPacket)
 		return false;
 	}
 
-	pem = smallgames::g_pathmgr.get_full_path(g_sslPrivateKey.c_str());
+	pem = smallgames::GetPathMgr().get_full_path(g_sslPrivateKey.c_str());
 	int use_prv = SSL_CTX_use_PrivateKey_file(sslContext_, pem.c_str(), SSL_FILETYPE_PEM);
 	if (0 >= use_prv)
 	{

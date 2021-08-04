@@ -178,7 +178,7 @@ bool ClientSDKDownloader::loadSDKDatas()
 		if (!sysinfos.error)
 			return false;
 
-		smallgames::g_pathmgr.list_res(out_.c_str(), "*", sdkFiles_);
+		smallgames::GetPathMgr().list_res(out_.c_str(), "*", sdkFiles_);
 		loadedSDK_ = true;
 	}
 

@@ -129,5 +129,5 @@ namespace smallgames
 		std::mutex mutex_;
 	};
 
-	extern PathMgr &g_pathmgr;
+	PathMgr &GetPathMgr();
 }

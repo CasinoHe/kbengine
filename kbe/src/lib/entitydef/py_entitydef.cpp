@@ -811,7 +811,7 @@ static bool isRefEntityDefModule(PyObject *pyObj)
 				strutil::kbe_replace(OUT, "\\\\", "/");                                            \
 				strutil::kbe_replace(OUT, "\\", "/");                                              \
 				strutil::kbe_replace(OUT, "//", "/");                                              \
-				std::string kbe_root = smallgames::g_pathmgr.get_script_path();                    \
+				std::string kbe_root = smallgames::GetPathMgr().get_script_path();                    \
 				strutil::kbe_replace(kbe_root, "\\\\", "/");                                       \
 				strutil::kbe_replace(kbe_root, "\\", "/");                                         \
 				strutil::kbe_replace(kbe_root, "/", "/");                                          \
@@ -1859,7 +1859,7 @@ static bool loadAllScriptForComponentType(COMPONENT_TYPE loadComponentType)
 		KBE_ASSERT(false);
 	}
 
-	std::string rootPath = smallgames::g_pathmgr.get_component_script_path(loadComponentType);
+	std::string rootPath = smallgames::GetPathMgr().get_component_script_path(loadComponentType);
 
 	if (rootPath.size() == 0)
 	{
@@ -1875,7 +1875,7 @@ static bool loadAllScriptForComponentType(COMPONENT_TYPE loadComponentType)
 	std::string entryScriptFilename(entryScriptFileName.c_str());
 
 	std::vector<std::string> results;
-	smallgames::g_pathmgr.list_res(rootPath.c_str(), "py|pyc", results);
+	smallgames::GetPathMgr().list_res(rootPath.c_str(), "py|pyc", results);
 
 	// 优先执行入口脚本
 	auto iter = results.begin();

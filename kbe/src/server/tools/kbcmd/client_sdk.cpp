@@ -180,7 +180,7 @@ bool ClientSDK::create(const std::string& path)
 
 	std::string findpath = "sdk_templates/client/" + name();
 
-	std::string getpath = smallgames::g_pathmgr.get_full_path(findpath);
+	std::string getpath = smallgames::GetPathMgr().get_full_path(findpath);
 
 	if (getpath.size() == 0 || findpath == getpath)
 	{
@@ -242,7 +242,7 @@ void ClientSDK::onCreateServerErrorDescrsModuleFileName()
 bool ClientSDK::copyPluginsSourceToPath(const std::string& path)
 {
 	std::vector<std::string> results;
-	if (!smallgames::g_pathmgr.list_res(path, "*", results))
+	if (!smallgames::GetPathMgr().list_res(path, "*", results))
 		return false;
 
 	std::string findpath("sdk_templates/client/" + name());
@@ -317,7 +317,7 @@ bool ClientSDK::writeServerErrorDescrsModule()
 
 	{
 		TiXmlNode *rootNode = NULL;
-		SmartPointer<XML> xml(new XML(smallgames::g_pathmgr.get_full_path("server/server_errors_defaults.xml").c_str()));
+		SmartPointer<XML> xml(new XML(smallgames::GetPathMgr().get_full_path("server/server_errors_defaults.xml").c_str()));
 
 				if (!xml->isGood())
 		{
@@ -343,9 +343,9 @@ bool ClientSDK::writeServerErrorDescrsModule()
 	{
 		TiXmlNode *rootNode = NULL;
 
-		if (smallgames::g_pathmgr.exists("server/server_errors.xml"))
+		if (smallgames::GetPathMgr().exists("server/server_errors.xml"))
 		{
-			SmartPointer<XML> xml(new XML(smallgames::g_pathmgr.get_full_path("server/server_errors.xml").c_str()));
+			SmartPointer<XML> xml(new XML(smallgames::GetPathMgr().get_full_path("server/server_errors.xml").c_str()));
 
 			if (xml->isGood())
 			{

@@ -305,16 +305,16 @@ void ScriptDefModule::autoMatchCompOwn()
 	{
 		std::string fmodule = "scripts/base/components/" + name_ + ".py";
 		std::string fmodule_pyc = fmodule + "c";
-		if (smallgames::g_pathmgr.get_full_path(fmodule) != fmodule ||
-				smallgames::g_pathmgr.get_full_path(fmodule_pyc) != fmodule_pyc)
+		if (smallgames::GetPathMgr().get_full_path(fmodule) != fmodule ||
+				smallgames::GetPathMgr().get_full_path(fmodule_pyc) != fmodule_pyc)
 			{
 				setBase(true);
 			}
 
 		fmodule = "scripts/cell/components/" + name_ + ".py";
 		fmodule_pyc = fmodule + "c";
-		if (smallgames::g_pathmgr.get_full_path(fmodule) != fmodule ||
-				smallgames::g_pathmgr.get_full_path(fmodule_pyc) != fmodule_pyc)
+		if (smallgames::GetPathMgr().get_full_path(fmodule) != fmodule ||
+				smallgames::GetPathMgr().get_full_path(fmodule_pyc) != fmodule_pyc)
 		{
 			setCell(true);
 		}
@@ -342,7 +342,7 @@ void ScriptDefModule::autoMatchCompOwn()
 	int assertionHasBase = -1;
 	int assertionHasCell = -1;
 
-	std::string entitiesFile = smallgames::g_pathmgr.get_script_path() + "/entities.xml";
+	std::string entitiesFile = smallgames::GetPathMgr().get_script_path() + "/entities.xml";
 
 	// 打开这个entities.xml文件
 	// 允许纯脚本定义，则可能没有这个文件
@@ -415,8 +415,8 @@ void ScriptDefModule::autoMatchCompOwn()
 
 	std::string fmodule = "scripts/client/" + name_ + ".py";
 	std::string fmodule_pyc = fmodule + "c";
-	if(smallgames::g_pathmgr.get_full_path(fmodule) != fmodule ||
-		smallgames::g_pathmgr.get_full_path(fmodule_pyc) != fmodule_pyc)
+	if(smallgames::GetPathMgr().get_full_path(fmodule) != fmodule ||
+		smallgames::GetPathMgr().get_full_path(fmodule_pyc) != fmodule_pyc)
 	{
 		if (assertionHasClient < 0)
 		{
@@ -458,8 +458,8 @@ void ScriptDefModule::autoMatchCompOwn()
 
 	fmodule = "scripts/base/" + name_ + ".py";
 	fmodule_pyc = fmodule + "c";
-	if(smallgames::g_pathmgr.get_full_path(fmodule) != fmodule ||
-		smallgames::g_pathmgr.get_full_path(fmodule_pyc) != fmodule_pyc)
+	if(smallgames::GetPathMgr().get_full_path(fmodule) != fmodule ||
+		smallgames::GetPathMgr().get_full_path(fmodule_pyc) != fmodule_pyc)
 	{
 		if (assertionHasBase < 0)
 		{
@@ -494,8 +494,8 @@ void ScriptDefModule::autoMatchCompOwn()
 
 	fmodule = "scripts/cell/" + name_ + ".py";
 	fmodule_pyc = fmodule + "c";
-	if(smallgames::g_pathmgr.get_full_path(fmodule) != fmodule ||
-		smallgames::g_pathmgr.get_full_path(fmodule_pyc) != fmodule_pyc)
+	if(smallgames::GetPathMgr().get_full_path(fmodule) != fmodule ||
+		smallgames::GetPathMgr().get_full_path(fmodule_pyc) != fmodule_pyc)
 	{
 		if (assertionHasCell < 0)
 		{

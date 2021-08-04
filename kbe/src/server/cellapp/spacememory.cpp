@@ -225,7 +225,7 @@ PyObject* SpaceMemory::__py_AddSpaceGeometryMapping(PyObject* self, PyObject* ar
 
 	SCRIPT_ERROR_CHECK();
 
-	if (smallgames::g_pathmgr.get_full_path(path).size() == 0)
+	if (smallgames::GetPathMgr().get_full_path(path).size() == 0)
 	{
 		PyErr_Format(PyExc_AssertionError, "KBEngine::addSpaceGeometryMapping: path error! spaceID=%u respath=%s",
 			spaceID, path);

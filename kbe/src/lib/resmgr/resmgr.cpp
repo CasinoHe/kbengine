@@ -12,7 +12,11 @@
 
 namespace smallgames
 {
-	PathMgr &g_pathmgr = PathMgr::getSingleton();
+	PathMgr &GetPathMgr()
+	{
+		static PathMgr &g_pathmgr = PathMgr::getSingleton();
+		return g_pathmgr;
+	}
 
 	namespace fs = std::filesystem;
 
@@ -341,13 +345,13 @@ namespace smallgames
 	//-------------------------------------------------------------------------------------
 	KBEngine::ResourceObjectPtr Resmgr::open_resource(std::initializer_list<std::string> path_list, std::ios::openmode mode, std::uint32_t flags)
 	{
-		if (!g_pathmgr.exists(path_list))
+		if (!GetPathMgr().exists(path_list))
 		{
-			KBEngine::ERROR_MSG(fmt::format("Cannot find resource file: {}", g_pathmgr.get_full_path(path_list)));
+			KBEngine::ERROR_MSG(fmt::format("Cannot find resource file: {}", GetPathMgr().get_full_path(path_list)));
 			return {};
 		}
 
-		std::string full_path = g_pathmgr.get_full_path(path_list);
+		std::string full_path = GetPathMgr().get_full_path(path_list);
 
 		return open_resource(full_path, mode, flags);
 	}

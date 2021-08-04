@@ -56,14 +56,14 @@ inline void START_MSG(const char * name, uint64 appuid)
 
 inline bool installPyScript(KBEngine::script::Script& script, COMPONENT_TYPE componentType)
 {
-	if (!smallgames::g_pathmgr.is_inited())
+	if (!smallgames::GetPathMgr().is_inited())
 	{
 		ERROR_MSG("EntityApp::installPyScript: KBE_RES_PATH error!\n");
 		return false;
 	}
 
 	std::wstring user_scripts_path = L"";
-	wchar_t* tbuf = KBEngine::strutil::char2wchar(const_cast<char*>(smallgames::g_pathmgr.get_script_path().c_str()));
+	wchar_t* tbuf = KBEngine::strutil::char2wchar(const_cast<char*>(smallgames::GetPathMgr().get_script_path().c_str()));
 	if(tbuf != NULL)
 	{
 		user_scripts_path += tbuf;
@@ -92,7 +92,7 @@ inline bool installPyScript(KBEngine::script::Script& script, COMPONENT_TYPE com
 		pyPaths += user_scripts_path + L"bots/components;";
 	}
 
-	std::string kbe_res_path(smallgames::g_pathmgr.get_res_path());
+	std::string kbe_res_path(smallgames::GetPathMgr().get_res_path());
 	kbe_res_path += "scripts/common";
 
 	tbuf = KBEngine::strutil::char2wchar(const_cast<char*>(kbe_res_path.c_str()));

@@ -31,7 +31,7 @@ bool FixedMessages::loadConfig(std::string fileName, bool notFoundError)
 
 	TiXmlNode* node = NULL, *rootNode = NULL;
 
-	SmartPointer<XML> xml(new XML(smallgames::g_pathmgr.get_full_path(fileName).c_str()));
+	SmartPointer<XML> xml(new XML(smallgames::GetPathMgr().get_full_path(fileName).c_str()));
 
 	if(!xml->isGood())
 	{

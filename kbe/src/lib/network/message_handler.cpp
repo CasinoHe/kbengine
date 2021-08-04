@@ -228,12 +228,12 @@ std::string MessageHandlers::getDigestStr()
 
 		{
 			TiXmlNode *rootNode = NULL;
-			SmartPointer<XML> xml(new XML(smallgames::g_pathmgr.get_full_path("server/server_errors_defaults.xml").c_str()));
+			SmartPointer<XML> xml(new XML(smallgames::GetPathMgr().get_full_path("server/server_errors_defaults.xml").c_str()));
 
 			if (!xml->isGood())
 			{
 				ERROR_MSG(fmt::format("MessageHandlers::getDigestStr(): load {} is failed!\n",
-															smallgames::g_pathmgr.get_full_path("server/server_errors_defaults.xml")));
+															smallgames::GetPathMgr().get_full_path("server/server_errors_defaults.xml")));
 
 				return "";
 			}
@@ -268,11 +268,11 @@ std::string MessageHandlers::getDigestStr()
 		{
 			TiXmlNode *rootNode = NULL;
 
-			bool has_file = smallgames::g_pathmgr.exists("server/server_errors.xml");
+			bool has_file = smallgames::GetPathMgr().exists("server/server_errors.xml");
 
 			if (has_file)
 			{
-				SmartPointer<XML> xml(new XML(smallgames::g_pathmgr.get_full_path("server/server_errors.xml").c_str()));
+				SmartPointer<XML> xml(new XML(smallgames::GetPathMgr().get_full_path("server/server_errors.xml").c_str()));
 
 				if (xml->isGood())
 				{

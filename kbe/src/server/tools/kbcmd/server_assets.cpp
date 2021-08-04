@@ -60,7 +60,7 @@ bool ServerAssets::create(const std::string& path)
 
 	std::string findpath = "sdk_templates/server/" + name();
 
-	std::string getpath = smallgames::g_pathmgr.get_full_path(findpath);
+	std::string getpath = smallgames::GetPathMgr().get_full_path(findpath);
 
 	if (getpath.size() == 0 || findpath == getpath)
 	{
@@ -80,7 +80,7 @@ bool ServerAssets::create(const std::string& path)
 bool ServerAssets::copyAssetsSourceToPath(const std::string& path)
 {
 	std::vector<std::string> results;
-	if (!smallgames::g_pathmgr.list_res(path, "*", results))
+	if (!smallgames::GetPathMgr().list_res(path, "*", results))
 		return false;
 
 	std::string findpath("sdk_templates/server/" + name());

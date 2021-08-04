@@ -774,10 +774,10 @@ PyObject* ClientApp::__py_getResFullPath(PyObject* self, PyObject* args)
 		S_Return;
 	}
 
-	if (!smallgames::g_pathmgr.exists(respath))
+	if (!smallgames::GetPathMgr().exists(respath))
 		return PyUnicode_FromString("");
 
-	std::string fullpath = smallgames::g_pathmgr.get_full_path(respath);
+	std::string fullpath = smallgames::GetPathMgr().get_full_path(respath);
 	return PyUnicode_FromString(fullpath.c_str());
 }
 
@@ -801,7 +801,7 @@ PyObject* ClientApp::__py_hasRes(PyObject* self, PyObject* args)
 		S_Return;
 	}
 
-	return PyBool_FromLong(smallgames::g_pathmgr.exists(respath));
+	return PyBool_FromLong(smallgames::GetPathMgr().exists(respath));
 }
 
 //-------------------------------------------------------------------------------------
@@ -825,7 +825,7 @@ PyObject* ClientApp::__py_kbeOpen(PyObject* self, PyObject* args)
 		S_Return;
 	}
 
-	std::string sfullpath = smallgames::g_pathmgr.get_full_path(respath);
+	std::string sfullpath = smallgames::GetPathMgr().get_full_path(respath);
 
 	PyObject *ioMod = PyImport_ImportModule("io");
 
@@ -865,7 +865,7 @@ PyObject* ClientApp::__py_matchPath(PyObject* self, PyObject* args)
 		S_Return;
 	}
 
-	std::string path = smallgames::g_pathmgr.get_full_path(respath);
+	std::string path = smallgames::GetPathMgr().get_full_path(respath);
 	return PyUnicode_FromStringAndSize(path.c_str(), path.size());
 }
 
@@ -981,12 +981,12 @@ PyObject* ClientApp::__py_listPathRes(PyObject* self, PyObject* args)
 	}
 
 	char* cpath = strutil::wchar2char(respath);
-	std::string foundPath = smallgames::g_pathmgr.get_full_path(cpath);
+	std::string foundPath = smallgames::GetPathMgr().get_full_path(cpath);
 	free(cpath);
 	PyMem_Free(respath);
 
 	std::vector<std::string> results;
-	smallgames::g_pathmgr.list_res(foundPath, ExtendName, results);
+	smallgames::GetPathMgr().list_res(foundPath, ExtendName, results);
 	PyObject* pyresults = PyTuple_New(results.size());
 
 	auto iter = results.begin();

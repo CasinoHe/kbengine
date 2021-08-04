@@ -26,6 +26,8 @@
 
 		There is no A instance outside, only static instance insdie class A
 */
+#include <typeinfo>
+#include <iostream>
 
 namespace smallgames
 {

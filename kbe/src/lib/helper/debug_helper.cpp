@@ -388,13 +388,13 @@ void DebugHelper::initialize(COMPONENT_TYPE componentType)
 	if(componentType == CLIENT_TYPE || componentType == CONSOLE_TYPE)
 	{
 		kbe_snprintf(helpConfig, MAX_PATH, "log4j.properties");
-		log4cxx::PropertyConfigurator::configure(smallgames::g_pathmgr.get_full_path(helpConfig).c_str());
+		log4cxx::PropertyConfigurator::configure(smallgames::GetPathMgr().get_full_path(helpConfig).c_str());
 	}
 	else
 	{
 		std::string cfg;
 
-		std::string kbengine_xml_path = smallgames::g_pathmgr.get_full_path("server/kbengine.xml");
+		std::string kbengine_xml_path = smallgames::GetPathMgr().get_full_path("server/kbengine.xml");
 		if (kbengine_xml_path != "server/kbengine.xml")
 		{
 			kbe_snprintf(helpConfig, MAX_PATH, "log4cxx_properties/%s.properties", COMPONENT_NAME_EX(componentType));
@@ -404,7 +404,7 @@ void DebugHelper::initialize(COMPONENT_TYPE componentType)
 			if (f == NULL)
 			{
 				kbe_snprintf(helpConfig, MAX_PATH, "server/log4cxx_properties_defaults/%s.properties", COMPONENT_NAME_EX(componentType));
-				cfg = smallgames::g_pathmgr.get_full_path(helpConfig);
+				cfg = smallgames::GetPathMgr().get_full_path(helpConfig);
 			}
 			else
 			{
@@ -415,7 +415,7 @@ void DebugHelper::initialize(COMPONENT_TYPE componentType)
 		else
 		{
 			kbe_snprintf(helpConfig, MAX_PATH, "server/log4cxx_properties_defaults/%s.properties", COMPONENT_NAME_EX(componentType));
-			cfg = smallgames::g_pathmgr.get_full_path(helpConfig);
+			cfg = smallgames::GetPathMgr().get_full_path(helpConfig);
 		}
 
 		log4cxx::PropertyConfigurator::configure(cfg.c_str());

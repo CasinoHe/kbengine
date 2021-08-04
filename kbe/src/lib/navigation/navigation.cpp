@@ -97,12 +97,12 @@ NavigationHandlePtr Navigation::loadNavigation(std::string resPath, const std::m
 	NavigationHandle* pNavigationHandle_ = NULL;
 
 	std::string path = resPath;
-	path = smallgames::g_pathmgr.get_full_path(path);
+	path = smallgames::GetPathMgr().get_full_path(path);
 	if (path.size() == 0)
 		return nullptr;
 		
 	std::vector<std::string> results;
-	smallgames::g_pathmgr.list_res(path, "tmx", results);
+	smallgames::GetPathMgr().list_res(path, "tmx", results);
 
 	if(results.size() > 0)
 	{
@@ -111,7 +111,7 @@ NavigationHandlePtr Navigation::loadNavigation(std::string resPath, const std::m
 	else 	
 	{
 		results.clear();
-		smallgames::g_pathmgr.list_res(path, "navmesh", results);
+		smallgames::GetPathMgr().list_res(path, "navmesh", results);
 
 		if(results.size() == 0)
 		{

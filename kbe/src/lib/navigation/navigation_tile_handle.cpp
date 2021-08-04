@@ -298,22 +298,22 @@ NavigationHandle* NavTileHandle::create(std::string resPath, const std::map< int
 	if(params.size() == 0)
 	{
 		path = resPath;
-		path = smallgames::g_pathmgr.get_full_path(path);
+		path = smallgames::GetPathMgr().get_full_path(path);
 			
 		std::vector<std::string> results;
-		smallgames::g_pathmgr.list_res(path, "tmx", results);
+		smallgames::GetPathMgr().list_res(path, "tmx", results);
 
 		if(results.size() == 0)
 		{
 			ERROR_MSG(fmt::format("NavTileHandle::create: path({}) not found tmx.!\n",
-														smallgames::g_pathmgr.get_full_path(path)));
+														smallgames::GetPathMgr().get_full_path(path)));
 
 			return NULL;
 		}
 	}
 	else
 	{
-		path = smallgames::g_pathmgr.get_full_path(params.begin()->second);
+		path = smallgames::GetPathMgr().get_full_path(params.begin()->second);
 	}
 	
 	return _create(path);
