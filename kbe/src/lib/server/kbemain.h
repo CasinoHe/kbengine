@@ -18,6 +18,7 @@
 #include "server/machine_infos.h"
 #include "server/id_component_querier.h"
 #include "resmgr/resmgr.h"
+#include "network/fixed_messages.h"
 
 #if KBE_PLATFORM == PLATFORM_WIN32
 #include "helper/crashhandler.h"
@@ -65,6 +66,9 @@ inline void START_MSG(const char * name, uint64 appuid)
 
 inline void loadConfig()
 {
+	Network::FixedMessages::getSingleton().loadConfig("server/messages_fixed_defaults.xml");
+	Network::FixedMessages::getSingleton().loadConfig("server/messages_fixed.xml", false);
+
 	smallgames::Resmgr::getSingleton();
 	smallgames::PathMgr::getSingleton();
 

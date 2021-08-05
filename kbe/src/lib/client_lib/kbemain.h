@@ -8,6 +8,7 @@
 #include "helper/debug_helper.h"
 #include "network/event_dispatcher.h"
 #include "network/network_interface.h"
+#include "network/fixed_messages.h"
 #include "network/message_handler.h"
 #include "server/machine_infos.h"
 #include "server/serverconfig.h"
@@ -123,6 +124,9 @@ inline bool uninstallPyScript(KBEngine::script::Script& script)
 
 inline bool loadConfig()
 {
+	Network::FixedMessages::getSingleton().loadConfig("server/messages_fixed_defaults.xml");
+	Network::FixedMessages::getSingleton().loadConfig("server/messages_fixed.xml", false);
+
 	// init path mgr and res mgr
 	smallgames::PathMgr::getSingleton();
 	smallgames::Resmgr::getSingleton();

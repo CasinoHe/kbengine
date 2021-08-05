@@ -24,8 +24,8 @@ msgID_(1),
 exposedMessages_(),
 name_(name)
 {
-	Network::FixedMessages::getSingleton().loadConfig("server/messages_fixed_defaults.xml");
-	Network::FixedMessages::getSingleton().loadConfig("server/messages_fixed.xml", false);
+	// Network::FixedMessages::getSingleton().loadConfig("server/messages_fixed_defaults.xml");
+	// Network::FixedMessages::getSingleton().loadConfig("server/messages_fixed.xml", false);
 	messageHandlers().push_back(this);
 }
 
