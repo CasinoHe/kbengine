@@ -57,15 +57,15 @@ threadPool_()
 	networkInterface_.pChannelTimeOutHandler(this);
 	networkInterface_.pChannelDeregisterHandler(this);
 
-	// ¹ã²¥×Ô¼ºµÄµØÖ·¸øÍøÉÏÉÏµÄËùÓĞkbemachine
-	// ²¢ÇÒ´Ókbemachine»ñÈ¡basappmgrºÍcellappmgrÒÔ¼°dbmgrµØÖ·
+	// ï¿½ã²¥ï¿½Ô¼ï¿½ï¿½Äµï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½kbemachine
+	// ï¿½ï¿½ï¿½Ò´ï¿½kbemachineï¿½ï¿½È¡basappmgrï¿½ï¿½cellappmgrï¿½Ô¼ï¿½dbmgrï¿½ï¿½Ö·
 	Components::getSingleton().pHandler(this);
 	this->dispatcher().addTask(&Components::getSingleton());
 	
 	pActiveTimerHandle_ = new ComponentActiveReportHandler(this);
 	pActiveTimerHandle_->startActiveTick(KBE_MAX(1.f, Network::g_channelInternalTimeout / 2.0f));
 
-	// Ä¬ÈÏËùÓĞapp¶¼ÉèÖÃÎªÕâ¸öÖµ£¬ Èç¹ûĞèÒªµ÷ÕûÔò¸÷×ÔÔÚÅÉÉúÀàÖØĞÂ¸³Öµ
+	// Ä¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½appï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½Öµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¸ï¿½Öµ
 	ProfileVal::setWarningPeriod(stampsPerSecond() / g_kbeSrvConfig.gameUpdateHertz());
 }
 
@@ -150,7 +150,7 @@ bool ServerApp::initialize()
 
 	bool ret = initializeEnd();
 
-	// ×îºóÈÔÈ»ĞèÒªÉèÖÃÒ»´Î£¬±ÜÃâÆÚ¼ä±»ÆäËûµÚÈı·½¿âĞŞ¸Ä
+	// ï¿½ï¿½ï¿½ï¿½ï¿½È»ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½Ò»ï¿½Î£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¼ä±»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ş¸ï¿½
 	if (!installSignals())
 		return false;
 
@@ -173,7 +173,7 @@ bool ServerApp::initializeWatcher()
 	WATCH_OBJECT("groupOrder", this, &ServerApp::groupOrder);
 	WATCH_OBJECT("gametime", this, &ServerApp::time);
 
-	return Network::initializeWatcher() && Resmgr::getSingleton().initializeWatcher() &&
+	return Network::initializeWatcher() && smallgames::Resmgr::getSingleton().initialize_watcher() &&
 		threadPool_.initializeWatcher() && WatchPool::initWatchPools();
 }
 

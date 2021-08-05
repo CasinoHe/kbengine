@@ -183,7 +183,7 @@ int getMD5(std::string data)
 //-------------------------------------------------------------------------------------
 void autoFixUserDigestUID()
 {
-	MachineInfos machineInfo;
+	MachineInfos &machineInfo = MachineInfos::getSingleton();
 
 	std::string datas = fmt::format("{}{}{}{}",
 		getUsername(),

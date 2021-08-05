@@ -17,12 +17,14 @@ public:
 	virtual void onSignalled(int sigNum) = 0;
 };
 
-class SignalHandlers : public Singleton<SignalHandlers>, public Task
+class SignalHandlers : public smallgames::Singleton<SignalHandlers>, public Task
 {
-public:
+private:
+	friend smallgames::Singleton<SignalHandlers>;
 	SignalHandlers();
 	~SignalHandlers();
-	
+
+public:
 	SignalHandler* addSignal(int sigNum, 
 		SignalHandler* pSignalHandler, int flags = 0);
 	

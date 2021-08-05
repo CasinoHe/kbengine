@@ -42,84 +42,96 @@
 
 namespace KBEngine{
 	
-KBE_SINGLETON_INIT(DebugHelper);
-
-DebugHelper dbghelper;
+DebugHelper &dbghelper = DebugHelper::getSingleton();
 ProfileVal g_syncLogProfile("syncLog");
 
 #ifndef NO_USE_LOG4CXX
-log4cxx::LoggerPtr g_logger(log4cxx::Logger::getLogger(""));
+log4cxx::LoggerPtr g_logger{log4cxx::Logger::getLogger("")};
 
-#define KBE_LOG4CXX_ERROR(logger, s)	\
-	{	\
-		try {	\
-			LOG4CXX_ERROR(logger, s);	\
-		}	\
-		catch (const log4cxx::helpers::IOException& ioex) {	\
-			printf("IOException: %s\nERROR=%s\n", ioex.what(), s.c_str());	\
-		}	\
-    }
-
-#define KBE_LOG4CXX_WARN(logger, s)	\
-	{	\
-		try {	\
-			LOG4CXX_WARN(logger, s);	\
-		}	\
-		catch (const log4cxx::helpers::IOException& ioex) {	\
-			printf("IOException: %s\nWARN=%s\n", ioex.what(), s.c_str());	\
-		}	\
-    }
-    
-#define KBE_LOG4CXX_INFO(logger, s)	\
-	{	\
-		try {	\
-			LOG4CXX_INFO(logger, s);	\
-		}	\
-		catch (const log4cxx::helpers::IOException& ioex) {	\
-			printf("IOException: %s\nINFO=%s\n", ioex.what(), s.c_str());	\
-		}	\
-    }
-    
-#define KBE_LOG4CXX_DEBUG(logger, s)	\
-	{	\
-		try {	\
-			LOG4CXX_DEBUG(logger, s);	\
-		}	\
-		catch (const log4cxx::helpers::IOException& ioex) {	\
-			printf("IOException: %s\nDEBUG=%s\n", ioex.what(), s.c_str());	\
-		}	\
-    }
-
-#define KBE_LOG4CXX_FATAL(logger, s)	\
-	{	\
-		try {	\
-			LOG4CXX_FATAL(logger, s);	\
-		}	\
-		catch (const log4cxx::helpers::IOException& ioex) {	\
-			printf("IOException: %s\nFATAL=%s\n", ioex.what(), s.c_str());	\
-		}	\
-    }
-
-#define KBE_LOG4CXX_PRINT(logger, s) { \
-		try {	\
-			   ::log4cxx::helpers::MessageBuffer oss_; \
-			   logger->forcedLog(::log4cxx::Level::getOff(), oss_.str(oss_ << s), LOG4CXX_LOCATION); \
-		}	\
-		catch (const log4cxx::helpers::IOException& ioex) {	\
-			printf("IOException: %s\nLOG=%s\n", ioex.what(), s.c_str());	\
-		}	\
+#define KBE_LOG4CXX_ERROR(logger, s)                                 \
+	{                                                                  \
+		try                                                              \
+		{                                                                \
+			LOG4CXX_ERROR(logger, s);                                      \
+		}                                                                \
+		catch (const log4cxx::helpers::IOException &ioex)                \
+		{                                                                \
+			printf("IOException: %s\nERROR=%s\n", ioex.what(), s.c_str()); \
+		}                                                                \
 	}
 
-#define KBE_LOG4CXX_LOG(logger, level, s)	\
-	{	\
-		try {	\
-			LOG4CXX_LOG(logger, level, s);	\
-		}	\
-		catch (const log4cxx::helpers::IOException& ioex) {	\
-			printf("IOException: %s\nLOG=%s\n", ioex.what(), s.c_str());	\
-		}	\
-    }
+#define KBE_LOG4CXX_WARN(logger, s)                                 \
+	{                                                                 \
+		try                                                             \
+		{                                                               \
+			LOG4CXX_WARN(logger, s);                                      \
+		}                                                               \
+		catch (const log4cxx::helpers::IOException &ioex)               \
+		{                                                               \
+			printf("IOException: %s\nWARN=%s\n", ioex.what(), s.c_str()); \
+		}                                                               \
+	}
 
+#define KBE_LOG4CXX_INFO(logger, s)                                 \
+	{                                                                 \
+		try                                                             \
+		{                                                               \
+			LOG4CXX_INFO(logger, s);                                      \
+		}                                                               \
+		catch (const log4cxx::helpers::IOException &ioex)               \
+		{                                                               \
+			printf("IOException: %s\nINFO=%s\n", ioex.what(), s.c_str()); \
+		}                                                               \
+	}
+
+#define KBE_LOG4CXX_DEBUG(logger, s)                                 \
+	{                                                                  \
+		try                                                              \
+		{                                                                \
+			LOG4CXX_DEBUG(logger, s);                                      \
+		}                                                                \
+		catch (const log4cxx::helpers::IOException &ioex)                \
+		{                                                                \
+			printf("IOException: %s\nDEBUG=%s\n", ioex.what(), s.c_str()); \
+		}                                                                \
+	}
+
+#define KBE_LOG4CXX_FATAL(logger, s)                                 \
+	{                                                                  \
+		try                                                              \
+		{                                                                \
+			LOG4CXX_FATAL(logger, s);                                      \
+		}                                                                \
+		catch (const log4cxx::helpers::IOException &ioex)                \
+		{                                                                \
+			printf("IOException: %s\nFATAL=%s\n", ioex.what(), s.c_str()); \
+		}                                                                \
+	}
+
+#define KBE_LOG4CXX_PRINT(logger, s)                                                        \
+	{                                                                                         \
+		try                                                                                     \
+		{                                                                                       \
+			::log4cxx::helpers::MessageBuffer oss_;                                               \
+			logger->forcedLog(::log4cxx::Level::getOff(), oss_.str(oss_ << s), LOG4CXX_LOCATION); \
+		}                                                                                       \
+		catch (const log4cxx::helpers::IOException &ioex)                                       \
+		{                                                                                       \
+			printf("IOException: %s\nLOG=%s\n", ioex.what(), s.c_str());                          \
+		}                                                                                       \
+	}
+
+#define KBE_LOG4CXX_LOG(logger, level, s)                          \
+	{                                                                \
+		try                                                            \
+		{                                                              \
+			LOG4CXX_LOG(logger, level, s);                               \
+		}                                                              \
+		catch (const log4cxx::helpers::IOException &ioex)              \
+		{                                                              \
+			printf("IOException: %s\nLOG=%s\n", ioex.what(), s.c_str()); \
+		}                                                              \
+	}
 
 #endif
 
@@ -376,13 +388,13 @@ void DebugHelper::initialize(COMPONENT_TYPE componentType)
 	if(componentType == CLIENT_TYPE || componentType == CONSOLE_TYPE)
 	{
 		kbe_snprintf(helpConfig, MAX_PATH, "log4j.properties");
-		log4cxx::PropertyConfigurator::configure(Resmgr::getSingleton().matchRes(helpConfig).c_str());
+		log4cxx::PropertyConfigurator::configure(smallgames::GetPathMgr().get_full_path(helpConfig).c_str());
 	}
 	else
 	{
 		std::string cfg;
 
-		std::string kbengine_xml_path = Resmgr::getSingleton().matchRes("server/kbengine.xml");
+		std::string kbengine_xml_path = smallgames::GetPathMgr().get_full_path("server/kbengine.xml");
 		if (kbengine_xml_path != "server/kbengine.xml")
 		{
 			kbe_snprintf(helpConfig, MAX_PATH, "log4cxx_properties/%s.properties", COMPONENT_NAME_EX(componentType));
@@ -392,7 +404,7 @@ void DebugHelper::initialize(COMPONENT_TYPE componentType)
 			if (f == NULL)
 			{
 				kbe_snprintf(helpConfig, MAX_PATH, "server/log4cxx_properties_defaults/%s.properties", COMPONENT_NAME_EX(componentType));
-				cfg = Resmgr::getSingleton().matchRes(helpConfig);
+				cfg = smallgames::GetPathMgr().get_full_path(helpConfig);
 			}
 			else
 			{
@@ -403,7 +415,7 @@ void DebugHelper::initialize(COMPONENT_TYPE componentType)
 		else
 		{
 			kbe_snprintf(helpConfig, MAX_PATH, "server/log4cxx_properties_defaults/%s.properties", COMPONENT_NAME_EX(componentType));
-			cfg = Resmgr::getSingleton().matchRes(helpConfig);
+			cfg = smallgames::GetPathMgr().get_full_path(helpConfig);
 		}
 
 		log4cxx::PropertyConfigurator::configure(cfg.c_str());
@@ -506,10 +518,10 @@ void DebugHelper::sync()
 		return;
 	}
 
-	// �����߳���־����bufferedLogPackets_
+	// 锟斤拷锟斤拷锟竭筹拷锟斤拷志锟斤拷锟斤拷bufferedLogPackets_
 	while (childThreadBufferedLogPackets_.size() > 0)
 	{
-		// ���������ȡ��һ�����󣬽����߳��ж���vector�ڴ潻����ȥ
+		// 锟斤拷锟斤拷锟斤拷锟斤拷锟饺★拷锟揭伙拷锟斤拷锟斤拷螅锟斤拷锟斤拷叱锟斤拷卸锟斤拷锟絭ector锟节存交锟斤拷锟斤拷去
 		MemoryStream* pMemoryStream = childThreadBufferedLogPackets_.front();
 		childThreadBufferedLogPackets_.pop();
 
@@ -520,17 +532,17 @@ void DebugHelper::sync()
 		pBundle->finiCurrPacket();
 		pBundle->newPacket();
 
-		// �����ǵ��ڴ潻����ȥ
+		// 锟斤拷锟斤拷锟角碉拷锟节存交锟斤拷锟斤拷去
 		pBundle->pCurrPacket()->swap(*pMemoryStream);
 		pBundle->currMsgLength(pBundle->currMsgLength() + pBundle->pCurrPacket()->length());
 
-		// �����ж��󽻻��������
+		// 锟斤拷锟斤拷锟叫讹拷锟襟交伙拷锟斤拷锟斤拷锟斤拷锟�
 		memoryStreamPool_.reclaimObject(pMemoryStream);
 	}
 
 	if (Network::Address::NONE == loggerAddr_)
 	{
-		// �������300��û���ҵ�logger����ôǿ�������ڴ�
+		// 锟斤拷锟斤拷锟斤拷锟�300锟斤拷没锟斤拷锟揭碉拷logger锟斤拷锟斤拷么强锟斤拷锟斤拷锟斤拷锟节达拷
 		if (timestamp() - loseLoggerTime_ > uint64(300 * stampsPerSecond()))
 		{
 			clearBufferedLog();
@@ -608,7 +620,7 @@ void DebugHelper::sync()
 		--hasBufferedLogPackets_;
 	}
 
-	// ������Ҫ��ʱ���ͣ������ڷ��͹����в������󣬵�����־������������
+	// 锟斤拷锟斤拷锟斤拷要锟斤拷时锟斤拷锟酵ｏ拷锟斤拷锟斤拷锟节凤拷锟酵癸拷锟斤拷锟叫诧拷锟斤拷锟斤拷锟襟，碉拷锟斤拷锟斤拷志锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷
 	if(bundles.size() > 0 && !pLoggerChannel->sending())
 		pLoggerChannel->delayedSend();
 
@@ -791,10 +803,10 @@ void DebugHelper::printBufferedLogs()
 	KBE_LOG4CXX_PRINT(g_logger, std::string("The following logs sent to logger failed:\n"));
 #endif
 
-	// �����߳���־����bufferedLogPackets_
+	// 锟斤拷锟斤拷锟竭筹拷锟斤拷志锟斤拷锟斤拷bufferedLogPackets_
 	while (childThreadBufferedLogPackets_.size() > 0)
 	{
-		// ���������ȡ��һ�����󣬽����߳��ж���vector�ڴ潻����ȥ
+		// 锟斤拷锟斤拷锟斤拷锟斤拷锟饺★拷锟揭伙拷锟斤拷锟斤拷螅锟斤拷锟斤拷叱锟斤拷卸锟斤拷锟絭ector锟节存交锟斤拷锟斤拷去
 		MemoryStream* pMemoryStream = childThreadBufferedLogPackets_.front();
 		childThreadBufferedLogPackets_.pop();
 
@@ -805,11 +817,11 @@ void DebugHelper::printBufferedLogs()
 		pBundle->finiCurrPacket();
 		pBundle->newPacket();
 
-		// �����ǵ��ڴ潻����ȥ
+		// 锟斤拷锟斤拷锟角碉拷锟节存交锟斤拷锟斤拷去
 		pBundle->pCurrPacket()->swap(*pMemoryStream);
 		pBundle->currMsgLength(pBundle->currMsgLength() + pBundle->pCurrPacket()->length());
 
-		// �����ж��󽻻��������
+		// 锟斤拷锟斤拷锟叫讹拷锟襟交伙拷锟斤拷锟斤拷锟斤拷锟�
 		memoryStreamPool_.reclaimObject(pMemoryStream);
 	}
 
@@ -1009,7 +1021,7 @@ void DebugHelper::script_info_msg(const std::string& s)
 
 	onMessage(KBELOG_TYPE_MAPPING(scriptMsgType_), s.c_str(), (uint32)s.size());
 
-	// ������û��ֶ����õ�Ҳ���Ϊ������Ϣ
+	// 锟斤拷锟斤拷锟斤拷没锟斤拷侄锟斤拷锟斤拷玫锟揭诧拷锟斤拷为锟斤拷锟斤拷锟斤拷息
 	if(log4cxx::ScriptLevel::SCRIPT_ERR == scriptMsgType_)
 	{
 		set_errorcolor();

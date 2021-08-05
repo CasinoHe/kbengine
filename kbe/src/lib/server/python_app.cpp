@@ -10,7 +10,7 @@ namespace KBEngine{
 KBEngine::ScriptTimers KBEngine::PythonApp::scriptTimers_;
 
 /**
-ÄÚ²¿¶¨Ê±Æ÷´¦ÀíÀà
+å†…éƒ¨å®šæ—¶å™¨å¤„ç†ç±»
 */
 class ScriptTimerHandler : public TimerHandler
 {
@@ -57,9 +57,9 @@ PythonApp::PythonApp(Network::EventDispatcher& dispatcher,
 					 COMPONENT_TYPE componentType,
 					 COMPONENT_ID componentID):
 ServerApp(dispatcher, ninterface, componentType, componentID),
-script_(),
 entryScript_()
 {
+	script_ = KBEngine::script::Script::getSingleton();
 	ScriptTimers::initialize(*this);
 }
 
@@ -143,17 +143,15 @@ int PythonApp::unregisterPyObjectToScript(const char* attrName)
 //-------------------------------------------------------------------------------------
 bool PythonApp::installPyScript()
 {
-	if(Resmgr::getSingleton().respaths().size() <= 0 || 
-		Resmgr::getSingleton().getPyUserResPath().size() == 0 || 
-		Resmgr::getSingleton().getPySysResPath().size() == 0 ||
-		Resmgr::getSingleton().getPyUserScriptsPath().size() == 0)
+	if (smallgames::GetPathMgr().get_res_path().size() <= 0 ||
+			smallgames::GetPathMgr().get_script_path().size() <= 0)
 	{
 		KBE_ASSERT(false && "PythonApp::installPyScript: KBE_RES_PATH error!\n");
 		return false;
 	}
 
 	std::wstring user_scripts_path = L"";
-	wchar_t* tbuf = KBEngine::strutil::char2wchar(const_cast<char*>(Resmgr::getSingleton().getPyUserScriptsPath().c_str()));
+	wchar_t *tbuf = KBEngine::strutil::char2wchar(const_cast<char *>(smallgames::GetPathMgr().get_script_path().c_str()));
 	if(tbuf != NULL)
 	{
 		user_scripts_path += tbuf;
@@ -205,8 +203,8 @@ bool PythonApp::installPyScript()
 		pyPaths += user_scripts_path + L"client/components;";
 		break;
 	};
-	
-	std::string kbe_res_path = Resmgr::getSingleton().getPySysResPath();
+
+	std::string kbe_res_path = smallgames::GetPathMgr().get_res_path();
 	kbe_res_path += "scripts/common";
 
 	tbuf = KBEngine::strutil::char2wchar(const_cast<char*>(kbe_res_path.c_str()));
@@ -229,7 +227,7 @@ bool PythonApp::uninstallPyScript()
 //-------------------------------------------------------------------------------------
 bool PythonApp::installPyModules()
 {
-	// °²×°Èë¿ÚÄ£¿é
+	// å®‰è£…å…¥å£æ¨¡å—
 	PyObject *entryScriptFileName = NULL;
 	if(componentType() == BASEAPP_TYPE)
 	{
@@ -270,29 +268,29 @@ bool PythonApp::installPyModules()
 
 	APPEND_SCRIPT_MODULE_METHOD(module, MemoryStream, script::PyMemoryStream::py_new, METH_VARARGS, 0);
 
-	// ×¢²á´´½¨entityµÄ·½·¨µ½py
-	// Ïò½Å±¾×¢²áapp·¢²¼×´Ì¬
+	// æ³¨å†Œåˆ›å»ºentityçš„æ–¹æ³•åˆ°py
+	// å‘è„šæœ¬æ³¨å†Œappå‘å¸ƒçŠ¶æ€
 	APPEND_SCRIPT_MODULE_METHOD(module, publish, __py_getAppPublish, METH_VARARGS, 0);
 
-	// ×¢²áÉèÖÃ½Å±¾Êä³öÀàĞÍ
+	// æ³¨å†Œè®¾ç½®è„šæœ¬è¾“å‡ºç±»å‹
 	APPEND_SCRIPT_MODULE_METHOD(module, scriptLogType, __py_setScriptLogType, METH_VARARGS, 0);
 	
-	// »ñµÃ×ÊÔ´È«Â·¾¶
+	// è·å¾—èµ„æºå…¨è·¯å¾„
 	APPEND_SCRIPT_MODULE_METHOD(module, getResFullPath, __py_getResFullPath, METH_VARARGS, 0);
 
-	// ÊÇ·ñ´æÔÚÄ³¸ö×ÊÔ´
+	// æ˜¯å¦å­˜åœ¨æŸä¸ªèµ„æº
 	APPEND_SCRIPT_MODULE_METHOD(module, hasRes, __py_hasRes, METH_VARARGS, 0);
 
-	// ´ò¿ªÒ»¸öÎÄ¼ş
+	// æ‰“å¼€ä¸€ä¸ªæ–‡ä»¶
 	APPEND_SCRIPT_MODULE_METHOD(module, open, __py_kbeOpen, METH_VARARGS, 0);
 
-	// ÁĞ³öÄ¿Â¼ÏÂËùÓĞÎÄ¼ş
+	// åˆ—å‡ºç›®å½•ä¸‹æ‰€æœ‰æ–‡ä»¶
 	APPEND_SCRIPT_MODULE_METHOD(module, listPathRes, __py_listPathRes, METH_VARARGS, 0);
 
-	// Æ¥ÅäÏà¶ÔÂ·¾¶»ñµÃÈ«Â·¾¶
+	// åŒ¹é…ç›¸å¯¹è·¯å¾„è·å¾—å…¨è·¯å¾„
 	APPEND_SCRIPT_MODULE_METHOD(module, matchPath, __py_matchPath, METH_VARARGS, 0);
 
-	// debug×·×Ùkbe·â×°µÄpy¶ÔÏó¼ÆÊı
+	// debugè¿½è¸ªkbeå°è£…çš„pyå¯¹è±¡è®¡æ•°
 	APPEND_SCRIPT_MODULE_METHOD(module, debugTracing, script::PyGC::__py_debugTracing, METH_VARARGS, 0);
 
 	if (PyModule_AddIntConstant(module, "LOG_TYPE_NORMAL", log4cxx::ScriptLevel::SCRIPT_INT))
@@ -325,7 +323,7 @@ bool PythonApp::installPyModules()
 		ERROR_MSG( "PythonApp::installPyModules: Unable to set KBEngine.NEXT_ONLY.\n");
 	}
 	
-	// ×¢²áËùÓĞpythonApp¶¼ÒªÓÃµ½µÄÍ¨ÓÃ½Ó¿Ú
+	// æ³¨å†Œæ‰€æœ‰pythonAppéƒ½è¦ç”¨åˆ°çš„é€šç”¨æ¥å£
 	APPEND_SCRIPT_MODULE_METHOD(module,		addTimer,						__py_addTimer,											METH_VARARGS,	0);
 	APPEND_SCRIPT_MODULE_METHOD(module,		delTimer,						__py_delTimer,											METH_VARARGS,	0);
 	APPEND_SCRIPT_MODULE_METHOD(module,		registerReadFileDescriptor,		PyFileDescriptor::__py_registerReadFileDescriptor,		METH_VARARGS,	0);
@@ -410,10 +408,10 @@ PyObject* PythonApp::__py_getResFullPath(PyObject* self, PyObject* args)
 		S_Return;
 	}
 
-	if(!Resmgr::getSingleton().hasRes(respath))
+	if(!smallgames::GetPathMgr().exists(respath))
 		return PyUnicode_FromString("");
 
-	std::string fullpath = Resmgr::getSingleton().matchRes(respath);
+	std::string fullpath = smallgames::GetPathMgr().get_full_path(respath);
 	return PyUnicode_FromString(fullpath.c_str());
 }
 
@@ -437,7 +435,7 @@ PyObject* PythonApp::__py_hasRes(PyObject* self, PyObject* args)
 		S_Return;
 	}
 
-	return PyBool_FromLong(Resmgr::getSingleton().hasRes(respath));
+	return PyBool_FromLong(smallgames::GetPathMgr().exists(respath));
 }
 
 //-------------------------------------------------------------------------------------
@@ -461,7 +459,7 @@ PyObject* PythonApp::__py_kbeOpen(PyObject* self, PyObject* args)
 		S_Return;
 	}
 
-	std::string sfullpath = Resmgr::getSingleton().matchRes(respath);
+	std::string sfullpath = smallgames::GetPathMgr().get_full_path(respath);
 
 	PyObject *ioMod = PyImport_ImportModule("io");
 
@@ -501,7 +499,7 @@ PyObject* PythonApp::__py_matchPath(PyObject* self, PyObject* args)
 		S_Return;
 	}
 
-	std::string path = Resmgr::getSingleton().matchPath(respath);
+	std::string path = smallgames::GetPathMgr().get_full_path(respath);
 	return PyUnicode_FromStringAndSize(path.c_str(), path.size());
 }
 
@@ -516,7 +514,7 @@ PyObject* PythonApp::__py_listPathRes(PyObject* self, PyObject* args)
 		S_Return;
 	}
 
-	std::wstring wExtendName = L"*";
+	std::string ExtendName = "*";
 	PyObject* pathobj = NULL;
 	PyObject* path_argsobj = NULL;
 
@@ -542,14 +540,16 @@ PyObject* PythonApp::__py_listPathRes(PyObject* self, PyObject* args)
 		{
 			wchar_t* fargs = NULL;
 			fargs = PyUnicode_AsWideCharString(path_argsobj, NULL);
-			wExtendName = fargs;
+			char *args = strutil::wchar2char(fargs);
+			ExtendName = args;
+			free(args);
 			PyMem_Free(fargs);
 		}
 		else
 		{
 			if(PySequence_Check(path_argsobj))
 			{
-				wExtendName = L"";
+				ExtendName = "";
 				Py_ssize_t size = PySequence_Size(path_argsobj);
 				for(int i=0; i<size; ++i)
 				{
@@ -563,8 +563,10 @@ PyObject* PythonApp::__py_listPathRes(PyObject* self, PyObject* args)
 					
 					wchar_t* wtemp = NULL;
 					wtemp = PyUnicode_AsWideCharString(pyobj, NULL);
-					wExtendName += wtemp;
-					wExtendName += L"|";
+					char *args = strutil::wchar2char(wtemp);
+					ExtendName += args;
+					ExtendName += "|";
+					free(args);
 					PyMem_Free(wtemp);
 				}
 			}
@@ -591,18 +593,18 @@ PyObject* PythonApp::__py_listPathRes(PyObject* self, PyObject* args)
 		S_Return;
 	}
 
-	if(wExtendName.size() == 0)
+	if(ExtendName.size() == 0)
 	{
 		PyErr_Format(PyExc_TypeError, "KBEngine::listPathRes(): args[pathargs] is NULL!");
 		PyErr_PrintEx(0);
 		S_Return;
 	}
 
-	if(wExtendName[0] == '.')
-		wExtendName.erase(wExtendName.begin());
+	if(ExtendName[0] == '.')
+		ExtendName.erase(ExtendName.begin());
 
-	if(wExtendName.size() == 0)
-		wExtendName = L"*";
+	if(ExtendName.size() == 0)
+		ExtendName = "*";
 
 	wchar_t* respath = PyUnicode_AsWideCharString(pathobj, NULL);
 	if(respath == NULL)
@@ -613,25 +615,22 @@ PyObject* PythonApp::__py_listPathRes(PyObject* self, PyObject* args)
 	}
 
 	char* cpath = strutil::wchar2char(respath);
-	std::string foundPath = Resmgr::getSingleton().matchPath(cpath);
+	std::string foundPath = smallgames::GetPathMgr().get_full_path(cpath);
 	free(cpath);
 	PyMem_Free(respath);
 
-	respath = strutil::char2wchar(foundPath.c_str());
-
-	std::vector<std::wstring> results;
-	Resmgr::getSingleton().listPathRes(respath, wExtendName, results);
+	std::vector<std::string> results;
+	smallgames::GetPathMgr().list_res(foundPath, ExtendName, results);
 	PyObject* pyresults = PyTuple_New(results.size());
 
-	std::vector<std::wstring>::iterator iter = results.begin();
+	auto iter = results.cbegin();
 	int i = 0;
 
-	for(; iter != results.end(); ++iter)
+	for(; iter != results.cend(); ++iter)
 	{
-		PyTuple_SET_ITEM(pyresults, i++, PyUnicode_FromWideChar((*iter).c_str(), (*iter).size()));
+		PyTuple_SET_ITEM(pyresults, i++, _PyUnicode_FromASCII((*iter).c_str(), (*iter).size()));
 	}
 
-	free(respath);
 	return pyresults;
 }
 
@@ -682,7 +681,7 @@ void PythonApp::onExecScriptCommand(Network::Channel* pChannel, KBEngine::Memory
 		retbuf = "\r\n";
 	}
 
-	// ½«½á¹û·µ»Ø¸ø¿Í»§¶Ë
+	// å°†ç»“æœè¿”å›ç»™å®¢æˆ·ç«¯
 	Network::Bundle* pBundle = Network::Bundle::createPoolObject(OBJECTPOOL_POINT);
 	ConsoleInterface::ConsoleExecCommandCBMessageHandler msgHandler;
 	(*pBundle).newMessage(msgHandler);
@@ -705,7 +704,7 @@ void PythonApp::reloadScript(bool fullReload)
 
 	// SCOPED_PROFILE(SCRIPTCALL_PROFILE);
 
-	// ËùÓĞ½Å±¾¶¼¼ÓÔØÍê±Ï
+	// æ‰€æœ‰è„šæœ¬éƒ½åŠ è½½å®Œæ¯•
 	PyObject* pyResult = PyObject_CallMethod(getEntryScript().get(),
 										const_cast<char*>("onInit"),
 										const_cast<char*>("i"), 

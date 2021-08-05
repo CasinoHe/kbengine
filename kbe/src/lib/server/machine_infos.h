@@ -5,11 +5,13 @@
 
 #include "common/common.h"
 namespace KBEngine{
-class MachineInfos : public Singleton<MachineInfos>
+class MachineInfos : public smallgames::Singleton<MachineInfos>
 {
-public:
+private:
+	friend smallgames::Singleton<MachineInfos>;
 	MachineInfos();
 
+public:
 	const std::string & machineName() const { return machineName_; }
 	const std::string & cpuInfo() const { return cpuInfo_; }
 	const std::vector<float>& cpuSpeeds() const { return cpuSpeeds_; }

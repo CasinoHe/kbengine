@@ -60,16 +60,16 @@ DWORD ClientSDKDownloader::startWindowsProcessGenSDK(const std::string& file)
 	std::string str = binPath_;
 	str += "/kbcmd.exe";
 
-	// ÓÃË«ÒýºÅ°ÑÃüÁîÐÐÀ¨ÆðÀ´£¬ÒÔ±ÜÃâÂ·¾¶ÖÐ´æÔÚ¿Õ¸ñ£¬´Ó¶øÖ´ÐÐ´íÎó
+	// ï¿½ï¿½Ë«ï¿½ï¿½ï¿½Å°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô±ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½Ð´ï¿½ï¿½Ú¿Õ¸ñ£¬´Ó¶ï¿½Ö´ï¿½Ð´ï¿½ï¿½ï¿½
 	str = "\"" + str + "\"";
 
-	// ‰ˆ¼Ó²ÎÊý
+	// ï¿½ï¿½ï¿½Ó²ï¿½ï¿½ï¿½
 	str += fmt::format(" --clientsdk={} --outpath={}", options_, file);
 
 	wchar_t* szCmdline = KBEngine::strutil::char2wchar(str.c_str());
 
-	// Ê¹ÓÃmachineµ±Ç°µÄ¹¤×÷Ä¿Â¼×÷ÎªÐÂ½ø³ÌµÄ¹¤×÷Ä¿Â¼£¬
-	// ÎªÒ»Ð©ÓëÏà¶ÔÄ¿Â¼µÄÎÄ¼þ²Ù×÷²Ù×÷Ò»ÖÂµÄ¹¤×÷Ä¿Â¼£¨ÈçÈÕÖ¾£©
+	// Ê¹ï¿½ï¿½machineï¿½ï¿½Ç°ï¿½Ä¹ï¿½ï¿½ï¿½Ä¿Â¼ï¿½ï¿½Îªï¿½Â½ï¿½ï¿½ÌµÄ¹ï¿½ï¿½ï¿½Ä¿Â¼ï¿½ï¿½
+	// ÎªÒ»Ð©ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿Â¼ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ÂµÄ¹ï¿½ï¿½ï¿½Ä¿Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¾ï¿½ï¿½
 	wchar_t currdir[1024];
 	GetCurrentDirectory(sizeof(currdir), currdir);
 
@@ -110,7 +110,7 @@ uint16 ClientSDKDownloader::starLinuxProcessGenSDK(const std::string& file)
 	{
 		std::string cmdLine = binPath_ + "kbcmd";
 
-		// ¸Ä±äµ±Ç°Ä¿Â¼£¬ÒÔÈÃ³öÎÊÌâµÄÊ±ºòcoreÄÜÔÚ´Ë´¦Éú³É
+		// ï¿½Ä±äµ±Ç°Ä¿Â¼ï¿½ï¿½ï¿½ï¿½ï¿½Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½coreï¿½ï¿½ï¿½Ú´Ë´ï¿½ï¿½ï¿½ï¿½ï¿½
 		//chdir(bin_path.c_str());
 
 		const char *argv[6];
@@ -173,13 +173,12 @@ bool ClientSDKDownloader::loadSDKDatas()
 		if (pid_ <= 0)
 			return false;
 
-		// ±ØÐëkbcmd½ø³ÌÒÑ¾­½áÊø
+		// ï¿½ï¿½ï¿½ï¿½kbcmdï¿½ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½
 		SystemInfo::PROCESS_INFOS sysinfos = SystemInfo::getSingleton().getProcessInfo(pid_);
 		if (!sysinfos.error)
 			return false;
 
-		wchar_t* wpath = strutil::char2wchar(out_.c_str());
-		Resmgr::getSingleton().listPathRes(wpath, L"*", sdkFiles_);
+		smallgames::GetPathMgr().list_res(out_.c_str(), "*", sdkFiles_);
 		loadedSDK_ = true;
 	}
 
@@ -196,9 +195,7 @@ bool ClientSDKDownloader::loadSDKDatas()
 		datas_ = NULL;
 	}
 
-	char* fileName = strutil::wchar2char(currSendFile_.c_str());
-	FILE* f = fopen(fileName, "rb");
-	free(fileName);
+	FILE* f = fopen(currSendFile_.c_str(), "rb");
 
 	if (f == NULL)
 		return false;
@@ -249,9 +246,7 @@ bool ClientSDKDownloader::process()
 		int remainingFiles = sdkFiles_.size();
 		(*pNewBundle) << (int)remainingFiles;
 
-		char* fileName = strutil::wchar2char(currSendFile_.c_str());
-		std::string sendFileName = fileName;
-		free(fileName);
+		std::string sendFileName(currSendFile_.c_str());
 
 		strutil::kbe_replace(sendFileName, out_, "");
 		while (sendFileName[0] == '\\' || sendFileName[0] == '/')
@@ -275,7 +270,7 @@ bool ClientSDKDownloader::process()
 
 	if (sdkFiles_.size() > 0)
 	{
-		currSendFile_ = L"";
+		currSendFile_ = "";
 		return true;
 	}
 

@@ -5,7 +5,6 @@
 
 #include "common/common.h"
 #include "common/tasks.h"
-#include "common/singleton.h"
 #include "helper/debug_helper.h"
 #include "server/components.h"
 #include "network/bundle.h"
@@ -19,14 +18,14 @@ class EventDispatcher;
 }
 
 /*
-	Èç¹ûÔÚappÉÏÃ»ÓĞÕÒµ½ÈÎºÎcellapp»òÕßbaseappÕâ¸öÄ£¿é½«Ò»Ğ©ÏûÏ¢»º´æÆğÀ´£¬ 
-	µÈ´ıÓĞĞÂµÄcellapp»òÕßbaseapp¼ÓÈëÔò¿ªÊ¼½«Ö¸Áî×ª·¢¡£
+	å¦‚æœåœ¨appä¸Šæ²¡æœ‰æ‰¾åˆ°ä»»ä½•cellappæˆ–è€…baseappè¿™ä¸ªæ¨¡å—å°†ä¸€äº›æ¶ˆæ¯ç¼“å­˜èµ·æ¥ï¼Œ 
+	ç­‰å¾…æœ‰æ–°çš„cellappæˆ–è€…baseappåŠ å…¥åˆ™å¼€å§‹å°†æŒ‡ä»¤è½¬å‘ã€‚
 */
 
 
 /*
-	µ±Ò»¸öÏûÏ¢±»³É¹¦×ª¼ÄÔòµ÷ÓÃÕâ¸öhandler´¦ÀíÊ£ÓàµÄÊÂÇé
-	ĞèÒªÖØĞ´process
+	å½“ä¸€ä¸ªæ¶ˆæ¯è¢«æˆåŠŸè½¬å¯„åˆ™è°ƒç”¨è¿™ä¸ªhandlerå¤„ç†å‰©ä½™çš„äº‹æƒ…
+	éœ€è¦é‡å†™process
 */
 class ForwardMessageOverHandler
 {
@@ -57,15 +56,41 @@ public:
 };
 
 /*
-	×ª·¢»º´æÏûÏ¢µ½Ö¸¶¨×é¼şÉÏ
+	è½¬å‘ç¼“å­˜æ¶ˆæ¯åˆ°æŒ‡å®šç»„ä»¶ä¸Š
 */
-class ForwardComponent_MessageBuffer : public Task, 
-						public Singleton<ForwardComponent_MessageBuffer>
+class ForwardComponent_MessageBuffer : public Task
 {
-public:
-	ForwardComponent_MessageBuffer(Network::NetworkInterface & networkInterface);
+
+private:
+	ForwardComponent_MessageBuffer(Network::NetworkInterface &networkInterface);
 	virtual ~ForwardComponent_MessageBuffer();
 
+	ForwardComponent_MessageBuffer(ForwardComponent_MessageBuffer &) = delete;
+	void operator=(ForwardComponent_MessageBuffer &) = delete;
+
+	inline static ForwardComponent_MessageBuffer *singleton_ = nullptr;
+
+public:
+	static ForwardComponent_MessageBuffer& getSingleton(Network::NetworkInterface &networkInterface)
+	{
+		if (!singleton_)
+		{
+			singleton_ = new ForwardComponent_MessageBuffer(networkInterface);
+		}
+		return *singleton_;
+	}
+
+	static ForwardComponent_MessageBuffer *getSingletonPtr()
+	{
+		return singleton_;
+	}
+
+	static ForwardComponent_MessageBuffer& getSingleton()
+	{
+		return *singleton_;
+	}
+
+public:
 	Network::EventDispatcher & dispatcher();
 
 	void push(COMPONENT_ID componentID, ForwardItem* pHandler);
@@ -85,15 +110,41 @@ private:
 };
 
 /*
-	×ª·¢»º´æÏûÏ¢µ½Í¬ÀàĞÍÈÎÒâ×é¼şÉÏ
+	è½¬å‘ç¼“å­˜æ¶ˆæ¯åˆ°åŒç±»å‹ä»»æ„ç»„ä»¶ä¸Š
 */
-class ForwardAnywhere_MessageBuffer : public Task, 
-						public Singleton<ForwardAnywhere_MessageBuffer>
+class ForwardAnywhere_MessageBuffer : public Task
 {
-public:
+private:
 	ForwardAnywhere_MessageBuffer(Network::NetworkInterface & networkInterface, COMPONENT_TYPE forwardComponentType);
 	virtual ~ForwardAnywhere_MessageBuffer();
 
+	ForwardAnywhere_MessageBuffer(ForwardAnywhere_MessageBuffer &) = delete;
+	void operator=(ForwardAnywhere_MessageBuffer &) = delete;
+
+	inline static ForwardAnywhere_MessageBuffer *singleton_ = nullptr;
+
+public:
+	static ForwardAnywhere_MessageBuffer& getSingleton(Network::NetworkInterface &networkInterface, COMPONENT_TYPE forwardComponentType)
+	{
+		if (!singleton_)
+		{
+			singleton_ = new ForwardAnywhere_MessageBuffer(networkInterface, forwardComponentType);
+		}
+		return *singleton_;
+	}
+
+	static ForwardAnywhere_MessageBuffer*getSingletonPtr()
+	{
+		return singleton_;
+	}
+
+	static ForwardAnywhere_MessageBuffer& getSingleton()
+	{
+		return *singleton_;
+	}
+
+
+public:
 	Network::EventDispatcher & dispatcher();
 
 	void push(ForwardItem* pHandler);

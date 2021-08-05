@@ -14,9 +14,9 @@ namespace Network
 class MessageHandler;
 
 /*
-	¼ÇÂ¼networkÁ÷Á¿µÈĞÅÏ¢
+	è®°å½•networkæµé‡ç­‰ä¿¡æ¯
 */
-class NetworkStats : public Singleton<NetworkStats>
+class NetworkStats : public smallgames::Singleton<NetworkStats>
 {
 public:
 	enum S_OP{
@@ -44,9 +44,12 @@ public:
 
 	typedef KBEUnordered_map<std::string, Stats> STATS;
 
+private:
+	friend smallgames::Singleton<NetworkStats>;
 	NetworkStats();
 	~NetworkStats();
 
+public:
 	void trackMessage(S_OP op, const MessageHandler& msgHandler, uint32 size);
 
 	NetworkStats::STATS& stats(){ return stats_; }

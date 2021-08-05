@@ -5,8 +5,6 @@
 
 namespace KBEngine { 
 
-KBE_SINGLETON_INIT(Network::FixedMessages);
-
 namespace Network
 {
 
@@ -15,8 +13,6 @@ FixedMessages::FixedMessages():
 _infomap(),
 _loaded(false)
 {
-	new Resmgr();
-	Resmgr::getSingleton().initialize();
 }
 
 //-------------------------------------------------------------------------------------
@@ -35,7 +31,7 @@ bool FixedMessages::loadConfig(std::string fileName, bool notFoundError)
 
 	TiXmlNode* node = NULL, *rootNode = NULL;
 
-	SmartPointer<XML> xml(new XML(Resmgr::getSingleton().matchRes(fileName).c_str()));
+	SmartPointer<XML> xml(new XML(smallgames::GetPathMgr().get_full_path(fileName).c_str()));
 
 	if(!xml->isGood())
 	{
@@ -57,7 +53,7 @@ bool FixedMessages::loadConfig(std::string fileName, bool notFoundError)
 	rootNode = xml->getRootNode();
 	if(rootNode == NULL)
 	{
-		// root½ÚµãÏÂÃ»ÓĞ×Ó½ÚµãÁË
+		// rootèŠ‚ç‚¹ä¸‹æ²¡æœ‰å­èŠ‚ç‚¹äº†
 		return true;
 	}
 

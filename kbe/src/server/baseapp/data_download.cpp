@@ -32,7 +32,7 @@ DataDownload::~DataDownload()
 {
 	SAFE_RELEASE_ARRAY(stream_);
 
-	Proxy* proxy = static_cast<Proxy*>(Baseapp::getSingleton().findEntity(entityID_));
+	Proxy* proxy = static_cast<Proxy*>(Baseapp::getSingletonPtr()->findEntity(entityID_));
 
 	if(proxy)
 	{
@@ -43,7 +43,7 @@ DataDownload::~DataDownload()
 //-------------------------------------------------------------------------------------
 bool DataDownload::send(const Network::MessageHandler& msgHandler, Network::Bundle* pBundle)
 {
-	Proxy* proxy = static_cast<Proxy*>(Baseapp::getSingleton().findEntity(entityID_));
+	Proxy* proxy = static_cast<Proxy*>(Baseapp::getSingletonPtr()->findEntity(entityID_));
 	
 	if(proxy && proxy->clientEntityCall())
 	{
@@ -232,12 +232,12 @@ FileDataDownload::~FileDataDownload()
 //-------------------------------------------------------------------------------------
 bool FileDataDownload::process()
 {
-	ResourceObjectPtr fptr = Resmgr::getSingleton().openResource(path_.c_str(), "rb");
+	ResourceObjectPtr fptr = smallgames::Resmgr::getSingleton().open_resource(path_);
 	if(fptr == NULL || !fptr->valid())
 	{
-		ERROR_MSG(fmt::format("FileDataDownload::process(): can't open {}.\n", 
-			Resmgr::getSingleton().matchRes(path_).c_str()));
-		
+		ERROR_MSG(fmt::format("FileDataDownload::process(): can't open {}.\n",
+													smallgames::GetPathMgr().get_full_path(path_).c_str()));
+
 		error_ = true;
 		return false;
 	}

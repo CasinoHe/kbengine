@@ -14,6 +14,7 @@
 #include "network/common.h"
 #include "network/address.h"
 #include "logwatcher.h"
+#include "common/appsingleton.h"
 
 //#define NDEBUG
 #include <map>	
@@ -47,7 +48,7 @@ struct LOG_ITEM
 };
 
 class Logger:	public PythonApp, 
-				public Singleton<Logger>
+				public smallgames::AppSingleton<Logger>
 {
 public:
 	typedef std::map<Network::Address, LogWatcher> LOG_WATCHERS;
@@ -58,13 +59,16 @@ public:
 		TIMEOUT_TICK = TIMEOUT_PYTHONAPP_MAX + 1
 	};
 
-	Logger(Network::EventDispatcher& dispatcher, 
-		Network::NetworkInterface& ninterface, 
-		COMPONENT_TYPE componentType,
-		COMPONENT_ID componentID);
+private:
+	friend smallgames::AppSingleton<Logger>;
+	Logger(Network::EventDispatcher &dispatcher,
+				 Network::NetworkInterface &ninterface,
+				 COMPONENT_TYPE componentType,
+				 COMPONENT_ID componentID);
 
 	~Logger();
 	
+public:
 	bool run();
 	
 	virtual bool initializeWatcher();
@@ -72,7 +76,7 @@ public:
 	void handleTimeout(TimerHandle handle, void * arg);
 	void handleTick();
 
-	/* ³õÊ¼»¯Ïà¹Ø½Ó¿Ú */
+	/* åˆå§‹åŒ–ç›¸å…³æ¥å£ */
 	bool initializeBegin();
 	bool inInitialize();
 	bool initializeEnd();
@@ -86,23 +90,23 @@ public:
 		return (uint32)buffered_logs_.size();
 	}
 
-	/** ÍøÂç½Ó¿Ú
-		Ğ´ÈÕÖ¾
+	/** ç½‘ç»œæ¥å£
+		å†™æ—¥å¿—
 	*/
 	void writeLog(Network::Channel* pChannel, KBEngine::MemoryStream& s);
 
-	/** ÍøÂç½Ó¿Ú
-		×¢²álog¼àÌıÕß
+	/** ç½‘ç»œæ¥å£
+		æ³¨å†Œlogç›‘å¬è€…
 	*/
 	void registerLogWatcher(Network::Channel* pChannel, KBEngine::MemoryStream& s);
 
-	/** ÍøÂç½Ó¿Ú
-		×¢Ïúlog¼àÌıÕß
+	/** ç½‘ç»œæ¥å£
+		æ³¨é”€logç›‘å¬è€…
 	*/
 	void deregisterLogWatcher(Network::Channel* pChannel, KBEngine::MemoryStream& s);
 
-	/** ÍøÂç½Ó¿Ú
-		log¼àÌıÕß¸üĞÂ×Ô¼ºµÄÉèÖÃ
+	/** ç½‘ç»œæ¥å£
+		logç›‘å¬è€…æ›´æ–°è‡ªå·±çš„è®¾ç½®
 	*/
 	void updateLogWatcherSetting(Network::Channel* pChannel, KBEngine::MemoryStream& s);
 

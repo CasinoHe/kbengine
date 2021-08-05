@@ -10,12 +10,15 @@
 namespace KBEngine
 {
 
-class SystemInfo : public Singleton<SystemInfo>
+class SystemInfo : public smallgames::Singleton<SystemInfo>
 {
-public:
+	friend smallgames::Singleton<SystemInfo>;
+
+private:
 	SystemInfo();
 	~SystemInfo();
 
+public:
 	struct PROCESS_INFOS
 	{
 		float cpu;

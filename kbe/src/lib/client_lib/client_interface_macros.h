@@ -17,7 +17,7 @@ namespace KBEngine{
 #define CLIENTAPP ClientApp
 
 /**
-	ClientÏûÏ¢ºê£¬  ²ÎÊýÎªÁ÷£¬ ÐèÒª×Ô¼º½â¿ª
+	Clientæ¶ˆæ¯å®ï¼Œ  å‚æ•°ä¸ºæµï¼Œ éœ€è¦è‡ªå·±è§£å¼€
 */
 #if defined(NETWORK_INTERFACE_DECLARE_BEGIN)
 	#undef CLIENT_MESSAGE_HANDLER_STREAM
@@ -25,11 +25,15 @@ namespace KBEngine{
 
 #if defined(DEFINE_IN_INTERFACE)
 #if defined(CLIENT)
-#define CLIENT_MESSAGE_HANDLER_STREAM(NAME)										\
-	void NAME##ClientMessagehandler_stream::handle(Network::Channel* pChannel,	\
-													KBEngine::MemoryStream& s)	\
-	{																			\
-			KBEngine::CLIENTAPP::getSingleton().NAME(pChannel, s);				\
+#define CLIENT_MESSAGE_HANDLER_STREAM(NAME)                                  \
+	void NAME##ClientMessagehandler_stream::handle(Network::Channel *pChannel, \
+																								 KBEngine::MemoryStream &s)  \
+	{                                                                          \
+		auto singleton_ptr = KBEngine::CLIENTAPP::getSingletonPtr();             \
+		if (singleton_ptr)                                                       \
+		{                                                                        \
+			singleton_ptr->NAME(pChannel, s);                                      \
+		}                                                                        \
 	}																			\
 
 #else
@@ -58,7 +62,7 @@ namespace KBEngine{
 																				\
 
 /**
-	ClientÏûÏ¢ºê£¬  Ö»ÓÐÁã¸ö²ÎÊýµÄÏûÏ¢
+	Clientæ¶ˆæ¯å®ï¼Œ  åªæœ‰é›¶ä¸ªå‚æ•°çš„æ¶ˆæ¯
 */
 #if defined(NETWORK_INTERFACE_DECLARE_BEGIN)
 	#undef CLIENT_MESSAGE_HANDLER_ARGS0
@@ -66,12 +70,16 @@ namespace KBEngine{
 
 #if defined(DEFINE_IN_INTERFACE)
 #if defined(CLIENT)
-#define CLIENT_MESSAGE_HANDLER_ARGS0(NAME)										\
-	void NAME##ClientMessagehandler0::handle(Network::Channel* pChannel,		\
-												KBEngine::MemoryStream& s)		\
-	{																			\
-			KBEngine::CLIENTAPP::getSingleton().NAME(pChannel);					\
-	}																			\
+#define CLIENT_MESSAGE_HANDLER_ARGS0(NAME)                             \
+	void NAME##ClientMessagehandler0::handle(Network::Channel *pChannel, \
+																					 KBEngine::MemoryStream &s)  \
+	{                                                                    \
+		auto singleton_ptr = KBEngine::CLIENTAPP::getSingletonPtr();       \
+		if (singleton_ptr)                                                 \
+		{                                                                  \
+			singleton_ptr->NAME(pChannel);                                   \
+		}                                                                  \
+	}
 
 #else
 #define CLIENT_MESSAGE_HANDLER_ARGS0(NAME)										\
@@ -100,7 +108,7 @@ namespace KBEngine{
 
 
 /**
-	ClientÏûÏ¢ºê£¬  Ö»ÓÐÒ»¸ö²ÎÊýµÄÏûÏ¢
+	Clientæ¶ˆæ¯å®ï¼Œ  åªæœ‰ä¸€ä¸ªå‚æ•°çš„æ¶ˆæ¯
 */
 #if defined(NETWORK_INTERFACE_DECLARE_BEGIN)
 	#undef CLIENT_MESSAGE_HANDLER_ARGS1
@@ -108,14 +116,18 @@ namespace KBEngine{
 
 #if defined(DEFINE_IN_INTERFACE)
 #if defined(CLIENT)
-#define CLIENT_MESSAGE_HANDLER_ARGS1(NAME, ARG_TYPE1, ARG_NAME1)				\
-	void NAME##ClientMessagehandler1::handle(Network::Channel* pChannel,		\
-												KBEngine::MemoryStream& s)		\
-	{																			\
-			ARG_TYPE1 ARG_NAME1;												\
-			s >> ARG_NAME1;														\
-			KBEngine::CLIENTAPP::getSingleton().NAME(pChannel, ARG_NAME1);		\
-	}																			\
+#define CLIENT_MESSAGE_HANDLER_ARGS1(NAME, ARG_TYPE1, ARG_NAME1)       \
+	void NAME##ClientMessagehandler1::handle(Network::Channel *pChannel, \
+																					 KBEngine::MemoryStream &s)  \
+	{                                                                    \
+		ARG_TYPE1 ARG_NAME1;                                               \
+		s >> ARG_NAME1;                                                    \
+		auto singleton_ptr = KBEngine::CLIENTAPP::getSingletonPtr();       \
+		if (singleton_ptr)                                                 \
+		{                                                                  \
+			singleton_ptr->NAME(pChannel, ARG_NAME1);                        \
+		}                                                                  \
+	}
 
 #else
 #define CLIENT_MESSAGE_HANDLER_ARGS1(NAME, ARG_TYPE1, ARG_NAME1)				\
@@ -144,7 +156,7 @@ namespace KBEngine{
 	
 
 /**
-	ClientÏûÏ¢ºê£¬  Ö»ÓÐ¶þ¸ö²ÎÊýµÄÏûÏ¢
+	Clientæ¶ˆæ¯å®ï¼Œ  åªæœ‰äºŒä¸ªå‚æ•°çš„æ¶ˆæ¯
 */
 #if defined(NETWORK_INTERFACE_DECLARE_BEGIN)
 	#undef CLIENT_MESSAGE_HANDLER_ARGS2
@@ -152,18 +164,22 @@ namespace KBEngine{
 
 #if defined(DEFINE_IN_INTERFACE)
 #if defined(CLIENT)
-#define CLIENT_MESSAGE_HANDLER_ARGS2(NAME, ARG_TYPE1, ARG_NAME1,				\
-											ARG_TYPE2, ARG_NAME2)				\
-	void NAME##ClientMessagehandler2::handle(Network::Channel* pChannel,		\
-												KBEngine::MemoryStream& s)		\
-	{																			\
-			ARG_TYPE1 ARG_NAME1;												\
-			s >> ARG_NAME1;														\
-			ARG_TYPE2 ARG_NAME2;												\
-			s >> ARG_NAME2;														\
-			KBEngine::CLIENTAPP::getSingleton().NAME(pChannel,					\
-													ARG_NAME1, ARG_NAME2);		\
-	}																			\
+#define CLIENT_MESSAGE_HANDLER_ARGS2(NAME, ARG_TYPE1, ARG_NAME1,       \
+																		 ARG_TYPE2, ARG_NAME2)             \
+	void NAME##ClientMessagehandler2::handle(Network::Channel *pChannel, \
+																					 KBEngine::MemoryStream &s)  \
+	{                                                                    \
+		ARG_TYPE1 ARG_NAME1;                                               \
+		s >> ARG_NAME1;                                                    \
+		ARG_TYPE2 ARG_NAME2;                                               \
+		s >> ARG_NAME2;                                                    \
+		auto singleton_ptr = KBEngine::CLIENTAPP::getSingletonPtr();       \
+		if (singleton_ptr)                                                 \
+		{                                                                  \
+			singleton_ptr->NAME(pChannel,                                    \
+													ARG_NAME1, ARG_NAME2);                       \
+		}                                                                  \
+	}
 
 #else
 #define CLIENT_MESSAGE_HANDLER_ARGS2(NAME, ARG_TYPE1, ARG_NAME1,				\
@@ -197,7 +213,7 @@ namespace KBEngine{
 
 
 /**
-	ClientÏûÏ¢ºê£¬  Ö»ÓÐÈý¸ö²ÎÊýµÄÏûÏ¢
+	Clientæ¶ˆæ¯å®ï¼Œ  åªæœ‰ä¸‰ä¸ªå‚æ•°çš„æ¶ˆæ¯
 */
 #if defined(NETWORK_INTERFACE_DECLARE_BEGIN)
 	#undef CLIENT_MESSAGE_HANDLER_ARGS3
@@ -205,21 +221,22 @@ namespace KBEngine{
 
 #if defined(DEFINE_IN_INTERFACE)
 #if defined(CLIENT)
-#define CLIENT_MESSAGE_HANDLER_ARGS3(NAME, ARG_TYPE1, ARG_NAME1,				\
-											ARG_TYPE2, ARG_NAME2,				\
-											ARG_TYPE3, ARG_NAME3)				\
-	void NAME##ClientMessagehandler3::handle(Network::Channel* pChannel,		\
-												KBEngine::MemoryStream& s)		\
-	{																			\
-			ARG_TYPE1 ARG_NAME1;												\
-			s >> ARG_NAME1;														\
-			ARG_TYPE2 ARG_NAME2;												\
-			s >> ARG_NAME2;														\
-			ARG_TYPE3 ARG_NAME3;												\
-			s >> ARG_NAME3;														\
-			KBEngine::CLIENTAPP::getSingleton().NAME(pChannel,					\
-				ARG_NAME1, ARG_NAME2,										 	\
-				ARG_NAME3);														\
+#define CLIENT_MESSAGE_HANDLER_ARGS3(NAME, ARG_TYPE1, ARG_NAME1,       \
+																		 ARG_TYPE2, ARG_NAME2,             \
+																		 ARG_TYPE3, ARG_NAME3)             \
+	void NAME##ClientMessagehandler3::handle(Network::Channel *pChannel, \
+																					 KBEngine::MemoryStream &s)  \
+	{                                                                    \
+		ARG_TYPE1 ARG_NAME1;                                               \
+		s >> ARG_NAME1;                                                    \
+		ARG_TYPE2 ARG_NAME2;                                               \
+		s >> ARG_NAME2;                                                    \
+		ARG_TYPE3 ARG_NAME3;                                               \
+		s >> ARG_NAME3;                                                    \
+		auto singleton_ptr = KBEngine::CLIENTAPP::getSingletonPtr();       \
+		singleton_ptr->NAME(pChannel,                                      \
+				ARG_NAME1, ARG_NAME2,                                          \
+				ARG_NAME3);                                                    \
 	}																			\
 
 #else
@@ -259,7 +276,7 @@ namespace KBEngine{
 
 
 /**
-	ClientÏûÏ¢ºê£¬  Ö»ÓÐËÄ¸ö²ÎÊýµÄÏûÏ¢
+	Clientæ¶ˆæ¯å®ï¼Œ  åªæœ‰å››ä¸ªå‚æ•°çš„æ¶ˆæ¯
 */
 #if defined(NETWORK_INTERFACE_DECLARE_BEGIN)
 	#undef CLIENT_MESSAGE_HANDLER_ARGS4
@@ -267,25 +284,29 @@ namespace KBEngine{
 
 #if defined(DEFINE_IN_INTERFACE)
 #if defined(CLIENT)
-#define CLIENT_MESSAGE_HANDLER_ARGS4(NAME, ARG_TYPE1, ARG_NAME1,				\
-											ARG_TYPE2, ARG_NAME2,				\
-											ARG_TYPE3, ARG_NAME3,				\
-											ARG_TYPE4, ARG_NAME4)				\
-	void NAME##ClientMessagehandler4::handle(Network::Channel* pChannel,		\
-												KBEngine::MemoryStream& s)		\
-	{																			\
-			ARG_TYPE1 ARG_NAME1;												\
-			s >> ARG_NAME1;														\
-			ARG_TYPE2 ARG_NAME2;												\
-			s >> ARG_NAME2;														\
-			ARG_TYPE3 ARG_NAME3;												\
-			s >> ARG_NAME3;														\
-			ARG_TYPE4 ARG_NAME4;												\
-			s >> ARG_NAME4;														\
-			KBEngine::CLIENTAPP::getSingleton().NAME(pChannel,					\
-				ARG_NAME1, ARG_NAME2,										 	\
-				ARG_NAME3, ARG_NAME4);											\
-	}																			\
+#define CLIENT_MESSAGE_HANDLER_ARGS4(NAME, ARG_TYPE1, ARG_NAME1,       \
+																		 ARG_TYPE2, ARG_NAME2,             \
+																		 ARG_TYPE3, ARG_NAME3,             \
+																		 ARG_TYPE4, ARG_NAME4)             \
+	void NAME##ClientMessagehandler4::handle(Network::Channel *pChannel, \
+																					 KBEngine::MemoryStream &s)  \
+	{                                                                    \
+		ARG_TYPE1 ARG_NAME1;                                               \
+		s >> ARG_NAME1;                                                    \
+		ARG_TYPE2 ARG_NAME2;                                               \
+		s >> ARG_NAME2;                                                    \
+		ARG_TYPE3 ARG_NAME3;                                               \
+		s >> ARG_NAME3;                                                    \
+		ARG_TYPE4 ARG_NAME4;                                               \
+		s >> ARG_NAME4;                                                    \
+		auto singleton_ptr = KBEngine::CLIENTAPP::getSingletonPtr();       \
+		if (singleton_ptr)                                                 \
+		{                                                                  \
+			singleton_ptr->NAME(pChannel,                                    \
+													ARG_NAME1, ARG_NAME2,                        \
+													ARG_NAME3, ARG_NAME4);                       \
+		}                                                                  \
+	}
 
 #else
 #define CLIENT_MESSAGE_HANDLER_ARGS4(NAME, ARG_TYPE1, ARG_NAME1,				\
@@ -327,7 +348,7 @@ namespace KBEngine{
 											ARG_TYPE4, ARG_NAME4)				\
 
 /**
-	ClientÏûÏ¢ºê£¬  Ö»ÓÐÎå¸ö²ÎÊýµÄÏûÏ¢
+	Clientæ¶ˆæ¯å®ï¼Œ  åªæœ‰äº”ä¸ªå‚æ•°çš„æ¶ˆæ¯
 */
 #if defined(NETWORK_INTERFACE_DECLARE_BEGIN)
 	#undef CLIENT_MESSAGE_HANDLER_ARGS5
@@ -335,28 +356,32 @@ namespace KBEngine{
 
 #if defined(DEFINE_IN_INTERFACE)
 #if defined(CLIENT)
-#define CLIENT_MESSAGE_HANDLER_ARGS5(NAME, ARG_TYPE1, ARG_NAME1,				\
-											ARG_TYPE2, ARG_NAME2,				\
-											ARG_TYPE3, ARG_NAME3,				\
-											ARG_TYPE4, ARG_NAME4,				\
-											ARG_TYPE5, ARG_NAME5)				\
-	void NAME##ClientMessagehandler5::handle(Network::Channel* pChannel,		\
-												KBEngine::MemoryStream& s)		\
-	{																			\
-			ARG_TYPE1 ARG_NAME1;												\
-			s >> ARG_NAME1;														\
-			ARG_TYPE2 ARG_NAME2;												\
-			s >> ARG_NAME2;														\
-			ARG_TYPE3 ARG_NAME3;												\
-			s >> ARG_NAME3;														\
-			ARG_TYPE4 ARG_NAME4;												\
-			s >> ARG_NAME4;														\
-			ARG_TYPE5 ARG_NAME5;												\
-			s >> ARG_NAME5;														\
-			KBEngine::CLIENTAPP::getSingleton().NAME(pChannel,					\
-				ARG_NAME1, ARG_NAME2,										 	\
-				ARG_NAME3, ARG_NAME4, ARG_NAME5);								\
-	}																			\
+#define CLIENT_MESSAGE_HANDLER_ARGS5(NAME, ARG_TYPE1, ARG_NAME1,       \
+																		 ARG_TYPE2, ARG_NAME2,             \
+																		 ARG_TYPE3, ARG_NAME3,             \
+																		 ARG_TYPE4, ARG_NAME4,             \
+																		 ARG_TYPE5, ARG_NAME5)             \
+	void NAME##ClientMessagehandler5::handle(Network::Channel *pChannel, \
+																					 KBEngine::MemoryStream &s)  \
+	{                                                                    \
+		ARG_TYPE1 ARG_NAME1;                                               \
+		s >> ARG_NAME1;                                                    \
+		ARG_TYPE2 ARG_NAME2;                                               \
+		s >> ARG_NAME2;                                                    \
+		ARG_TYPE3 ARG_NAME3;                                               \
+		s >> ARG_NAME3;                                                    \
+		ARG_TYPE4 ARG_NAME4;                                               \
+		s >> ARG_NAME4;                                                    \
+		ARG_TYPE5 ARG_NAME5;                                               \
+		s >> ARG_NAME5;                                                    \
+		auto singleton_ptr = KBEngine::CLIENTAPP::getSingletonPtr();       \
+		if (singleton_ptr)                                                 \
+		{                                                                  \
+			singleton_ptr->NAME(pChannel,                                    \
+													ARG_NAME1, ARG_NAME2,                        \
+													ARG_NAME3, ARG_NAME4, ARG_NAME5);            \
+		}                                                                  \
+	}
 
 #else
 #define CLIENT_MESSAGE_HANDLER_ARGS5(NAME, ARG_TYPE1, ARG_NAME1,				\
@@ -404,7 +429,7 @@ namespace KBEngine{
 
 
 /**
-	ClientÏûÏ¢ºê£¬  Ö»ÓÐÁù¸ö²ÎÊýµÄÏûÏ¢
+	Clientæ¶ˆæ¯å®ï¼Œ  åªæœ‰å…­ä¸ªå‚æ•°çš„æ¶ˆæ¯
 */
 #if defined(NETWORK_INTERFACE_DECLARE_BEGIN)
 	#undef CLIENT_MESSAGE_HANDLER_ARGS6
@@ -412,31 +437,35 @@ namespace KBEngine{
 
 #if defined(DEFINE_IN_INTERFACE)
 #if defined(CLIENT)
-#define CLIENT_MESSAGE_HANDLER_ARGS6(NAME, ARG_TYPE1, ARG_NAME1,				\
-											ARG_TYPE2, ARG_NAME2,				\
-											ARG_TYPE3, ARG_NAME3,				\
-											ARG_TYPE4, ARG_NAME4,				\
-											ARG_TYPE5, ARG_NAME5,				\
-											ARG_TYPE6, ARG_NAME6)				\
-	void NAME##ClientMessagehandler6::handle(Network::Channel* pChannel,		\
-												KBEngine::MemoryStream& s)		\
-	{																			\
-			ARG_TYPE1 ARG_NAME1;												\
-			s >> ARG_NAME1;														\
-			ARG_TYPE2 ARG_NAME2;												\
-			s >> ARG_NAME2;														\
-			ARG_TYPE3 ARG_NAME3;												\
-			s >> ARG_NAME3;														\
-			ARG_TYPE4 ARG_NAME4;												\
-			s >> ARG_NAME4;														\
-			ARG_TYPE5 ARG_NAME5;												\
-			s >> ARG_NAME5;														\
-			ARG_TYPE6 ARG_NAME6;												\
-			s >> ARG_NAME6;														\
-			KBEngine::CLIENTAPP::getSingleton().NAME(pChannel,					\
-				ARG_NAME1, ARG_NAME2,										 	\
-				ARG_NAME3, ARG_NAME4, ARG_NAME5, ARG_NAME6);					\
-	}																			\
+#define CLIENT_MESSAGE_HANDLER_ARGS6(NAME, ARG_TYPE1, ARG_NAME1,       \
+																		 ARG_TYPE2, ARG_NAME2,             \
+																		 ARG_TYPE3, ARG_NAME3,             \
+																		 ARG_TYPE4, ARG_NAME4,             \
+																		 ARG_TYPE5, ARG_NAME5,             \
+																		 ARG_TYPE6, ARG_NAME6)             \
+	void NAME##ClientMessagehandler6::handle(Network::Channel *pChannel, \
+																					 KBEngine::MemoryStream &s)  \
+	{                                                                    \
+		ARG_TYPE1 ARG_NAME1;                                               \
+		s >> ARG_NAME1;                                                    \
+		ARG_TYPE2 ARG_NAME2;                                               \
+		s >> ARG_NAME2;                                                    \
+		ARG_TYPE3 ARG_NAME3;                                               \
+		s >> ARG_NAME3;                                                    \
+		ARG_TYPE4 ARG_NAME4;                                               \
+		s >> ARG_NAME4;                                                    \
+		ARG_TYPE5 ARG_NAME5;                                               \
+		s >> ARG_NAME5;                                                    \
+		ARG_TYPE6 ARG_NAME6;                                               \
+		s >> ARG_NAME6;                                                    \
+		auto singleton_ptr = KBEngine::CLIENTAPP::getSingletonPtr();       \
+		if (singleton_ptr)                                                 \
+		{                                                                  \
+			singleton_ptr->NAME(pChannel,                                    \
+													ARG_NAME1, ARG_NAME2,                        \
+													ARG_NAME3, ARG_NAME4, ARG_NAME5, ARG_NAME6); \
+		}                                                                  \
+	}
 
 #else
 #define CLIENT_MESSAGE_HANDLER_ARGS6(NAME, ARG_TYPE1, ARG_NAME1,				\
@@ -488,7 +517,7 @@ namespace KBEngine{
 											ARG_TYPE6, ARG_NAME6)				\
 
 /**
-	ClientÏûÏ¢ºê£¬  Ö»ÓÐ°Ë¸ö²ÎÊýµÄÏûÏ¢
+	Clientæ¶ˆæ¯å®ï¼Œ  åªæœ‰å…«ä¸ªå‚æ•°çš„æ¶ˆæ¯
 */
 #if defined(NETWORK_INTERFACE_DECLARE_BEGIN)
 	#undef CLIENT_MESSAGE_HANDLER_ARGS8
@@ -496,38 +525,42 @@ namespace KBEngine{
 
 #if defined(DEFINE_IN_INTERFACE)
 #if defined(CLIENT)
-#define CLIENT_MESSAGE_HANDLER_ARGS8(NAME, ARG_TYPE1, ARG_NAME1,				\
-											ARG_TYPE2, ARG_NAME2,				\
-											ARG_TYPE3, ARG_NAME3,				\
-											ARG_TYPE4, ARG_NAME4,				\
-											ARG_TYPE5, ARG_NAME5,				\
-											ARG_TYPE6, ARG_NAME6,				\
-											ARG_TYPE7, ARG_NAME7,				\
-											ARG_TYPE8, ARG_NAME8)				\
-	void NAME##ClientMessagehandler8::handle(Network::Channel* pChannel,		\
-												KBEngine::MemoryStream& s)		\
-	{																			\
-			ARG_TYPE1 ARG_NAME1;												\
-			s >> ARG_NAME1;														\
-			ARG_TYPE2 ARG_NAME2;												\
-			s >> ARG_NAME2;														\
-			ARG_TYPE3 ARG_NAME3;												\
-			s >> ARG_NAME3;														\
-			ARG_TYPE4 ARG_NAME4;												\
-			s >> ARG_NAME4;														\
-			ARG_TYPE5 ARG_NAME5;												\
-			s >> ARG_NAME5;														\
-			ARG_TYPE6 ARG_NAME6;												\
-			s >> ARG_NAME6;														\
-			ARG_TYPE7 ARG_NAME7;												\
-			s >> ARG_NAME7;														\
-			ARG_TYPE8 ARG_NAME8;												\
-			s >> ARG_NAME8;														\
-			KBEngine::CLIENTAPP::getSingleton().NAME(pChannel,					\
-										ARG_NAME1, ARG_NAME2, ARG_NAME3, 		\
-										ARG_NAME4, ARG_NAME5, ARG_NAME6,		\
-										ARG_NAME7, ARG_NAME8);					\
-	}																			\
+#define CLIENT_MESSAGE_HANDLER_ARGS8(NAME, ARG_TYPE1, ARG_NAME1,       \
+																		 ARG_TYPE2, ARG_NAME2,             \
+																		 ARG_TYPE3, ARG_NAME3,             \
+																		 ARG_TYPE4, ARG_NAME4,             \
+																		 ARG_TYPE5, ARG_NAME5,             \
+																		 ARG_TYPE6, ARG_NAME6,             \
+																		 ARG_TYPE7, ARG_NAME7,             \
+																		 ARG_TYPE8, ARG_NAME8)             \
+	void NAME##ClientMessagehandler8::handle(Network::Channel *pChannel, \
+																					 KBEngine::MemoryStream &s)  \
+	{                                                                    \
+		ARG_TYPE1 ARG_NAME1;                                               \
+		s >> ARG_NAME1;                                                    \
+		ARG_TYPE2 ARG_NAME2;                                               \
+		s >> ARG_NAME2;                                                    \
+		ARG_TYPE3 ARG_NAME3;                                               \
+		s >> ARG_NAME3;                                                    \
+		ARG_TYPE4 ARG_NAME4;                                               \
+		s >> ARG_NAME4;                                                    \
+		ARG_TYPE5 ARG_NAME5;                                               \
+		s >> ARG_NAME5;                                                    \
+		ARG_TYPE6 ARG_NAME6;                                               \
+		s >> ARG_NAME6;                                                    \
+		ARG_TYPE7 ARG_NAME7;                                               \
+		s >> ARG_NAME7;                                                    \
+		ARG_TYPE8 ARG_NAME8;                                               \
+		s >> ARG_NAME8;                                                    \
+		auto singleton_ptr = KBEngine::CLIENTAPP::getSingletonPtr();       \
+		if (singleton_ptr)                                                 \
+		{                                                                  \
+			singleton_ptr->NAME(pChannel,                                    \
+													ARG_NAME1, ARG_NAME2, ARG_NAME3,             \
+													ARG_NAME4, ARG_NAME5, ARG_NAME6,             \
+													ARG_NAME7, ARG_NAME8);                       \
+		}                                                                  \
+	}
 
 #else
 #define CLIENT_MESSAGE_HANDLER_ARGS8(NAME, ARG_TYPE1, ARG_NAME1,				\

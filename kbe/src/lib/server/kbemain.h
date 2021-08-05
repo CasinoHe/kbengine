@@ -18,6 +18,7 @@
 #include "server/machine_infos.h"
 #include "server/id_component_querier.h"
 #include "resmgr/resmgr.h"
+#include "network/fixed_messages.h"
 
 #if KBE_PLATFORM == PLATFORM_WIN32
 #include "helper/crashhandler.h"
@@ -27,7 +28,7 @@ namespace KBEngine{
 
 inline void START_MSG(const char * name, uint64 appuid)
 {
-	MachineInfos machineInfo;
+	MachineInfos &machineInfo = MachineInfos::getSingleton();
 	
 	std::string s = (fmt::format("---- {} "
 			"Version: {}. "
@@ -65,7 +66,11 @@ inline void START_MSG(const char * name, uint64 appuid)
 
 inline void loadConfig()
 {
-	Resmgr::getSingleton().initialize();
+	Network::FixedMessages::getSingleton().loadConfig("server/messages_fixed_defaults.xml");
+	Network::FixedMessages::getSingleton().loadConfig("server/messages_fixed.xml", false);
+
+	smallgames::Resmgr::getSingleton();
+	smallgames::PathMgr::getSingleton();
 
 	// "../../res/server/kbengine_defaults.xml"
 	g_kbeSrvConfig.loadConfig("server/kbengine_defaults.xml");
@@ -158,19 +163,19 @@ int kbeMainT(int argc, char * argv[], COMPONENT_TYPE componentType,
 
 	INFO_MSG( "-----------------------------------------------------------------------------------------\n\n\n");
 
-	std::string publicKeyPath = Resmgr::getSingleton().getPyUserResPath() + "key/" + "kbengine_public.key";
-	std::string privateKeyPath = Resmgr::getSingleton().getPyUserResPath() + "key/" + "kbengine_private.key";
+	std::string publicKeyPath = smallgames::GetPathMgr().get_full_path({"key", "kbengine_public.key"});
+	std::string privateKeyPath = smallgames::GetPathMgr().get_full_path({"key", "kbengine_private.key"});
 
 	bool isExsit = access(publicKeyPath.c_str(), 0) == 0 && access(privateKeyPath.c_str(), 0) == 0;
 	if (!isExsit)
 	{
-		publicKeyPath = Resmgr::getSingleton().matchPath("key/") + "kbengine_public.key";
-		privateKeyPath = Resmgr::getSingleton().matchPath("key/") + "kbengine_private.key";
+		publicKeyPath = smallgames::GetPathMgr().get_full_path({"key", "kbengine_public.key"});
+		privateKeyPath = smallgames::GetPathMgr().get_full_path({"key", "kbengine_private.key"});
 	}
 	
-	KBEKey kbekey(publicKeyPath, privateKeyPath);
+	KBEKey &kbekey = KBEKey::getSingleton(publicKeyPath, privateKeyPath);
 
-	Resmgr::getSingleton().print();
+	smallgames::GetPathMgr().print();
 
 	Network::EventDispatcher dispatcher;
 	DebugHelper::getSingleton().pDispatcher(&dispatcher);
@@ -197,7 +202,7 @@ int kbeMainT(int argc, char * argv[], COMPONENT_TYPE componentType,
 
 	Components::getSingleton().initialize(&networkInterface, componentType, g_componentID);
 	
-	SERVER_APP app(dispatcher, networkInterface, componentType, g_componentID);
+	SERVER_APP &app = SERVER_APP::getSingleton(dispatcher, networkInterface, componentType, g_componentID);
 	Components::getSingleton().findLogger();
 	START_MSG(COMPONENT_NAME_EX(componentType), g_componentID);
 
@@ -370,34 +375,34 @@ inline void parseMainCommandArgs(int argc, char* argv[])
 }
 
 #if KBE_PLATFORM == PLATFORM_WIN32
-#define KBENGINE_MAIN																									\
-kbeMain(int argc, char* argv[]);																						\
-int main(int argc, char* argv[])																						\
-{																														\
-	loadConfig();																										\
-	g_componentID = genUUID64();																						\
-	parseMainCommandArgs(argc, argv);																					\
-	char dumpname[MAX_BUF] = {0};																						\
-	kbe_snprintf(dumpname, MAX_BUF, "%" PRAppID, g_componentID);														\
-	KBEngine::exception::installCrashHandler(1, dumpname);																\
-	int retcode = -1;																									\
-	THREAD_TRY_EXECUTION;																								\
-	retcode = kbeMain(argc, argv);																						\
-	THREAD_HANDLE_CRASH;																								\
-	return retcode;																										\
-}																														\
-int kbeMain
+#define KBENGINE_MAIN                                            \
+	kbeMain(int argc, char *argv[]);                               \
+	int main(int argc, char *argv[])                               \
+	{                                                              \
+		loadConfig();                                                \
+		g_componentID = genUUID64();                                 \
+		parseMainCommandArgs(argc, argv);                            \
+		char dumpname[MAX_BUF] = {0};                                \
+		kbe_snprintf(dumpname, MAX_BUF, "%" PRAppID, g_componentID); \
+		KBEngine::exception::installCrashHandler(1, dumpname);       \
+		int retcode = -1;                                            \
+		THREAD_TRY_EXECUTION;                                        \
+		retcode = kbeMain(argc, argv);                               \
+		THREAD_HANDLE_CRASH;                                         \
+		return retcode;                                              \
+	}                                                              \
+	int kbeMain
 #else
-#define KBENGINE_MAIN																									\
-kbeMain(int argc, char* argv[]);																						\
-int main(int argc, char* argv[])																						\
-{																														\
-	loadConfig();																										\
-	g_componentID = genUUID64();																						\
-	parseMainCommandArgs(argc, argv);																					\
-	return kbeMain(argc, argv);																							\
-}																														\
-int kbeMain
+#define KBENGINE_MAIN                 \
+	kbeMain(int argc, char *argv[]);    \
+	int main(int argc, char *argv[])    \
+	{                                   \
+		loadConfig();                     \
+		g_componentID = genUUID64();      \
+		parseMainCommandArgs(argc, argv); \
+		return kbeMain(argc, argv);       \
+	}                                   \
+	int kbeMain
 #endif
 }
 

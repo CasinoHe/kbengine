@@ -74,7 +74,7 @@ std::pair<std::wstring, std::wstring> getComponentPythonPaths(COMPONENT_TYPE com
 	std::pair<std::wstring, std::wstring> pathPair = std::make_pair(L"", L"");
 
 	std::wstring user_scripts_path = L"";
-	wchar_t* tbuf = KBEngine::strutil::char2wchar(const_cast<char*>(Resmgr::getSingleton().getPyUserScriptsPath().c_str()));
+	wchar_t* tbuf = KBEngine::strutil::char2wchar(const_cast<char*>(smallgames::GetPathMgr().get_script_path().c_str()));
 	if (tbuf != NULL)
 	{
 		user_scripts_path += tbuf;
@@ -115,7 +115,7 @@ std::pair<std::wstring, std::wstring> getComponentPythonPaths(COMPONENT_TYPE com
 		break;
 	};
 
-	std::string kbe_res_path = Resmgr::getSingleton().getPySysResPath();
+	std::string kbe_res_path = smallgames::GetPathMgr().get_res_path();
 	kbe_res_path += "scripts/common";
 
 	tbuf = KBEngine::strutil::char2wchar(const_cast<char*>(kbe_res_path.c_str()));

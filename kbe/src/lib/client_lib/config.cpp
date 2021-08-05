@@ -10,7 +10,6 @@
 #include "common/kbeversion.h"
 
 namespace KBEngine{
-KBE_SINGLETON_INIT(Config);
 
 //-------------------------------------------------------------------------------------
 Config::Config():
@@ -39,7 +38,7 @@ bool Config::loadConfig(std::string fileName)
 {
 	fileName_ = fileName;
 	TiXmlNode* rootNode = NULL;
-	SmartPointer<XML> xml(new XML(Resmgr::getSingleton().matchRes(fileName_).c_str()));
+	SmartPointer<XML> xml(new XML(smallgames::GetPathMgr().get_full_path(fileName_).c_str()));
 
 	if(!xml->isGood())
 	{
@@ -51,7 +50,7 @@ bool Config::loadConfig(std::string fileName)
 	
 	if(xml->getRootNode() == NULL)
 	{
-		// root½ÚµãÏÂÃ»ÓÐ×Ó½ÚµãÁË
+		// rootèŠ‚ç‚¹ä¸‹æ²¡æœ‰å­èŠ‚ç‚¹äº†
 		return true;
 	}
 
@@ -87,7 +86,7 @@ bool Config::loadConfig(std::string fileName)
 					{
 						Network::g_trace_packet_disables.push_back(c);
 
-						// ²»debug¼ÓÃÜ°ü
+						// ä¸debugåŠ å¯†åŒ…
 						if(c == "Encrypted::packets")
 							Network::g_trace_encrypted_packet = false;
 					}
@@ -419,7 +418,7 @@ void Config::writeAccountName(const char* name)
 		return;
 
 	TiXmlNode* rootNode = NULL;
-	XML* xml = new XML(Resmgr::getSingleton().matchRes(fileName_).c_str());
+	XML* xml = new XML(smallgames::GetPathMgr().get_full_path(fileName_).c_str());
 
 	if(!xml->isGood())
 	{

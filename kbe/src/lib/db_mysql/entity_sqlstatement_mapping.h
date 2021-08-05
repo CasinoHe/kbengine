@@ -12,17 +12,15 @@
 namespace KBEngine{ 
 
 class SqlStatement;
-class EntitySqlStatementMapping : public Singleton<EntitySqlStatementMapping>
+class EntitySqlStatementMapping : public smallgames::Singleton<EntitySqlStatementMapping>
 {
+	friend smallgames::Singleton<EntitySqlStatementMapping>;
+
+private:
+	EntitySqlStatementMapping() = default;
+	virtual ~EntitySqlStatementMapping() = default;
+
 public:
-	EntitySqlStatementMapping()
-	{
-	}
-
-	virtual ~EntitySqlStatementMapping()
-	{
-	}
-
 	void addQuerySqlStatement(const std::string& tableName, SqlStatement* pSqlStatement);
 	void addInsertSqlStatement(const std::string& tableName, SqlStatement* pSqlStatement);
 	void addUpdateSqlStatement(const std::string& tableName, SqlStatement* pSqlStatement);

@@ -77,7 +77,7 @@ SpaceMemory::~SpaceMemory()
 //-------------------------------------------------------------------------------------
 void SpaceMemory::_clearGhosts()
 {
-	// ÒòÎªspaceÔÚdestroyÊ±×ö¹ýÒ»´ÎÇåÀí£¬Òò´ËÕâÀïÀíÂÛÉÏÊ£ÏÂµÄÊÇghostsÊµÌå
+	// ï¿½ï¿½Îªspaceï¿½ï¿½destroyÊ±ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê£ï¿½Âµï¿½ï¿½ï¿½ghostsÊµï¿½ï¿½
 	if(entities_.size() == 0)
 		return;
 	
@@ -225,7 +225,7 @@ PyObject* SpaceMemory::__py_AddSpaceGeometryMapping(PyObject* self, PyObject* ar
 
 	SCRIPT_ERROR_CHECK();
 
-	if (Resmgr::getSingleton().matchPath(path).size() == 0)
+	if (smallgames::GetPathMgr().get_full_path(path).size() == 0)
 	{
 		PyErr_Format(PyExc_AssertionError, "KBEngine::addSpaceGeometryMapping: path error! spaceID=%u respath=%s",
 			spaceID, path);
@@ -302,7 +302,7 @@ void SpaceMemory::onLoadedSpaceGeometryMapping(NavigationHandlePtr pNavHandle)
 	INFO_MSG(fmt::format("KBEngine::onLoadedSpaceGeometryMapping: spaceID={}, respath={}!\n",
 			id(), getGeometryPath()));
 
-	// Í¨Öª½Å±¾
+	// Í¨Öªï¿½Å±ï¿½
 	{
 		SCOPED_PROFILE(SCRIPTCALL_PROFILE);
 		SCRIPT_OBJECT_CALL_ARGS2(Cellapp::getSingleton().getEntryScript().get(), const_cast<char*>("onSpaceGeometryLoaded"), 
@@ -332,7 +332,7 @@ void SpaceMemory::onAllSpaceGeometryLoaded()
 {
 	SCOPED_PROFILE(SCRIPTCALL_PROFILE);
 
-	// Í¨Öª½Å±¾
+	// Í¨Öªï¿½Å±ï¿½
 	SCRIPT_OBJECT_CALL_ARGS3(Cellapp::getSingleton().getEntryScript().get(), const_cast<char*>("onAllSpaceGeometryLoaded"), 
 		const_cast<char*>("Iis"), this->id(), true, getGeometryPath().c_str(), false);
 }
@@ -388,13 +388,13 @@ void SpaceMemory::removeEntity(Entity* pEntity)
 
 	pEntity->spaceID(0);
 	
-	// ÏÈ»ñÈ¡µ½ËùÔÚÎ»ÖÃ
+	// ï¿½È»ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
 	SPACE_ENTITIES::size_type idx = pEntity->spaceEntityIdx();
 
 	KBE_ASSERT(idx < entities_.size());
 	KBE_ASSERT(entities_[ idx ] == pEntity);
 
-	// Èç¹ûÓÐ2¸ö»òÒÔÉÏµÄentityÔò½«×îºóÒ»¸öentityÒÆÖÁÉ¾³ýµÄÕâ¸öentityËùÔÚÎ»ÖÃ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½entityï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½entityï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½entityï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
 	Entity* pBack = entities_.back().get();
 	pBack->spaceEntityIdx(idx);
 	entities_[idx] = pBack;
@@ -403,11 +403,11 @@ void SpaceMemory::removeEntity(Entity* pEntity)
 
 	onLeaveWorld(pEntity);
 
-	// Õâ¾ä±ØÐëÔÚonLeaveWorldÖ®ºó£¬ ÒòÎª¿ÉÄÜrangeTriggerÐèÒª²Î¿¼pEntityCoordinateNode
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½onLeaveWorldÖ®ï¿½ï¿½ ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½rangeTriggerï¿½ï¿½Òªï¿½Î¿ï¿½pEntityCoordinateNode
 	pEntity->uninstallCoordinateNodes(&coordinateSystem_);
 	pEntity->onLeaveSpace(this);
 
-	// Èç¹ûÃ»ÓÐentityÁËÔòÐèÒªÏú»Ùspace, ÒòÎªspace×îÉÙ´æÔÚÒ»¸öentity
+	// ï¿½ï¿½ï¿½Ã»ï¿½ï¿½entityï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½space, ï¿½ï¿½Îªspaceï¿½ï¿½ï¿½Ù´ï¿½ï¿½ï¿½Ò»ï¿½ï¿½entity
 	if(entities_.empty() && state_ == STATE_NORMAL)
 	{
 		SpaceMemorys::destroySpace(this->id(), 0);
@@ -432,8 +432,8 @@ void SpaceMemory::onEnterWorld(Entity* pEntity)
 {
 	KBE_ASSERT(pEntity != NULL);
 	
-	// Èç¹ûÊÇÒ»¸öÓÐWitness(Í¨³£ÊÇÍæ¼Ò)ÔòÐèÒª½«µ±Ç°³¡¾°ÒÑ¾­´´½¨µÄÓÐclient²¿·ÖµÄentity¹ã²¥¸øËû
-	// ·ñÔòÊÇÒ»¸öÆÕÍ¨µÄentity½øÈëÊÀ½ç£¬ ÄÇÃ´ÐèÒª½«Õâ¸öentity¹ã²¥¸øËùÓÐ¿´¼ûËûµÄÓÐWitnessµÄentity¡£
+	// ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Witness(Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½clientï¿½ï¿½ï¿½Öµï¿½entityï¿½ã²¥ï¿½ï¿½ï¿½ï¿½
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½entityï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ç£¬ ï¿½ï¿½Ã´ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½entityï¿½ã²¥ï¿½ï¿½ï¿½ï¿½ï¿½Ð¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Witnessï¿½ï¿½entityï¿½ï¿½
 	if(pEntity->hasWitness())
 	{
 		_onEnterWorld(pEntity);
@@ -453,8 +453,8 @@ void SpaceMemory::onLeaveWorld(Entity* pEntity)
 	if(!pEntity->isReal() || !pEntity->pScriptModule()->hasClient())
 		return;
 	
-	// ÏòÆäËûÈË¿Í»§¶Ë¹ã²¥×Ô¼ºµÄÀë¿ª
-	// Ïò¿Í»§¶Ë·¢ËÍonLeaveWorldÏûÏ¢
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¿Í»ï¿½ï¿½Ë¹ã²¥ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ë¿ª
+	// ï¿½ï¿½Í»ï¿½ï¿½Ë·ï¿½ï¿½ï¿½onLeaveWorldï¿½ï¿½Ï¢
 	if(pEntity->hasWitness())
 	{
 		pEntity->pWitness()->onLeaveSpace(this);
@@ -602,7 +602,7 @@ void SpaceMemory::delSpaceData(const std::string& key)
 //-------------------------------------------------------------------------------------
 void SpaceMemory::onSpaceDataChanged(const std::string& key, const std::string& value, bool isdel)
 {
-	// Í¨Öª½Å±¾
+	// Í¨Öªï¿½Å±ï¿½
 	if(!isdel)
 	{
 		SCOPED_PROFILE(SCRIPTCALL_PROFILE);

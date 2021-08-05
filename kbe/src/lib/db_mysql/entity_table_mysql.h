@@ -18,7 +18,7 @@ class EntityTableMysql;
 #define MYSQL_ENGINE_TYPE "InnoDB"
 
 /*
-	ά��entity�����ݿ���е�һ���ֶ�
+	维锟斤拷entity锟斤拷锟斤拷锟捷匡拷锟斤拷械锟揭伙拷锟斤拷侄锟�
 */
 class EntityTableItemMysqlBase : public EntityTableItem
 {
@@ -27,7 +27,7 @@ public:
 	  EntityTableItem(itemDBType, datalength, flags),
 	  mysqlItemtype_(mysqlItemtype)
 	{
-		// ��¼�����������õ����б��
+		// 锟斤拷录锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟矫碉拷锟斤拷锟叫憋拷锟�
 		ALL_MYSQL_SET_FLAGS |= flags;
 
 		memset(db_item_name_, 0, MAX_BUF);
@@ -40,33 +40,33 @@ public:
 	uint8 type() const{ return TABLE_ITEM_TYPE_UNKONWN; }
 
 	/**
-		��ʼ��
+		锟斤拷始锟斤拷
 	*/
 	virtual bool initialize(const PropertyDescription* pPropertyDescription, 
 		const DataType* pDataType, std::string name);
 
 	/**
-		ͬ��entity�������ݿ���
+		同锟斤拷entity锟斤拷锟斤拷锟斤拷锟捷匡拷锟斤拷
 	*/
 	virtual bool syncToDB(DBInterface* pdbi, void* pData = NULL) = 0;
 
 	/**
-		��������
+		锟斤拷锟斤拷锟斤拷锟斤拷
 	*/
 	virtual bool writeItem(DBInterface* pdbi, DBID dbid, MemoryStream* s, ScriptDefModule* pModule){ return true; }
 
 	/**
-		��ѯ��
+		锟斤拷询锟斤拷
 	*/
 	virtual bool queryTable(DBInterface* pdbi, DBID dbid, MemoryStream* s, ScriptDefModule* pModule){ return true; }
 
 	/**
-		��ȡĳ�������е����ݷŵ�����
+		锟斤拷取某锟斤拷锟斤拷锟斤拷锟叫碉拷锟斤拷锟捷放碉拷锟斤拷锟斤拷
 	*/
 	virtual void addToStream(MemoryStream* s, mysql::DBContext& context, DBID resultDBID){};
 
 	/**
-		��ȡ��Ҫ�洢�ı����� �ֶ�����ת��Ϊsql�洢ʱ���ַ���ֵ
+		锟斤拷取锟斤拷要锟芥储锟侥憋拷锟斤拷锟斤拷 锟街讹拷锟斤拷锟斤拷转锟斤拷为sql锟芥储时锟斤拷锟街凤拷锟斤拷值
 	*/
 	virtual void getWriteSqlItem(DBInterface* pdbi, MemoryStream* s, mysql::DBContext& context) = 0;
 	virtual void getReadSqlItem(mysql::DBContext& context) = 0;
@@ -96,17 +96,17 @@ public:
 	uint8 type() const{ return TABLE_ITEM_TYPE_DIGIT; }
 
 	/**
-		ͬ��entity�������ݿ���
+		同锟斤拷entity锟斤拷锟斤拷锟斤拷锟捷匡拷锟斤拷
 	*/
 	virtual bool syncToDB(DBInterface* pdbi, void* pData = NULL);
 
 	/**
-		��ȡĳ�������е����ݷŵ�����
+		锟斤拷取某锟斤拷锟斤拷锟斤拷锟叫碉拷锟斤拷锟捷放碉拷锟斤拷锟斤拷
 	*/
 	void addToStream(MemoryStream* s, mysql::DBContext& context, DBID resultDBID);
 
 	/**
-		��ȡ��Ҫ�洢�ı����� �ֶ�����ת��Ϊsql�洢ʱ���ַ���ֵ
+		锟斤拷取锟斤拷要锟芥储锟侥憋拷锟斤拷锟斤拷 锟街讹拷锟斤拷锟斤拷转锟斤拷为sql锟芥储时锟斤拷锟街凤拷锟斤拷值
 	*/
 	virtual void getWriteSqlItem(DBInterface* pdbi, MemoryStream* s, mysql::DBContext& context);
 	virtual void getReadSqlItem(mysql::DBContext& context);
@@ -129,17 +129,17 @@ public:
 	uint8 type() const{ return TABLE_ITEM_TYPE_STRING; }
 
 	/**
-		ͬ��entity�������ݿ���
+		同锟斤拷entity锟斤拷锟斤拷锟斤拷锟捷匡拷锟斤拷
 	*/
 	virtual bool syncToDB(DBInterface* pdbi, void* pData = NULL);
 
 	/**
-		��ȡĳ�������е����ݷŵ�����
+		锟斤拷取某锟斤拷锟斤拷锟斤拷锟叫碉拷锟斤拷锟捷放碉拷锟斤拷锟斤拷
 	*/
 	void addToStream(MemoryStream* s, mysql::DBContext& context, DBID resultDBID);
 
 	/**
-		��ȡ��Ҫ�洢�ı����� �ֶ�����ת��Ϊsql�洢ʱ���ַ���ֵ
+		锟斤拷取锟斤拷要锟芥储锟侥憋拷锟斤拷锟斤拷 锟街讹拷锟斤拷锟斤拷转锟斤拷为sql锟芥储时锟斤拷锟街凤拷锟斤拷值
 	*/
 	virtual void getWriteSqlItem(DBInterface* pdbi, MemoryStream* s, mysql::DBContext& context);
 	virtual void getReadSqlItem(mysql::DBContext& context);
@@ -159,17 +159,17 @@ public:
 	uint8 type() const{ return TABLE_ITEM_TYPE_UNICODE; }
 
 	/**
-		ͬ��entity�������ݿ���
+		同锟斤拷entity锟斤拷锟斤拷锟斤拷锟捷匡拷锟斤拷
 	*/
 	virtual bool syncToDB(DBInterface* pdbi, void* pData = NULL);
 
 	/**
-		��ȡĳ�������е����ݷŵ�����
+		锟斤拷取某锟斤拷锟斤拷锟斤拷锟叫碉拷锟斤拷锟捷放碉拷锟斤拷锟斤拷
 	*/
 	void addToStream(MemoryStream* s, mysql::DBContext& context, DBID resultDBID);
 
 	/**
-		��ȡ��Ҫ�洢�ı����� �ֶ�����ת��Ϊsql�洢ʱ���ַ���ֵ
+		锟斤拷取锟斤拷要锟芥储锟侥憋拷锟斤拷锟斤拷 锟街讹拷锟斤拷锟斤拷转锟斤拷为sql锟芥储时锟斤拷锟街凤拷锟斤拷值
 	*/
 	virtual void getWriteSqlItem(DBInterface* pdbi, MemoryStream* s, mysql::DBContext& context);
 	virtual void getReadSqlItem(mysql::DBContext& context);
@@ -189,17 +189,17 @@ public:
 	uint8 type() const{ return TABLE_ITEM_TYPE_PYTHON; }
 
 	/**
-		ͬ��entity�������ݿ���
+		同锟斤拷entity锟斤拷锟斤拷锟斤拷锟捷匡拷锟斤拷
 	*/
 	virtual bool syncToDB(DBInterface* pdbi, void* pData = NULL);
 
 	/**
-		��ȡĳ�������е����ݷŵ�����
+		锟斤拷取某锟斤拷锟斤拷锟斤拷锟叫碉拷锟斤拷锟捷放碉拷锟斤拷锟斤拷
 	*/
 	void addToStream(MemoryStream* s, mysql::DBContext& context, DBID resultDBID);
 
 	/**
-		��ȡ��Ҫ�洢�ı����� �ֶ�����ת��Ϊsql�洢ʱ���ַ���ֵ
+		锟斤拷取锟斤拷要锟芥储锟侥憋拷锟斤拷锟斤拷 锟街讹拷锟斤拷锟斤拷转锟斤拷为sql锟芥储时锟斤拷锟街凤拷锟斤拷值
 	*/
 	virtual void getWriteSqlItem(DBInterface* pdbi, MemoryStream* s, mysql::DBContext& context);
 	virtual void getReadSqlItem(mysql::DBContext& context);
@@ -219,17 +219,17 @@ public:
 	uint8 type() const{ return TABLE_ITEM_TYPE_BLOB; }
 
 	/**
-		ͬ��entity�������ݿ���
+		同锟斤拷entity锟斤拷锟斤拷锟斤拷锟捷匡拷锟斤拷
 	*/
 	virtual bool syncToDB(DBInterface* pdbi, void* pData = NULL);
 
 	/**
-		��ȡĳ�������е����ݷŵ�����
+		锟斤拷取某锟斤拷锟斤拷锟斤拷锟叫碉拷锟斤拷锟捷放碉拷锟斤拷锟斤拷
 	*/
 	void addToStream(MemoryStream* s, mysql::DBContext& context, DBID resultDBID);
 
 	/**
-		��ȡ��Ҫ�洢�ı����� �ֶ�����ת��Ϊsql�洢ʱ���ַ���ֵ
+		锟斤拷取锟斤拷要锟芥储锟侥憋拷锟斤拷锟斤拷 锟街讹拷锟斤拷锟斤拷转锟斤拷为sql锟芥储时锟斤拷锟街凤拷锟斤拷值
 	*/
 	virtual void getWriteSqlItem(DBInterface* pdbi, MemoryStream* s, mysql::DBContext& context);
 	virtual void getReadSqlItem(mysql::DBContext& context);
@@ -251,17 +251,17 @@ public:
 	virtual bool isSameKey(std::string key);
 
 	/**
-		ͬ��entity�������ݿ���
+		同锟斤拷entity锟斤拷锟斤拷锟斤拷锟捷匡拷锟斤拷
 	*/
 	virtual bool syncToDB(DBInterface* pdbi, void* pData = NULL);
 
 	/**
-		��ȡĳ�������е����ݷŵ�����
+		锟斤拷取某锟斤拷锟斤拷锟斤拷锟叫碉拷锟斤拷锟捷放碉拷锟斤拷锟斤拷
 	*/
 	void addToStream(MemoryStream* s, mysql::DBContext& context, DBID resultDBID);
 
 	/**
-		��ȡ��Ҫ�洢�ı����� �ֶ�����ת��Ϊsql�洢ʱ���ַ���ֵ
+		锟斤拷取锟斤拷要锟芥储锟侥憋拷锟斤拷锟斤拷 锟街讹拷锟斤拷锟斤拷转锟斤拷为sql锟芥储时锟斤拷锟街凤拷锟斤拷值
 	*/
 	virtual void getWriteSqlItem(DBInterface* pdbi, MemoryStream* s, mysql::DBContext& context);
 	virtual void getReadSqlItem(mysql::DBContext& context);
@@ -292,17 +292,17 @@ public:
 	virtual bool isSameKey(std::string key);
 
 	/**
-		ͬ��entity�������ݿ���
+		同锟斤拷entity锟斤拷锟斤拷锟斤拷锟捷匡拷锟斤拷
 	*/
 	virtual bool syncToDB(DBInterface* pdbi, void* pData = NULL);
 
 	/**
-		��ȡĳ�������е����ݷŵ�����
+		锟斤拷取某锟斤拷锟斤拷锟斤拷锟叫碉拷锟斤拷锟捷放碉拷锟斤拷锟斤拷
 	*/
 	void addToStream(MemoryStream* s, mysql::DBContext& context, DBID resultDBID);
 
 	/**
-		��ȡ��Ҫ�洢�ı����� �ֶ�����ת��Ϊsql�洢ʱ���ַ���ֵ
+		锟斤拷取锟斤拷要锟芥储锟侥憋拷锟斤拷锟斤拷 锟街讹拷锟斤拷锟斤拷转锟斤拷为sql锟芥储时锟斤拷锟街凤拷锟斤拷值
 	*/
 	virtual void getWriteSqlItem(DBInterface* pdbi, MemoryStream* s, mysql::DBContext& context);
 	virtual void getReadSqlItem(mysql::DBContext& context);
@@ -333,17 +333,17 @@ public:
 	virtual bool isSameKey(std::string key);
 
 	/**
-		ͬ��entity�������ݿ���
+		同锟斤拷entity锟斤拷锟斤拷锟斤拷锟捷匡拷锟斤拷
 	*/
 	virtual bool syncToDB(DBInterface* pdbi, void* pData = NULL);
 
 	/**
-		��ȡĳ�������е����ݷŵ�����
+		锟斤拷取某锟斤拷锟斤拷锟斤拷锟叫碉拷锟斤拷锟捷放碉拷锟斤拷锟斤拷
 	*/
 	void addToStream(MemoryStream* s, mysql::DBContext& context, DBID resultDBID);
 
 	/**
-		��ȡ��Ҫ�洢�ı����� �ֶ�����ת��Ϊsql�洢ʱ���ַ���ֵ
+		锟斤拷取锟斤拷要锟芥储锟侥憋拷锟斤拷锟斤拷 锟街讹拷锟斤拷锟斤拷转锟斤拷为sql锟芥储时锟斤拷锟街凤拷锟斤拷值
 	*/
 	virtual void getWriteSqlItem(DBInterface* pdbi, MemoryStream* s, mysql::DBContext& context);
 	virtual void getReadSqlItem(mysql::DBContext& context);
@@ -372,17 +372,17 @@ public:
 	uint8 type() const{ return TABLE_ITEM_TYPE_ENTITYCALL; }
 
 	/**
-		ͬ��entity�������ݿ���
+		同锟斤拷entity锟斤拷锟斤拷锟斤拷锟捷匡拷锟斤拷
 	*/
 	virtual bool syncToDB(DBInterface* pdbi, void* pData = NULL);
 
 	/**
-		��ȡĳ�������е����ݷŵ�����
+		锟斤拷取某锟斤拷锟斤拷锟斤拷锟叫碉拷锟斤拷锟捷放碉拷锟斤拷锟斤拷
 	*/
 	void addToStream(MemoryStream* s, mysql::DBContext& context, DBID resultDBID);
 
 	/**
-		��ȡ��Ҫ�洢�ı����� �ֶ�����ת��Ϊsql�洢ʱ���ַ���ֵ
+		锟斤拷取锟斤拷要锟芥储锟侥憋拷锟斤拷锟斤拷 锟街讹拷锟斤拷锟斤拷转锟斤拷为sql锟芥储时锟斤拷锟街凤拷锟斤拷值
 	*/
 	virtual void getWriteSqlItem(DBInterface* pdbi, MemoryStream* s, mysql::DBContext& context);
 	virtual void getReadSqlItem(mysql::DBContext& context);
@@ -403,7 +403,7 @@ public:
 	virtual bool isSameKey(std::string key);
 
 	/**
-		��ʼ��
+		锟斤拷始锟斤拷
 	*/
 	virtual bool initialize(const PropertyDescription* pPropertyDescription, 
 		const DataType* pDataType, std::string name);
@@ -411,17 +411,17 @@ public:
 	uint8 type() const{ return TABLE_ITEM_TYPE_FIXEDARRAY; }
 
 	/**
-		ͬ��entity�������ݿ���
+		同锟斤拷entity锟斤拷锟斤拷锟斤拷锟捷匡拷锟斤拷
 	*/
 	virtual bool syncToDB(DBInterface* pdbi, void* pData = NULL);
 
 	/**
-		��ȡĳ�������е����ݷŵ�����
+		锟斤拷取某锟斤拷锟斤拷锟斤拷锟叫碉拷锟斤拷锟捷放碉拷锟斤拷锟斤拷
 	*/
 	void addToStream(MemoryStream* s, mysql::DBContext& context, DBID resultDBID);
 
 	/**
-		��ȡ��Ҫ�洢�ı����� �ֶ�����ת��Ϊsql�洢ʱ���ַ���ֵ
+		锟斤拷取锟斤拷要锟芥储锟侥憋拷锟斤拷锟斤拷 锟街讹拷锟斤拷锟斤拷转锟斤拷为sql锟芥储时锟斤拷锟街凤拷锟斤拷值
 	*/
 	virtual void getWriteSqlItem(DBInterface* pdbi, MemoryStream* s, mysql::DBContext& context);
 	virtual void getReadSqlItem(mysql::DBContext& context);
@@ -450,23 +450,23 @@ public:
 	virtual bool isSameKey(std::string key);
 
 	/**
-		��ʼ��
+		锟斤拷始锟斤拷
 	*/
 	virtual bool initialize(const PropertyDescription* pPropertyDescription, 
 		const DataType* pDataType, std::string name);
 
 	/**
-		ͬ��entity�������ݿ���
+		同锟斤拷entity锟斤拷锟斤拷锟斤拷锟捷匡拷锟斤拷
 	*/
 	virtual bool syncToDB(DBInterface* pdbi, void* pData = NULL);
 
 	/**
-		��ȡĳ�������е����ݷŵ�����
+		锟斤拷取某锟斤拷锟斤拷锟斤拷锟叫碉拷锟斤拷锟捷放碉拷锟斤拷锟斤拷
 	*/
 	void addToStream(MemoryStream* s, mysql::DBContext& context, DBID resultDBID);
 
 	/**
-		��ȡ��Ҫ�洢�ı����� �ֶ�����ת��Ϊsql�洢ʱ���ַ���ֵ
+		锟斤拷取锟斤拷要锟芥储锟侥憋拷锟斤拷锟斤拷 锟街讹拷锟斤拷锟斤拷转锟斤拷为sql锟芥储时锟斤拷锟街凤拷锟斤拷值
 	*/
 	virtual void getWriteSqlItem(DBInterface* pdbi, MemoryStream* s, mysql::DBContext& context);
 	virtual void getReadSqlItem(mysql::DBContext& context);
@@ -476,7 +476,7 @@ public:
 	uint32 getItemDatabaseLength(const std::string& name);
 
 protected:
-	EntityTableItemMysql_FIXED_DICT::FIXEDDICT_KEYTYPES			keyTypes_;		// ����̶��ֵ���ĸ���key������
+	EntityTableItemMysql_FIXED_DICT::FIXEDDICT_KEYTYPES			keyTypes_;		// 锟斤拷锟斤拷潭锟斤拷值锟斤拷锟侥革拷锟斤拷key锟斤拷锟斤拷锟斤拷
 };
 
 
@@ -495,7 +495,7 @@ public:
 	virtual bool isSameKey(std::string key);
 
 	/**
-		��ʼ��
+		锟斤拷始锟斤拷
 	*/
 	virtual bool initialize(const PropertyDescription* pPropertyDescription,
 		const DataType* pDataType, std::string name);
@@ -503,17 +503,17 @@ public:
 	uint8 type() const { return TABLE_ITEM_TYPE_COMPONENT; }
 
 	/**
-		ͬ��entity�������ݿ���
+		同锟斤拷entity锟斤拷锟斤拷锟斤拷锟捷匡拷锟斤拷
 	*/
 	virtual bool syncToDB(DBInterface* pdbi, void* pData = NULL);
 
 	/**
-		��ȡĳ�������е����ݷŵ�����
+		锟斤拷取某锟斤拷锟斤拷锟斤拷锟叫碉拷锟斤拷锟捷放碉拷锟斤拷锟斤拷
 	*/
 	void addToStream(MemoryStream* s, mysql::DBContext& context, DBID resultDBID);
 
 	/**
-		��ȡ��Ҫ�洢�ı����� �ֶ�����ת��Ϊsql�洢ʱ���ַ���ֵ
+		锟斤拷取锟斤拷要锟芥储锟侥憋拷锟斤拷锟斤拷 锟街讹拷锟斤拷锟斤拷转锟斤拷为sql锟芥储时锟斤拷锟街凤拷锟斤拷值
 	*/
 	virtual void getWriteSqlItem(DBInterface* pdbi, MemoryStream* s, mysql::DBContext& context);
 	virtual void getReadSqlItem(mysql::DBContext& context);
@@ -526,7 +526,7 @@ protected:
 
 
 /*
-	ά��entity�����ݿ��еı�
+	维锟斤拷entity锟斤拷锟斤拷锟捷匡拷锟叫的憋拷
 */
 class EntityTableMysql : public EntityTable
 {
@@ -535,55 +535,55 @@ public:
 	virtual ~EntityTableMysql();
 	
 	/**
-		��ʼ��
+		锟斤拷始锟斤拷
 	*/
 	virtual bool initialize(ScriptDefModule* sm, std::string name);
 
 	/**
-		ͬ��entity�������ݿ���
+		同锟斤拷entity锟斤拷锟斤拷锟斤拷锟捷匡拷锟斤拷
 	*/
 	virtual bool syncToDB(DBInterface* pdbi);
 
 	/**
-		ͬ��������
+		同锟斤拷锟斤拷锟斤拷锟斤拷
 	*/
 	virtual bool syncIndexToDB(DBInterface* pdbi);
 
 	/** 
-		����һ����item
+		锟斤拷锟斤拷一锟斤拷锟斤拷item
 	*/
 	virtual EntityTableItem* createItem(std::string type, std::string defaultVal);
 
 	DBID writeTable(DBInterface* pdbi, DBID dbid, int8 shouldAutoLoad, MemoryStream* s, ScriptDefModule* pModule);
 
 	/**
-		�����ݿ�ɾ��entity
+		锟斤拷锟斤拷锟捷匡拷删锟斤拷entity
 	*/
 	bool removeEntity(DBInterface* pdbi, DBID dbid, ScriptDefModule* pModule);
 
 	/**
-		��ȡ���е����ݷŵ�����
+		锟斤拷取锟斤拷锟叫碉拷锟斤拷锟捷放碉拷锟斤拷锟斤拷
 	*/
 	virtual bool queryTable(DBInterface* pdbi, DBID dbid, MemoryStream* s, ScriptDefModule* pModule);
 
 	/**
-		�����Ƿ��Զ�����
+		锟斤拷锟斤拷锟角凤拷锟皆讹拷锟斤拷锟斤拷
 	*/
 	virtual void entityShouldAutoLoad(DBInterface* pdbi, DBID dbid, bool shouldAutoLoad);
 
 	/**
-		��ѯ�Զ����ص�ʵ��
+		锟斤拷询锟皆讹拷锟斤拷锟截碉拷实锟斤拷
 	*/
 	virtual void queryAutoLoadEntities(DBInterface* pdbi, ScriptDefModule* pModule, 
 		ENTITY_ID start, ENTITY_ID end, std::vector<DBID>& outs);
 
 	/**
-		��ȡĳ�������е����ݷŵ�����
+		锟斤拷取某锟斤拷锟斤拷锟斤拷锟叫碉拷锟斤拷锟捷放碉拷锟斤拷锟斤拷
 	*/
 	void addToStream(MemoryStream* s, mysql::DBContext& context, DBID resultDBID);
 
 	/**
-		��ȡ��Ҫ�洢�ı����� �ֶ�����ת��Ϊsql�洢ʱ���ַ���ֵ
+		锟斤拷取锟斤拷要锟芥储锟侥憋拷锟斤拷锟斤拷 锟街讹拷锟斤拷锟斤拷转锟斤拷为sql锟芥储时锟斤拷锟街凤拷锟斤拷值
 	*/
 	virtual void getWriteSqlItem(DBInterface* pdbi, MemoryStream* s, mysql::DBContext& context);
 	virtual void getReadSqlItem(mysql::DBContext& context);

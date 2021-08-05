@@ -41,12 +41,12 @@ PyObject* EntityRemoteMethod::tp_call(PyObject* self, PyObject* args,
 	MethodDescription* methodDescription = rmethod->getDescription();
 	EntityCallAbstract* entityCall = rmethod->getEntityCall();
 
-	if (!entityCall->isClient() || entityCall->type() == ENTITYCALL_TYPE_CLIENT_VIA_CELL /* ÐèÒªÏÈ¾­¹ýcell */ )
+	if (!entityCall->isClient() || entityCall->type() == ENTITYCALL_TYPE_CLIENT_VIA_CELL /* ï¿½ï¿½Òªï¿½È¾ï¿½ï¿½ï¿½cell */ )
 	{
 		return RemoteEntityMethod::tp_call(self, args, kwds);
 	}
 
-	Entity* pEntity = Baseapp::getSingleton().findEntity(entityCall->id());
+	Entity* pEntity = Baseapp::getSingletonPtr()->findEntity(entityCall->id());
 	if(pEntity == NULL)
 	{
 		//WARNING_MSG(fmt::format("EntityRemoteMethod::callClientMethod: not found entity({}).\n",
@@ -55,7 +55,7 @@ PyObject* EntityRemoteMethod::tp_call(PyObject* self, PyObject* args,
 		return RemoteEntityMethod::tp_call(self, args, kwds);
 	}
 
-	// Èç¹ûÊÇµ÷ÓÃ¿Í»§¶Ë·½·¨£¬ ÎÒÃÇ¼ÇÂ¼ÊÂ¼þ²¢ÇÒ¼ÇÂ¼´ø¿í
+	// ï¿½ï¿½ï¿½ï¿½Çµï¿½ï¿½Ã¿Í»ï¿½ï¿½Ë·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ç¼ï¿½Â¼ï¿½Â¼ï¿½ï¿½ï¿½ï¿½Ò¼ï¿½Â¼ï¿½ï¿½ï¿½ï¿½
 	if(methodDescription->checkArgs(args))
 	{
 		Network::Bundle* pBundle = Network::Bundle::createPoolObject(OBJECTPOOL_POINT);
@@ -79,7 +79,7 @@ PyObject* EntityRemoteMethod::tp_call(PyObject* self, PyObject* args,
 		if(mstream->wpos() > 0)
 			(*pBundle).append(mstream->data(), (int)mstream->wpos());
 
-		// ¼ÇÂ¼Õâ¸öÊÂ¼þ²úÉúµÄÊý¾ÝÁ¿´óÐ¡
+		// ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡
 		g_privateClientEventHistoryStats.trackEvent(pEntity->scriptName(), 
 			methodDescription->getName(), 
 			pBundle->currMsgLength(), 

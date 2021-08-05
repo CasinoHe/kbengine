@@ -9,8 +9,6 @@
 
 namespace KBEngine{
 
-KBE_SINGLETON_INIT(Navigation);
-
 //-------------------------------------------------------------------------------------
 Navigation::Navigation():
 navhandles_(),
@@ -64,7 +62,7 @@ NavigationHandlePtr Navigation::findNavigation(std::string resPath)
 		}
 		else if (iter->second->type() == NavigationHandle::NAV_TILE)
 		{
-			// ÓÉÓÚtileÐèÒª×öÅö×²£¬ Ã¿Ò»¸öspace¶¼ÐèÒªÒ»·ÝÐÂµÄÊý¾Ý£¬ ÎÒÃÇÕâÀï²ÉÓÃ¿½±´µÄ·½Ê½À´Ôö¼Ó¹¹ÔìËÙ¶È
+			// ç”±äºŽtileéœ€è¦åšç¢°æ’žï¼Œ æ¯ä¸€ä¸ªspaceéƒ½éœ€è¦ä¸€ä»½æ–°çš„æ•°æ®ï¼Œ æˆ‘ä»¬è¿™é‡Œé‡‡ç”¨æ‹·è´çš„æ–¹å¼æ¥å¢žåŠ æž„é€ é€Ÿåº¦
 			NavTileHandle* pNavTileHandle = new NavTileHandle(*(KBEngine::NavTileHandle*)iter->second.get());
 			DEBUG_MSG(fmt::format("Navigation::findNavigation: copy NavTileHandle({:p})!\n", (void*)pNavTileHandle));
 			return NavigationHandlePtr(pNavTileHandle);
@@ -99,17 +97,13 @@ NavigationHandlePtr Navigation::loadNavigation(std::string resPath, const std::m
 	NavigationHandle* pNavigationHandle_ = NULL;
 
 	std::string path = resPath;
-	path = Resmgr::getSingleton().matchPath(path);
-	if(path.size() == 0)
-		return NULL;
+	path = smallgames::GetPathMgr().get_full_path(path);
+	if (path.size() == 0)
+		return nullptr;
 		
-	wchar_t* wpath = strutil::char2wchar(path.c_str());
-	std::wstring wspath = wpath;
-	free(wpath);
+	std::vector<std::string> results;
+	smallgames::GetPathMgr().list_res(path, "tmx", results);
 
-	std::vector<std::wstring> results;
-	Resmgr::getSingleton().listPathRes(wspath, L"tmx", results);
-	
 	if(results.size() > 0)
 	{
 		pNavigationHandle_ = NavTileHandle::create(resPath, params);
@@ -117,11 +111,11 @@ NavigationHandlePtr Navigation::loadNavigation(std::string resPath, const std::m
 	else 	
 	{
 		results.clear();
-		Resmgr::getSingleton().listPathRes(wspath, L"navmesh", results);
+		smallgames::GetPathMgr().list_res(path, "navmesh", results);
 
 		if(results.size() == 0)
 		{
-			return NULL;
+			return nullptr;
 		}
 
 		pNavigationHandle_ = NavMeshHandle::create(resPath, params);

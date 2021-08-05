@@ -80,9 +80,9 @@ void EntityAutoLoader::onEntityAutoLoadCBFromDBMgr(Network::Channel* pChannel, M
 		DBID dbid;
 		s >> dbid;
 
-		if(PyObject_HasAttrString(Baseapp::getSingleton().getEntryScript().get(), "onAutoLoadEntityCreate") > 0)
+		if(PyObject_HasAttrString(Baseapp::getSingletonPtr()->getEntryScript().get(), "onAutoLoadEntityCreate") > 0)
 		{
-			PyObject* pyResult = PyObject_CallMethod(Baseapp::getSingleton().getEntryScript().get(), 
+			PyObject* pyResult = PyObject_CallMethod(Baseapp::getSingletonPtr()->getEntryScript().get(), 
 												const_cast<char*>("onAutoLoadEntityCreate"), 
 												const_cast<char*>("sK"), 
 												EntityDef::findScriptModule(entityType)->getName(),
@@ -102,7 +102,7 @@ void EntityAutoLoader::onEntityAutoLoadCBFromDBMgr(Network::Channel* pChannel, M
 		}
 		else
 		{
-			Baseapp::getSingleton().createEntityAnywhereFromDBID(EntityDef::findScriptModule(entityType)->getName(), dbid, NULL, 
+			Baseapp::getSingletonPtr()->createEntityAnywhereFromDBID(EntityDef::findScriptModule(entityType)->getName(), dbid, NULL, 
 				g_kbeSrvConfig.dbInterfaceIndex2dbInterfaceName(dbInterfaceIndex));
 		}
 	}

@@ -27,17 +27,22 @@ void Backuper::tick()
 	if (periodInTicks == 0)
 		return;
 
-	// ÕâÀï¶Ô±¸·İµÄentity×öÒ»ÏÂ·ÖÅú²Ù×÷
-	// ´ó¸ÅËã·¨ÊÇÅäÖÃÉÏÌîĞ´µÄ±¸·İÖÜÆÚ»»Ëã³ÉtickÊıÁ¿£¬ Ã¿¸ötick±¸·İÒ»²¿·Öentity
-	float numToBackUpFloat = float(Baseapp::getSingleton().pEntities()->size()) / periodInTicks + backupRemainder_;
+	// è¿™é‡Œå¯¹å¤‡ä»½çš„entityåšä¸€ä¸‹åˆ†æ‰¹æ“ä½œ
+	// å¤§æ¦‚ç®—æ³•æ˜¯é…ç½®ä¸Šå¡«å†™çš„å¤‡ä»½å‘¨æœŸæ¢ç®—æˆtickæ•°é‡ï¼Œ æ¯ä¸ªtickå¤‡ä»½ä¸€éƒ¨åˆ†entity
+	auto base_singleton_ptr = Baseapp::getSingletonPtr();
+	float numToBackUpFloat = 0.0f;
+	if (base_singleton_ptr)
+	{
+		numToBackUpFloat = float(base_singleton_ptr->pEntities()->size()) / periodInTicks + backupRemainder_;
+	}
 
-	// ±¾´Î±¸·İµÄÊıÁ¿
+	// æœ¬æ¬¡å¤‡ä»½çš„æ•°é‡
 	int numToBackUp = int(numToBackUpFloat);
 
-	// ¼ÆËã³ö¾«¶Èµ¼ÖÂµÄËğÊ§ÊıÁ¿
+	// è®¡ç®—å‡ºç²¾åº¦å¯¼è‡´çš„æŸå¤±æ•°é‡
 	backupRemainder_ = numToBackUpFloat - numToBackUp;
 
-	// Èç¹û±¸·İ±íÖĞÃ»ÓĞÄÚÈİÁËÔòÖØĞÂ²úÉúÒ»·İĞÂµÄ
+	// å¦‚æœå¤‡ä»½è¡¨ä¸­æ²¡æœ‰å†…å®¹äº†åˆ™é‡æ–°äº§ç”Ÿä¸€ä»½æ–°çš„
 	if (backupEntityIDs_.empty())
 	{
 		this->createBackupTable();
@@ -47,7 +52,8 @@ void Backuper::tick()
 	
 	while((numToBackUp > 0) && !backupEntityIDs_.empty())
 	{
-		Entity * pEntity = Baseapp::getSingleton().findEntity(backupEntityIDs_.back());
+		auto base_singleton_ptr = Baseapp::getSingletonPtr();
+		Entity * pEntity = base_singleton_ptr->findEntity(backupEntityIDs_.back());
 		backupEntityIDs_.pop_back();
 		
 		if (pEntity && backup(*pEntity, *s))
@@ -64,7 +70,7 @@ void Backuper::tick()
 //-------------------------------------------------------------------------------------
 bool Backuper::backup(Entity& entity, MemoryStream& s)
 {
-	// ÕâÀï¿ªÊ¼½«ĞèÒª±¸·İµÄÊı¾İĞ´ÈëÁ÷
+	// è¿™é‡Œå¼€å§‹å°†éœ€è¦å¤‡ä»½çš„æ•°æ®å†™å…¥æµ
 	entity.writeBackupData(&s);
 
 	if(entity.shouldAutoBackup() == KBE_NEXT_ONLY)
@@ -78,9 +84,9 @@ void Backuper::createBackupTable()
 {
 	backupEntityIDs_.clear();
 
-	Entities<Entity>::ENTITYS_MAP::const_iterator iter = Baseapp::getSingleton().pEntities()->getEntities().begin();
+	Entities<Entity>::ENTITYS_MAP::const_iterator iter = Baseapp::getSingletonPtr()->pEntities()->getEntities().begin();
 
-	for(; iter != Baseapp::getSingleton().pEntities()->getEntities().end(); ++iter)
+	for(; iter != Baseapp::getSingletonPtr()->pEntities()->getEntities().end(); ++iter)
 	{
 		Entity* pEntity = static_cast<Entity*>(iter->second.get());
 
@@ -88,7 +94,7 @@ void Backuper::createBackupTable()
 			backupEntityIDs_.push_back(iter->first);
 	}
 
-	// Ëæ»úÒ»ÏÂĞòÁĞ
+	// éšæœºä¸€ä¸‹åºåˆ—
 	std::random_shuffle(backupEntityIDs_.begin(), backupEntityIDs_.end());
 }
 

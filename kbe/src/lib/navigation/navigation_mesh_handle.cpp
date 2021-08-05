@@ -412,43 +412,36 @@ NavigationHandle* NavMeshHandle::create(std::string resPath, const std::map< int
 	NavMeshHandle* pNavMeshHandle = NULL;
 
 	std::string path = resPath;
-	path = Resmgr::getSingleton().matchPath(path);
-	wchar_t* wpath = strutil::char2wchar(path.c_str());
-	std::wstring wspath = wpath;
-	free(wpath);
+	path = smallgames::GetPathMgr().get_full_path(path);
 
 	if(params.size() == 0)
 	{
-		std::vector<std::wstring> results;
-		Resmgr::getSingleton().listPathRes(wspath, L"navmesh", results);
+		std::vector<std::string> results;
+		smallgames::GetPathMgr().list_res(path, "navmesh", results);
 
 		if(results.size() == 0)
 		{
-			ERROR_MSG(fmt::format("NavMeshHandle::create: path({}) not found navmesh.!\n", 
-				Resmgr::getSingleton().matchRes(path)));
+			ERROR_MSG(fmt::format("NavMeshHandle::create: path({}) not found navmesh.!\n",
+														smallgames::GetPathMgr().get_full_path(path)));
 
 			return NULL;
 		}
 
 		pNavMeshHandle = new NavMeshHandle();
-		std::vector<std::wstring>::iterator iter = results.begin();
+		auto iter = results.cbegin();
 		int layer = 0;
 		
-		for(; iter != results.end(); ++iter)
+		for(; iter != results.cend(); ++iter)
 		{
-			char* cpath = strutil::wchar2char((*iter).c_str());
-			path = cpath;
-			free(cpath);
-			
-			_create(layer++, resPath, path, pNavMeshHandle);
+			_create(layer++, resPath, (*iter).c_str(), pNavMeshHandle);
 		}
 	}
 	else
 	{
 		pNavMeshHandle = new NavMeshHandle();
-		std::map< int, std::string >::const_iterator iter = params.begin();
+		std::map<int, std::string>::const_iterator iter = params.cbegin();
 
-		for(; iter != params.end(); ++iter)
+		for(; iter != params.cend(); ++iter)
 		{
 			_create(iter->first, resPath, path + "/" + iter->second, pNavMeshHandle);
 		}		
@@ -465,8 +458,8 @@ dtNavMesh* tryReadNavmesh(uint8* data, size_t readsize, const std::string& res, 
 	{
 		if(showlog)
 		{
-			ERROR_MSG(fmt::format("NavMeshHandle::tryReadNavmesh: open({}), NavMeshSetHeader error!\n", 
-				Resmgr::getSingleton().matchRes(res)));
+			ERROR_MSG(fmt::format("NavMeshHandle::tryReadNavmesh: open({}), NavMeshSetHeader error!\n",
+														smallgames::GetPathMgr().get_full_path(res)));
 		}
 
 		return NULL;
@@ -580,8 +573,8 @@ bool NavMeshHandle::_create(int layer, const std::string& resPath, const std::st
 	FILE* fp = fopen(res.c_str(), "rb");
 	if (!fp)
 	{
-		ERROR_MSG(fmt::format("NavMeshHandle::create: open({}) error!\n", 
-			Resmgr::getSingleton().matchRes(res)));
+		ERROR_MSG(fmt::format("NavMeshHandle::create: open({}) error!\n",
+													smallgames::GetPathMgr().get_full_path(res)));
 
 		return false;
 	}
@@ -596,8 +589,8 @@ bool NavMeshHandle::_create(int layer, const std::string& resPath, const std::st
 	uint8* data = new uint8[flen];
 	if(data == NULL)
 	{
-		ERROR_MSG(fmt::format("NavMeshHandle::create: open({}), memory(size={}) error!\n", 
-			Resmgr::getSingleton().matchRes(res), flen));
+		ERROR_MSG(fmt::format("NavMeshHandle::create: open({}), memory(size={}) error!\n",
+													smallgames::GetPathMgr().get_full_path(res), flen));
 
 		fclose(fp);
 		SAFE_RELEASE_ARRAY(data);
@@ -608,7 +601,7 @@ bool NavMeshHandle::_create(int layer, const std::string& resPath, const std::st
 	if(readsize != flen)
 	{
 		ERROR_MSG(fmt::format("NavMeshHandle::create: open({}), read(size={} != {}) error!\n", 
-			Resmgr::getSingleton().matchRes(res), readsize, flen));
+													smallgames::GetPathMgr().get_full_path(res), readsize, flen));
 
 		fclose(fp);
 		SAFE_RELEASE_ARRAY(data);

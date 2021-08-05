@@ -180,7 +180,7 @@ bool ClientSDK::create(const std::string& path)
 
 	std::string findpath = "sdk_templates/client/" + name();
 
-	std::string getpath = Resmgr::getSingleton().matchPath(findpath);
+	std::string getpath = smallgames::GetPathMgr().get_full_path(findpath);
 
 	if (getpath.size() == 0 || findpath == getpath)
 	{
@@ -241,72 +241,51 @@ void ClientSDK::onCreateServerErrorDescrsModuleFileName()
 //-------------------------------------------------------------------------------------
 bool ClientSDK::copyPluginsSourceToPath(const std::string& path)
 {
-	wchar_t* wpath = strutil::char2wchar(path.c_str());
-	std::wstring sourcePath = wpath;
-	free(wpath);
-
-	wpath = strutil::char2wchar(basepath_.c_str());
-	std::wstring destPath = wpath;
-	free(wpath);
-	
-	std::vector<std::wstring> results;
-	if (!Resmgr::getSingleton().listPathRes(sourcePath, L"*", results))
+	std::vector<std::string> results;
+	if (!smallgames::GetPathMgr().list_res(path, "*", results))
 		return false;
 
-	wchar_t* wfindpath = strutil::char2wchar(std::string("sdk_templates/client/" + name()).c_str());
-	std::wstring findpath = wfindpath;
-	free(wfindpath);
+	std::string findpath("sdk_templates/client/" + name());
+	std::string destpath(basepath_.c_str());
 
-	std::vector<std::wstring>::iterator iter = results.begin();
-	for (; iter != results.end(); ++iter)
+	auto iter = results.cbegin();
+	for (; iter != results.cend(); ++iter)
 	{
-		std::wstring::size_type fpos = (*iter).find(findpath);
+		std::string::size_type fpos = (*iter).find(findpath);
 
-		char* ccattr = strutil::wchar2char((*iter).c_str());
-		std::string currpath = ccattr;
-		free(ccattr);
+		std::string currpath((*iter).c_str());
 
 		if (fpos == std::wstring::npos)
 		{
-			ERROR_MSG(fmt::format("ClientSDK::copyPluginsSourceToPath(): split path({}) error!\n",
-				currpath));
+			ERROR_MSG(fmt::format("ClientSDK::copyPluginsSourceToPath(): split path({}) error!\n", currpath));
 
 			return false;
 		}
 
-		std::wstring targetFile = (*iter);
+		std::string targetFile = (*iter);
 		targetFile.erase(0, fpos + findpath.size() + 1);
-		targetFile = (destPath + targetFile);
+		targetFile = (destpath + targetFile);
 
-		std::wstring basepath = targetFile;
-		fpos = targetFile.rfind(L"/");
-
-		ccattr = strutil::wchar2char(targetFile.c_str());
-		std::string currTargetFile = ccattr;
-		free(ccattr);
+		std::string basepath(targetFile);
+		fpos = targetFile.rfind("/");
 
 		if (fpos == std::wstring::npos)
 		{
-			ERROR_MSG(fmt::format("ClientSDK::copyPluginsSourceToPath(): split basepath({}) error!\n",
-				currTargetFile));
+			ERROR_MSG(fmt::format("ClientSDK::copyPluginsSourceToPath(): split basepath({}) error!\n", targetFile));
 
 			return false;
 		}
 
 		basepath.erase(fpos, basepath.size() - fpos);
-		
-		ccattr = strutil::wchar2char(basepath.c_str());
-		std::string currbasepath = ccattr;
-		free(ccattr);
 
-		if (KBCMD::creatDir(currbasepath.c_str()) == -1)
+		if (KBCMD::creatDir(basepath.c_str()) == -1)
 		{
-			ERROR_MSG(fmt::format("ClientSDK::copyPluginsSourceToPath(): creating directory error! path={}\n", currbasepath));
+			ERROR_MSG(fmt::format("ClientSDK::copyPluginsSourceToPath(): creating directory error! path={}\n", basepath));
 			return false;
 		}
 
 		std::ifstream input(currpath.c_str(), std::ios::binary);
-		std::ofstream output(currTargetFile.c_str(), std::ios::binary);
+		std::ofstream output(targetFile.c_str(), std::ios::binary);
 
 		std::stringstream ss;
 		std::string filebody;
@@ -338,9 +317,9 @@ bool ClientSDK::writeServerErrorDescrsModule()
 
 	{
 		TiXmlNode *rootNode = NULL;
-		SmartPointer<XML> xml(new XML(Resmgr::getSingleton().matchRes("server/server_errors_defaults.xml").c_str()));
+		SmartPointer<XML> xml(new XML(smallgames::GetPathMgr().get_full_path("server/server_errors_defaults.xml").c_str()));
 
-		if (!xml->isGood())
+				if (!xml->isGood())
 		{
 			ERROR_MSG(fmt::format("ClientSDK::writeServerErrorDescrsModule: load {} is failed!\n",
 				"server/server_errors_defaults.xml"));
@@ -364,12 +343,9 @@ bool ClientSDK::writeServerErrorDescrsModule()
 	{
 		TiXmlNode *rootNode = NULL;
 
-		FILE* f = Resmgr::getSingleton().openRes("server/server_errors.xml");
-
-		if (f)
+		if (smallgames::GetPathMgr().exists("server/server_errors.xml"))
 		{
-			fclose(f);
-			SmartPointer<XML> xml(new XML(Resmgr::getSingleton().matchRes("server/server_errors.xml").c_str()));
+			SmartPointer<XML> xml(new XML(smallgames::GetPathMgr().get_full_path("server/server_errors.xml").c_str()));
 
 			if (xml->isGood())
 			{
@@ -833,7 +809,7 @@ bool ClientSDK::writeEntityCall(ScriptDefModule* pScriptDefModule)
 
 	std::string newModuleName;
 
-	// ÏÈÐ´BaseEntityCall
+	// ï¿½ï¿½Ð´BaseEntityCall
 	if(!writeBaseEntityCallBegin(pScriptDefModule))
 		return false;
 
@@ -932,7 +908,7 @@ bool ClientSDK::writeEntityCall(ScriptDefModule* pScriptDefModule)
 	headerfileBody_ += fmt::format("\n");
 	sourcefileBody_ += fmt::format("\n");
 
-	// ÔÙÐ´CellEntityCall
+	// ï¿½ï¿½Ð´CellEntityCall
 	if (!writeCellEntityCallBegin(pScriptDefModule))
 		return false;
 

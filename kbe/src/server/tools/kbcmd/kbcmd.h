@@ -10,11 +10,12 @@
 #include "network/endpoint.h"
 #include "resmgr/resmgr.h"
 #include "thread/threadpool.h"
+#include "common/appsingleton.h"
 
 namespace KBEngine{
 
 class KBCMD : public PythonApp,
-	public Singleton<KBCMD>
+	public smallgames::AppSingleton<KBCMD>
 {
 public:
 	enum TimeOutType
@@ -22,19 +23,22 @@ public:
 		TIMEOUT_TICK = TIMEOUT_PYTHONAPP_MAX + 1
 	};
 
-	KBCMD(Network::EventDispatcher& dispatcher,
-		Network::NetworkInterface& ninterface,
-		COMPONENT_TYPE componentType,
-		COMPONENT_ID componentID);
+private:
+	friend smallgames::AppSingleton<KBCMD>;
+	KBCMD(Network::EventDispatcher &dispatcher,
+				Network::NetworkInterface &ninterface,
+				COMPONENT_TYPE componentType,
+				COMPONENT_ID componentID);
 
 	~KBCMD();
 
+public:
 	bool run();
 
 	void handleTimeout(TimerHandle handle, void * arg);
 	void handleMainTick();
 
-	/* ≥ı ºªØœ‡πÿΩ”ø⁄ */
+	/* ÂàùÂßãÂåñÁõ∏ÂÖ≥Êé•Âè£ */
 	bool initializeBegin();
 	bool inInitialize();
 	bool initializeEnd();

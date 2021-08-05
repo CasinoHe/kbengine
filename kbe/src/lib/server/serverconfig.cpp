@@ -13,7 +13,6 @@
 #endif
 
 namespace KBEngine{
-KBE_SINGLETON_INIT(ServerConfig);
 
 static bool g_dbmgr_addDefaultAddress = true;
 
@@ -52,7 +51,7 @@ ServerConfig::~ServerConfig()
 bool ServerConfig::loadConfig(std::string fileName)
 {
 	TiXmlNode* node = NULL, *rootNode = NULL;
-	SmartPointer<XML> xml(new XML(Resmgr::getSingleton().matchRes(fileName).c_str()));
+	SmartPointer<XML> xml(new XML(smallgames::GetPathMgr().get_full_path(fileName).c_str()));
 
 	if(!xml->isGood())
 	{
@@ -61,7 +60,11 @@ bool ServerConfig::loadConfig(std::string fileName)
 
 		return false;
 	}
-	
+	else
+	{
+		INFO_MSG(fmt::format("ServerConfig::loadConfig: load {} succeed!\n", fileName.c_str()));
+	}
+
 	if(xml->getRootNode() == NULL)
 	{
 		// no child node on root
@@ -850,10 +853,10 @@ bool ServerConfig::loadConfig(std::string fileName)
 
 			childnode = xml->enterNode(node, "checktick");
 			if(childnode)
-				Resmgr::respool_checktick = xml->getValInt(childnode);
+				smallgames::Resmgr::respool_checktick = xml->getValInt(childnode);
 
-			Resmgr::respool_timeout = _baseAppInfo.respool_timeout;
-			Resmgr::respool_buffersize = _baseAppInfo.respool_buffersize;
+			smallgames::Resmgr::respool_timeout = _baseAppInfo.respool_timeout;
+			smallgames::Resmgr::respool_buffersize = _baseAppInfo.respool_buffersize;
 		}
 	}
 
@@ -1539,7 +1542,7 @@ bool ServerConfig::loadConfig(std::string fileName)
 
 	if(email_service_config.size() > 0)
 	{
-		SmartPointer<XML> emailxml(new XML(Resmgr::getSingleton().matchRes(email_service_config).c_str()));
+		SmartPointer<XML> emailxml(new XML(smallgames::GetPathMgr().get_full_path(email_service_config).c_str()));
 
 		if(!emailxml->isGood())
 		{

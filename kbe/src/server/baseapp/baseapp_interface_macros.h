@@ -20,7 +20,7 @@
 namespace KBEngine{
 
 /**
-	BaseappÏûÏ¢ºê£¬  ²ÎÊýÎªÁ÷£¬ ÐèÒª×Ô¼º½â¿ª
+	Baseappæ¶ˆæ¯å®ï¼Œ  å‚æ•°ä¸ºæµï¼Œ éœ€è¦è‡ªå·±è§£å¼€
 */
 #if defined(NETWORK_INTERFACE_DECLARE_BEGIN)
 	#undef BASEAPP_MESSAGE_HANDLER_STREAM
@@ -46,7 +46,7 @@ namespace KBEngine{
 	void NAME##BaseappMessagehandler_stream::handle(Network::Channel* pChannel,	\
 													KBEngine::MemoryStream& s)	\
 	{																			\
-			KBEngine::Baseapp::getSingleton().NAME(pChannel, s);				\
+			KBEngine::Baseapp::getSingletonPtr()->NAME(pChannel, s);				\
 	}																			\
 
 #else
@@ -75,7 +75,7 @@ namespace KBEngine{
 																				\
 
 /**
-	BaseappÏûÏ¢ºê£¬  Ö»ÓÐÁã¸ö²ÎÊýµÄÏûÏ¢
+	Baseappæ¶ˆæ¯å®ï¼Œ  åªæœ‰é›¶ä¸ªå‚æ•°çš„æ¶ˆæ¯
 */
 #if defined(NETWORK_INTERFACE_DECLARE_BEGIN)
 	#undef BASEAPP_MESSAGE_HANDLER_ARGS0
@@ -87,7 +87,7 @@ namespace KBEngine{
 	void NAME##BaseappMessagehandler0::handle(Network::Channel* pChannel,		\
 												KBEngine::MemoryStream& s)		\
 	{																			\
-			KBEngine::Baseapp::getSingleton().NAME(pChannel);					\
+			KBEngine::Baseapp::getSingletonPtr()->NAME(pChannel);					\
 	}																			\
 
 #else
@@ -116,7 +116,7 @@ namespace KBEngine{
 																				\
 
 /**
-	BaseappÏûÏ¢ºê£¬  Ö»ÓÐÒ»¸ö²ÎÊýµÄÏûÏ¢
+	Baseappæ¶ˆæ¯å®ï¼Œ  åªæœ‰ä¸€ä¸ªå‚æ•°çš„æ¶ˆæ¯
 */
 #if defined(NETWORK_INTERFACE_DECLARE_BEGIN)
 	#undef BASEAPP_MESSAGE_HANDLER_ARGS1
@@ -130,7 +130,7 @@ namespace KBEngine{
 	{																			\
 			ARG_TYPE1 ARG_NAME1;												\
 			s >> ARG_NAME1;														\
-			KBEngine::Baseapp::getSingleton().NAME(pChannel, ARG_NAME1);		\
+			KBEngine::Baseapp::getSingletonPtr()->NAME(pChannel, ARG_NAME1);		\
 	}																			\
 
 #else
@@ -159,7 +159,7 @@ namespace KBEngine{
 																				\
 
 /**
-	BaseappÏûÏ¢ºê£¬  Ö»ÓÐ¶þ¸ö²ÎÊýµÄÏûÏ¢
+	Baseappæ¶ˆæ¯å®ï¼Œ  åªæœ‰äºŒä¸ªå‚æ•°çš„æ¶ˆæ¯
 */
 #if defined(NETWORK_INTERFACE_DECLARE_BEGIN)
 	#undef BASEAPP_MESSAGE_HANDLER_ARGS2
@@ -176,7 +176,7 @@ namespace KBEngine{
 			s >> ARG_NAME1;														\
 			ARG_TYPE2 ARG_NAME2;												\
 			s >> ARG_NAME2;														\
-			KBEngine::Baseapp::getSingleton().NAME(pChannel,					\
+			KBEngine::Baseapp::getSingletonPtr()->NAME(pChannel,					\
 													ARG_NAME1, ARG_NAME2);		\
 	}																			\
 
@@ -211,7 +211,7 @@ namespace KBEngine{
 
 
 /**
-	BaseappÏûÏ¢ºê£¬  Ö»ÓÐÈý¸ö²ÎÊýµÄÏûÏ¢
+	Baseappæ¶ˆæ¯å®ï¼Œ  åªæœ‰ä¸‰ä¸ªå‚æ•°çš„æ¶ˆæ¯
 */
 #if defined(NETWORK_INTERFACE_DECLARE_BEGIN)
 	#undef BASEAPP_MESSAGE_HANDLER_ARGS3
@@ -231,7 +231,7 @@ namespace KBEngine{
 			s >> ARG_NAME2;														\
 			ARG_TYPE3 ARG_NAME3;												\
 			s >> ARG_NAME3;														\
-			KBEngine::Baseapp::getSingleton().NAME(pChannel,					\
+			KBEngine::Baseapp::getSingletonPtr()->NAME(pChannel,					\
 				ARG_NAME1, ARG_NAME2, 											\
 				ARG_NAME3);														\
 	}																			\
@@ -272,7 +272,7 @@ namespace KBEngine{
 
 
 /**
-	BaseappÏûÏ¢ºê£¬  Ö»ÓÐËÄ¸ö²ÎÊýµÄÏûÏ¢
+	Baseappæ¶ˆæ¯å®ï¼Œ  åªæœ‰å››ä¸ªå‚æ•°çš„æ¶ˆæ¯
 */
 #if defined(NETWORK_INTERFACE_DECLARE_BEGIN)
 	#undef BASEAPP_MESSAGE_HANDLER_ARGS4
@@ -295,7 +295,7 @@ namespace KBEngine{
 			s >> ARG_NAME3;														\
 			ARG_TYPE4 ARG_NAME4;												\
 			s >> ARG_NAME4;														\
-			KBEngine::Baseapp::getSingleton().NAME(pChannel,					\
+			KBEngine::Baseapp::getSingletonPtr()->NAME(pChannel,					\
 													ARG_NAME1, ARG_NAME2, 		\
 				ARG_NAME3, ARG_NAME4);											\
 	}																			\
@@ -340,7 +340,7 @@ namespace KBEngine{
 											ARG_TYPE4, ARG_NAME4)				\
 
 /**
-	BaseappÏûÏ¢ºê£¬  Ö»ÓÐÎå¸ö²ÎÊýµÄÏûÏ¢
+	Baseappæ¶ˆæ¯å®ï¼Œ  åªæœ‰äº”ä¸ªå‚æ•°çš„æ¶ˆæ¯
 */
 #if defined(NETWORK_INTERFACE_DECLARE_BEGIN)
 	#undef BASEAPP_MESSAGE_HANDLER_ARGS5
@@ -366,7 +366,7 @@ namespace KBEngine{
 			s >> ARG_NAME4;														\
 			ARG_TYPE5 ARG_NAME5;												\
 			s >> ARG_NAME5;														\
-			KBEngine::Baseapp::getSingleton().NAME(pChannel,					\
+			KBEngine::Baseapp::getSingletonPtr()->NAME(pChannel,					\
 													ARG_NAME1, ARG_NAME2, 		\
 				ARG_NAME3, ARG_NAME4, ARG_NAME5);								\
 	}																			\
@@ -417,7 +417,7 @@ namespace KBEngine{
 
 
 /**
-	BaseappÏûÏ¢ºê£¬  Ö»ÓÐÁù¸ö²ÎÊýµÄÏûÏ¢
+	Baseappæ¶ˆæ¯å®ï¼Œ  åªæœ‰å…­ä¸ªå‚æ•°çš„æ¶ˆæ¯
 */
 #if defined(NETWORK_INTERFACE_DECLARE_BEGIN)
 	#undef BASEAPP_MESSAGE_HANDLER_ARGS6
@@ -446,7 +446,7 @@ namespace KBEngine{
 			s >> ARG_NAME5;														\
 			ARG_TYPE6 ARG_NAME6;												\
 			s >> ARG_NAME6;														\
-			KBEngine::Baseapp::getSingleton().NAME(pChannel,					\
+			KBEngine::Baseapp::getSingletonPtr()->NAME(pChannel,					\
 													ARG_NAME1, ARG_NAME2, 		\
 				ARG_NAME3, ARG_NAME4, ARG_NAME5, ARG_NAME6);					\
 	}																			\
@@ -501,7 +501,7 @@ namespace KBEngine{
 											ARG_TYPE6, ARG_NAME6)				\
 
 /**
-	BaseappÏûÏ¢ºê£¬  Ö»ÓÐÆß¸ö²ÎÊýµÄÏûÏ¢
+	Baseappæ¶ˆæ¯å®ï¼Œ  åªæœ‰ä¸ƒä¸ªå‚æ•°çš„æ¶ˆæ¯
 */
 #if defined(NETWORK_INTERFACE_DECLARE_BEGIN)
 	#undef BASEAPP_MESSAGE_HANDLER_ARGS7
@@ -533,7 +533,7 @@ namespace KBEngine{
 			s >> ARG_NAME6;														\
 			ARG_TYPE7 ARG_NAME7;												\
 			s >> ARG_NAME7;														\
-			KBEngine::Baseapp::getSingleton().NAME(pChannel,					\
+			KBEngine::Baseapp::getSingletonPtr()->NAME(pChannel,					\
 										ARG_NAME1, ARG_NAME2, ARG_NAME3, 		\
 										ARG_NAME4, ARG_NAME5, ARG_NAME6,		\
 										ARG_NAME7);								\
@@ -595,7 +595,7 @@ namespace KBEngine{
 
 
 /**
-	BaseappÏûÏ¢ºê£¬  Ö»ÓÐ°Ë¸ö²ÎÊýµÄÏûÏ¢
+	Baseappæ¶ˆæ¯å®ï¼Œ  åªæœ‰å…«ä¸ªå‚æ•°çš„æ¶ˆæ¯
 */
 #if defined(NETWORK_INTERFACE_DECLARE_BEGIN)
 	#undef BASEAPP_MESSAGE_HANDLER_ARGS8
@@ -630,7 +630,7 @@ namespace KBEngine{
 			s >> ARG_NAME7;														\
 			ARG_TYPE8 ARG_NAME8;												\
 			s >> ARG_NAME8;														\
-			KBEngine::Baseapp::getSingleton().NAME(pChannel,					\
+			KBEngine::Baseapp::getSingletonPtr()->NAME(pChannel,					\
 										ARG_NAME1, ARG_NAME2, ARG_NAME3, 		\
 										ARG_NAME4, ARG_NAME5, ARG_NAME6,		\
 										ARG_NAME7, ARG_NAME8);					\
@@ -697,7 +697,7 @@ namespace KBEngine{
 
 
 /**
-	BaseappÏûÏ¢ºê£¬  Ö»ÓÐ¾Å¸ö²ÎÊýµÄÏûÏ¢
+	Baseappæ¶ˆæ¯å®ï¼Œ  åªæœ‰ä¹ä¸ªå‚æ•°çš„æ¶ˆæ¯
 */
 #if defined(NETWORK_INTERFACE_DECLARE_BEGIN)
 	#undef BASEAPP_MESSAGE_HANDLER_ARGS9
@@ -735,7 +735,7 @@ namespace KBEngine{
 			s >> ARG_NAME8;														\
 			ARG_TYPE9 ARG_NAME9;												\
 			s >> ARG_NAME9;														\
-			KBEngine::Baseapp::getSingleton().NAME(pChannel,					\
+			KBEngine::Baseapp::getSingletonPtr()->NAME(pChannel,					\
 										ARG_NAME1, ARG_NAME2, ARG_NAME3, 		\
 										ARG_NAME4, ARG_NAME5, ARG_NAME6,		\
 										ARG_NAME7, ARG_NAME8, ARG_NAME9);		\
@@ -807,7 +807,7 @@ namespace KBEngine{
 
 
 /**
-	BaseappÏûÏ¢ºê£¬  Ö»ÓÐÊ®¸ö²ÎÊýµÄÏûÏ¢
+	Baseappæ¶ˆæ¯å®ï¼Œ  åªæœ‰åä¸ªå‚æ•°çš„æ¶ˆæ¯
 */
 #if defined(NETWORK_INTERFACE_DECLARE_BEGIN)
 	#undef BASEAPP_MESSAGE_HANDLER_ARGS10
@@ -848,7 +848,7 @@ namespace KBEngine{
 			s >> ARG_NAME9;														\
 			ARG_TYPE10 ARG_NAME10;												\
 			s >> ARG_NAME10;													\
-			KBEngine::Baseapp::getSingleton().NAME(pChannel,					\
+			KBEngine::Baseapp::getSingletonPtr()->NAME(pChannel,					\
 										ARG_NAME1, ARG_NAME2, ARG_NAME3, 		\
 										ARG_NAME4, ARG_NAME5, ARG_NAME6,		\
 										ARG_NAME7, ARG_NAME8, ARG_NAME9,		\
@@ -926,7 +926,7 @@ namespace KBEngine{
 
 
 /**
-	BaseappÏûÏ¢ºê£¬  Ö»ÓÐÊ®Ò»¸ö²ÎÊýµÄÏûÏ¢
+	Baseappæ¶ˆæ¯å®ï¼Œ  åªæœ‰åä¸€ä¸ªå‚æ•°çš„æ¶ˆæ¯
 */
 #if defined(NETWORK_INTERFACE_DECLARE_BEGIN)
 	#undef BASEAPP_MESSAGE_HANDLER_ARGS11
@@ -970,7 +970,7 @@ namespace KBEngine{
 			s >> ARG_NAME10;													\
 			ARG_TYPE11 ARG_NAME11;												\
 			s >> ARG_NAME11;													\
-			KBEngine::Baseapp::getSingleton().NAME(pChannel,					\
+			KBEngine::Baseapp::getSingletonPtr()->NAME(pChannel,					\
 										ARG_NAME1, ARG_NAME2, ARG_NAME3, 		\
 										ARG_NAME4, ARG_NAME5, ARG_NAME6,		\
 										ARG_NAME7, ARG_NAME8, ARG_NAME9,		\

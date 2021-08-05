@@ -298,29 +298,22 @@ NavigationHandle* NavTileHandle::create(std::string resPath, const std::map< int
 	if(params.size() == 0)
 	{
 		path = resPath;
-		path = Resmgr::getSingleton().matchPath(path);
-		wchar_t* wpath = strutil::char2wchar(path.c_str());
-		std::wstring wspath = wpath;
-		free(wpath);
+		path = smallgames::GetPathMgr().get_full_path(path);
 			
-		std::vector<std::wstring> results;
-		Resmgr::getSingleton().listPathRes(wspath, L"tmx", results);
+		std::vector<std::string> results;
+		smallgames::GetPathMgr().list_res(path, "tmx", results);
 
 		if(results.size() == 0)
 		{
-			ERROR_MSG(fmt::format("NavTileHandle::create: path({}) not found tmx.!\n", 
-				Resmgr::getSingleton().matchRes(path)));
+			ERROR_MSG(fmt::format("NavTileHandle::create: path({}) not found tmx.!\n",
+														smallgames::GetPathMgr().get_full_path(path)));
 
 			return NULL;
 		}
-					
-		char* cpath = strutil::wchar2char(results[0].c_str());
-		path = cpath;
-		free(cpath);
 	}
 	else
 	{
-		path = Resmgr::getSingleton().matchRes(params.begin()->second);
+		path = smallgames::GetPathMgr().get_full_path(params.begin()->second);
 	}
 	
 	return _create(path);

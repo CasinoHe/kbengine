@@ -37,9 +37,9 @@ private:
 	uint64 lastTime_;
 	uint64 startTime_;
 	int64 pid_;
-	std::vector<std::wstring> sdkFiles_;
+	std::vector<std::string> sdkFiles_;
 	bool loadedSDK_;
-	std::wstring currSendFile_;
+	std::string currSendFile_;
 	std::string out_;
 
 };

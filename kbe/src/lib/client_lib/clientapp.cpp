@@ -32,7 +32,6 @@ COMPONENT_GUS g_genuuid_sections = -1;
 
 GAME_TIME g_kbetime = 0;
 
-KBE_SINGLETON_INIT(ClientApp);
 //-------------------------------------------------------------------------------------
 ClientApp::ClientApp(Network::EventDispatcher& dispatcher, 
 					 Network::NetworkInterface& ninterface, 
@@ -57,7 +56,7 @@ state_(C_STATE_INIT)
 	networkInterface_.pChannelTimeOutHandler(this);
 	networkInterface_.pChannelDeregisterHandler(this);
 
-	// ³õÊ¼»¯entityCallÄ£¿é»ñÈ¡channelº¯ÊıµØÖ·
+	// åˆå§‹åŒ–entityCallæ¨¡å—è·å–channelå‡½æ•°åœ°å€
 	EntityCallAbstract::setFindChannelFunc(std::tr1::bind(&ClientApp::findChannelByEntityCall, this,
 		std::tr1::placeholders::_1));
 
@@ -127,7 +126,7 @@ bool ClientApp::initializeBegin()
 //-------------------------------------------------------------------------------------	
 bool ClientApp::initializeEnd()
 {
-	// ËùÓĞ½Å±¾¶¼¼ÓÔØÍê±Ï
+	// æ‰€æœ‰è„šæœ¬éƒ½åŠ è½½å®Œæ¯•
 	PyObject* pyResult = PyObject_CallMethod(getEntryScript().get(), 
 										const_cast<char*>("onInit"), 
 										const_cast<char*>("i"), 
@@ -181,13 +180,13 @@ bool ClientApp::installEntityDef()
 	if(!EntityDef::installScript(getScript().getModule()))
 		return false;
 
-	// ³õÊ¼»¯ËùÓĞÀ©Õ¹Ä£¿é
+	// åˆå§‹åŒ–æ‰€æœ‰æ‰©å±•æ¨¡å—
 	// assets/scripts/
 	if(!EntityDef::initialize(scriptBaseTypes_, g_componentType)){
 		return false;
 	}
 
-	// ×¢²áÒ»Ğ©½Ó¿Úµ½kbengine
+	// æ³¨å†Œä¸€äº›æ¥å£åˆ°kbengine
 	APPEND_SCRIPT_MODULE_METHOD(getScript().getModule(),	publish,			__py_getAppPublish,								METH_VARARGS,	0)
 	APPEND_SCRIPT_MODULE_METHOD(getScript().getModule(),	fireEvent,			__py_fireEvent,									METH_VARARGS,	0)
 	APPEND_SCRIPT_MODULE_METHOD(getScript().getModule(),	player,				__py_getPlayer,									METH_VARARGS,	0)
@@ -199,19 +198,19 @@ bool ClientApp::installEntityDef()
 	APPEND_SCRIPT_MODULE_METHOD(getScript().getModule(),	disconnect,			__py_disconnect,								METH_VARARGS,	0)
 	APPEND_SCRIPT_MODULE_METHOD(getScript().getModule(),	kbassert,			__py_assert,									METH_VARARGS,	0)
 
-	// »ñµÃ×ÊÔ´È«Â·¾¶
+	// è·å¾—èµ„æºå…¨è·¯å¾„
 	APPEND_SCRIPT_MODULE_METHOD(getScript().getModule(),	getResFullPath,		__py_getResFullPath,							METH_VARARGS,	0)
 
-	// ÊÇ·ñ´æÔÚÄ³¸ö×ÊÔ´
+	// æ˜¯å¦å­˜åœ¨æŸä¸ªèµ„æº
 	APPEND_SCRIPT_MODULE_METHOD(getScript().getModule(),	hasRes,				__py_hasRes,									METH_VARARGS,	0)
 
-	// ´ò¿ªÒ»¸öÎÄ¼ş
+	// æ‰“å¼€ä¸€ä¸ªæ–‡ä»¶
 	APPEND_SCRIPT_MODULE_METHOD(getScript().getModule(),	open,				__py_kbeOpen,									METH_VARARGS,	0)
 
-	// ÁĞ³öÄ¿Â¼ÏÂËùÓĞÎÄ¼ş
+	// åˆ—å‡ºç›®å½•ä¸‹æ‰€æœ‰æ–‡ä»¶
 	APPEND_SCRIPT_MODULE_METHOD(getScript().getModule(),	listPathRes,		__py_listPathRes,								METH_VARARGS,	0)
 
-	// Æ¥ÅäÏà¶ÔÂ·¾¶»ñµÃÈ«Â·¾¶
+	// åŒ¹é…ç›¸å¯¹è·¯å¾„è·å¾—å…¨è·¯å¾„
 	APPEND_SCRIPT_MODULE_METHOD(getScript().getModule(),	matchPath,			__py_matchPath,									METH_VARARGS,	0)
 	return true;
 }
@@ -236,7 +235,7 @@ bool ClientApp::installPyModules()
 	registerScript(EntityComponent::getScriptType());
 	onInstallPyModules();
 
-	// ×¢²áÉèÖÃ½Å±¾Êä³öÀàĞÍ
+	// æ³¨å†Œè®¾ç½®è„šæœ¬è¾“å‡ºç±»å‹
 	APPEND_SCRIPT_MODULE_METHOD(getScript().getModule(),	scriptLogType,	__py_setScriptLogType,	METH_VARARGS,	0)
 	if(PyModule_AddIntConstant(this->getScript().getModule(), "LOG_TYPE_NORMAL", log4cxx::ScriptLevel::SCRIPT_INT))
 	{
@@ -265,7 +264,7 @@ bool ClientApp::installPyModules()
 
 	registerPyObjectToScript("entities", pEntities_);
 
-	// °²×°Èë¿ÚÄ£¿é
+	// å®‰è£…å…¥å£æ¨¡å—
 	PyObject *entryScriptFileName = PyUnicode_FromString(g_kbeConfig.entryScriptFile());
 	if(entryScriptFileName != NULL)
 	{
@@ -299,7 +298,7 @@ bool ClientApp::uninstallPyModules()
 //-------------------------------------------------------------------------------------		
 void ClientApp::finalise(void)
 {
-	// ½áÊøÍ¨Öª½Å±¾
+	// ç»“æŸé€šçŸ¥è„šæœ¬
 	PyObject* pyResult = PyObject_CallMethod(getEntryScript().get(), 
 										const_cast<char*>("onFinish"),
 										const_cast<char*>(""));
@@ -395,7 +394,7 @@ void ClientApp::handleGameTick()
 				bool ret = updateChannel(false, "", "", "", 0);
 				if(ret)
 				{
-					// ÏÈÎÕÊÖÈ»ºóµÈhelloCBÖ®ºóÔÙ½øĞĞµÇÂ¼
+					// å…ˆæ¡æ‰‹ç„¶åç­‰helloCBä¹‹åå†è¿›è¡Œç™»å½•
 					Network::Bundle* pBundle = Network::Bundle::createPoolObject(OBJECTPOOL_POINT);
 					(*pBundle).newMessage(BaseappInterface::hello);
 					(*pBundle) << KBEVersion::versionString();
@@ -454,7 +453,7 @@ int ClientApp::processOnce(bool shouldIdle)
 //-------------------------------------------------------------------------------------
 void ClientApp::onTargetChanged()
 { 
-	// ËùÓĞ½Å±¾¶¼¼ÓÔØÍê±Ï
+	// æ‰€æœ‰è„šæœ¬éƒ½åŠ è½½å®Œæ¯•
 	PyObject* pyResult = PyObject_CallMethod(getEntryScript().get(), 
 										const_cast<char*>("onTargetChanged"), 
 										const_cast<char*>("i"), 
@@ -479,7 +478,14 @@ PyObject* ClientApp::__py_getAppPublish(PyObject* self, PyObject* args)
 //-------------------------------------------------------------------------------------		
 PyObject* ClientApp::__py_getPlayer(PyObject* self, PyObject* args)
 {
-	client::Entity* pEntity = ClientApp::getSingleton().pPlayer();
+	auto client_ptr = ClientApp::getSingletonPtr();
+	client::Entity *pEntity = nullptr;
+
+	if (client_ptr)
+	{
+		pEntity = client_ptr->pPlayer();
+	}
+
 	if(pEntity)
 	{
 		Py_INCREF(pEntity);
@@ -526,7 +532,11 @@ PyObject* ClientApp::__py_fireEvent(PyObject* self, PyObject* args)
 		eventdata.datas = datas;
 	}
 
-	ClientApp::getSingleton().fireEvent(&eventdata);
+	auto client_ptr = ClientApp::getSingletonPtr();
+	if (client_ptr)
+	{
+		client_ptr->fireEvent(&eventdata);
+	}
 	S_Return;
 }
 
@@ -645,7 +655,7 @@ bool ClientApp::login(std::string accountName, std::string passwd, std::string d
 	bool ret = updateChannel(true, accountName, passwd, ip, port);
 	if(ret)
 	{
-		// ÏÈÎÕÊÖÈ»ºóµÈhelloCBÖ®ºóÔÙ½øĞĞµÇÂ¼
+		// å…ˆæ¡æ‰‹ç„¶åç­‰helloCBä¹‹åå†è¿›è¡Œç™»å½•
 		Network::Bundle* pBundle = Network::Bundle::createPoolObject(OBJECTPOOL_POINT);
 		(*pBundle).newMessage(LoginappInterface::hello);
 		(*pBundle) << KBEVersion::versionString();
@@ -764,10 +774,10 @@ PyObject* ClientApp::__py_getResFullPath(PyObject* self, PyObject* args)
 		S_Return;
 	}
 
-	if (!Resmgr::getSingleton().hasRes(respath))
+	if (!smallgames::GetPathMgr().exists(respath))
 		return PyUnicode_FromString("");
 
-	std::string fullpath = Resmgr::getSingleton().matchRes(respath);
+	std::string fullpath = smallgames::GetPathMgr().get_full_path(respath);
 	return PyUnicode_FromString(fullpath.c_str());
 }
 
@@ -791,7 +801,7 @@ PyObject* ClientApp::__py_hasRes(PyObject* self, PyObject* args)
 		S_Return;
 	}
 
-	return PyBool_FromLong(Resmgr::getSingleton().hasRes(respath));
+	return PyBool_FromLong(smallgames::GetPathMgr().exists(respath));
 }
 
 //-------------------------------------------------------------------------------------
@@ -815,7 +825,7 @@ PyObject* ClientApp::__py_kbeOpen(PyObject* self, PyObject* args)
 		S_Return;
 	}
 
-	std::string sfullpath = Resmgr::getSingleton().matchRes(respath);
+	std::string sfullpath = smallgames::GetPathMgr().get_full_path(respath);
 
 	PyObject *ioMod = PyImport_ImportModule("io");
 
@@ -855,7 +865,7 @@ PyObject* ClientApp::__py_matchPath(PyObject* self, PyObject* args)
 		S_Return;
 	}
 
-	std::string path = Resmgr::getSingleton().matchPath(respath);
+	std::string path = smallgames::GetPathMgr().get_full_path(respath);
 	return PyUnicode_FromStringAndSize(path.c_str(), path.size());
 }
 
@@ -870,7 +880,7 @@ PyObject* ClientApp::__py_listPathRes(PyObject* self, PyObject* args)
 		S_Return;
 	}
 
-	std::wstring wExtendName = L"*";
+	std::string ExtendName = "*";
 	PyObject* pathobj = NULL;
 	PyObject* path_argsobj = NULL;
 
@@ -896,14 +906,16 @@ PyObject* ClientApp::__py_listPathRes(PyObject* self, PyObject* args)
 		{
 			wchar_t* fargs = NULL;
 			fargs = PyUnicode_AsWideCharString(path_argsobj, NULL);
-			wExtendName = fargs;
+			char *args = strutil::wchar2char(fargs);
+			ExtendName = args;
+			free(args);
 			PyMem_Free(fargs);
 		}
 		else
 		{
 			if (PySequence_Check(path_argsobj))
 			{
-				wExtendName = L"";
+				ExtendName = "";
 				Py_ssize_t size = PySequence_Size(path_argsobj);
 				for (int i = 0; i<size; ++i)
 				{
@@ -917,8 +929,10 @@ PyObject* ClientApp::__py_listPathRes(PyObject* self, PyObject* args)
 
 					wchar_t* wtemp = NULL;
 					wtemp = PyUnicode_AsWideCharString(pyobj, NULL);
-					wExtendName += wtemp;
-					wExtendName += L"|";
+					char *temp = strutil::wchar2char(wtemp);
+					ExtendName += temp;
+					ExtendName += "|";
+					free(temp);
 					PyMem_Free(wtemp);
 				}
 			}
@@ -945,18 +959,18 @@ PyObject* ClientApp::__py_listPathRes(PyObject* self, PyObject* args)
 		S_Return;
 	}
 
-	if (wExtendName.size() == 0)
+	if (ExtendName.size() == 0)
 	{
 		PyErr_Format(PyExc_TypeError, "KBEngine::listPathRes(): args[pathargs] is NULL!");
 		PyErr_PrintEx(0);
 		S_Return;
 	}
 
-	if (wExtendName[0] == '.')
-		wExtendName.erase(wExtendName.begin());
+	if (ExtendName[0] == '.')
+		ExtendName.erase(ExtendName.begin());
 
-	if (wExtendName.size() == 0)
-		wExtendName = L"*";
+	if (ExtendName.size() == 0)
+		ExtendName = "*";
 
 	wchar_t* respath = PyUnicode_AsWideCharString(pathobj, NULL);
 	if (respath == NULL)
@@ -967,25 +981,22 @@ PyObject* ClientApp::__py_listPathRes(PyObject* self, PyObject* args)
 	}
 
 	char* cpath = strutil::wchar2char(respath);
-	std::string foundPath = Resmgr::getSingleton().matchPath(cpath);
+	std::string foundPath = smallgames::GetPathMgr().get_full_path(cpath);
 	free(cpath);
 	PyMem_Free(respath);
 
-	respath = strutil::char2wchar(foundPath.c_str());
-
-	std::vector<std::wstring> results;
-	Resmgr::getSingleton().listPathRes(respath, wExtendName, results);
+	std::vector<std::string> results;
+	smallgames::GetPathMgr().list_res(foundPath, ExtendName, results);
 	PyObject* pyresults = PyTuple_New(results.size());
 
-	std::vector<std::wstring>::iterator iter = results.begin();
+	auto iter = results.begin();
 	int i = 0;
 
 	for (; iter != results.end(); ++iter)
 	{
-		PyTuple_SET_ITEM(pyresults, i++, PyUnicode_FromWideChar((*iter).c_str(), (*iter).size()));
+		PyTuple_SET_ITEM(pyresults, i++, PyUnicode_FromStringAndSize((*iter).c_str(), (*iter).size()));
 	}
 
-	free(respath);
 	return pyresults;
 }
 //-------------------------------------------------------------------------------------		

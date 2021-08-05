@@ -9,7 +9,6 @@
 #include "helper/debug_helper.h"
 #include "helper/script_loglevel.h"
 #include "xml/xml.h"	
-#include "common/singleton.h"
 #include "common/smartpointer.h"
 #include "common/timer.h"
 #include "network/interfaces.h"
@@ -19,6 +18,7 @@
 #include "thread/threadpool.h"
 #include "pyscript/script.h"
 #include "resmgr/resmgr.h"
+#include "common/appsingleton.h"
 	
 namespace KBEngine{
 
@@ -29,12 +29,11 @@ class TCPPacketSender;
 class TCPPacketReceiver;
 }
 
-class ClientApp : 
-	public Singleton<ClientApp>,
-	public ClientObjectBase,
-	public TimerHandler, 
-	public Network::ChannelTimeOutHandler,
-	public Network::ChannelDeregisterHandler
+class ClientApp : public smallgames::AppSingleton<ClientApp>,
+									public ClientObjectBase,
+									public TimerHandler,
+									public Network::ChannelTimeOutHandler,
+									public Network::ChannelDeregisterHandler
 {
 public:
 	enum TimeOutType
@@ -51,14 +50,17 @@ public:
 		C_STATE_LOGIN_BASEAPP = 4,
 		C_STATE_PLAY = 5,
 	};
-public:
-	ClientApp(Network::EventDispatcher& dispatcher, 
-			Network::NetworkInterface& ninterface, 
-			COMPONENT_TYPE componentType,
-			COMPONENT_ID componentID);
 
+protected:
+	friend smallgames::AppSingleton<ClientApp>;
+
+	ClientApp(Network::EventDispatcher & dispatcher,
+						Network::NetworkInterface & ninterface,
+						COMPONENT_TYPE componentType,
+						COMPONENT_ID componentID);
 	~ClientApp();
 
+public:
 	virtual bool initialize();
 	virtual bool initializeBegin();
 	virtual bool inInitialize(){ return true; }
@@ -117,7 +119,7 @@ public:
 	virtual void onServerClosed();
 
 	/**
-		ÉèÖÃ½Å±¾Êä³öÀàĞÍÇ°×º
+		è®¾ç½®è„šæœ¬è¾“å‡ºç±»å‹å‰ç¼€
 	*/
 	static PyObject* __py_setScriptLogType(PyObject* self, PyObject* args);
 
@@ -128,104 +130,104 @@ public:
 		const std::string& scriptVerInfo, const std::string& protocolMD5, 
 		const std::string& entityDefMD5, COMPONENT_TYPE componentType);
 
-	/** ÍøÂç½Ó¿Ú
-		ºÍ·şÎñ¶ËµÄ°æ±¾²»Æ¥Åä
+	/** ç½‘ç»œæ¥å£
+		å’ŒæœåŠ¡ç«¯çš„ç‰ˆæœ¬ä¸åŒ¹é…
 	*/
 	virtual void onVersionNotMatch(Network::Channel* pChannel, MemoryStream& s);
 
-	/** ÍøÂç½Ó¿Ú
-		ºÍ·şÎñ¶ËµÄ½Å±¾²ã°æ±¾²»Æ¥Åä
+	/** ç½‘ç»œæ¥å£
+		å’ŒæœåŠ¡ç«¯çš„è„šæœ¬å±‚ç‰ˆæœ¬ä¸åŒ¹é…
 	*/
 	virtual void onScriptVersionNotMatch(Network::Channel* pChannel, MemoryStream& s);
 
-	/** ÍøÂç½Ó¿Ú
-	   µÇÂ¼³É¹¦
-	   @ip: ·şÎñÆ÷ipµØÖ·
-	   @port: ·şÎñÆ÷¶Ë¿Ú
+	/** ç½‘ç»œæ¥å£
+	   ç™»å½•æˆåŠŸ
+	   @ip: æœåŠ¡å™¨ipåœ°å€
+	   @port: æœåŠ¡å™¨ç«¯å£
 	*/
 	virtual void onLoginSuccessfully(Network::Channel * pChannel, MemoryStream& s);
 
-	/** ÍøÂç½Ó¿Ú
-	   µÇÂ¼Ê§°Ü»Øµ÷
-	   @failedcode: Ê§°Ü·µ»ØÂë NETWORK_ERR_SRV_NO_READY:·şÎñÆ÷Ã»ÓĞ×¼±¸ºÃ, 
-									NETWORK_ERR_SRV_OVERLOAD:·şÎñÆ÷¸ºÔØ¹ıÖØ, 
-									NETWORK_ERR_NAME_PASSWORD:ÓÃ»§Ãû»òÕßÃÜÂë²»ÕıÈ·
+	/** ç½‘ç»œæ¥å£
+	   ç™»å½•å¤±è´¥å›è°ƒ
+	   @failedcode: å¤±è´¥è¿”å›ç  NETWORK_ERR_SRV_NO_READY:æœåŠ¡å™¨æ²¡æœ‰å‡†å¤‡å¥½, 
+									NETWORK_ERR_SRV_OVERLOAD:æœåŠ¡å™¨è´Ÿè½½è¿‡é‡, 
+									NETWORK_ERR_NAME_PASSWORD:ç”¨æˆ·åæˆ–è€…å¯†ç ä¸æ­£ç¡®
 	*/
 	virtual void onLoginFailed(Network::Channel * pChannel, MemoryStream& s);
 
-	/** ÍøÂç½Ó¿Ú
-	   µÇÂ¼Ê§°Ü»Øµ÷
-	   @failedcode: Ê§°Ü·µ»ØÂë NETWORK_ERR_SRV_NO_READY:·şÎñÆ÷Ã»ÓĞ×¼±¸ºÃ, 
-									NETWORK_ERR_ILLEGAL_LOGIN:·Ç·¨µÇÂ¼, 
-									NETWORK_ERR_NAME_PASSWORD:ÓÃ»§Ãû»òÕßÃÜÂë²»ÕıÈ·
+	/** ç½‘ç»œæ¥å£
+	   ç™»å½•å¤±è´¥å›è°ƒ
+	   @failedcode: å¤±è´¥è¿”å›ç  NETWORK_ERR_SRV_NO_READY:æœåŠ¡å™¨æ²¡æœ‰å‡†å¤‡å¥½, 
+									NETWORK_ERR_ILLEGAL_LOGIN:éæ³•ç™»å½•, 
+									NETWORK_ERR_NAME_PASSWORD:ç”¨æˆ·åæˆ–è€…å¯†ç ä¸æ­£ç¡®
 	*/
 	virtual void onLoginBaseappFailed(Network::Channel * pChannel, SERVER_ERROR_CODE failedcode);
 	virtual void onReloginBaseappFailed(Network::Channel * pChannel, SERVER_ERROR_CODE failedcode);
 
-	/** ÍøÂç½Ó¿Ú
-	   ÖØµÇÂ½baseapp³É¹¦
+	/** ç½‘ç»œæ¥å£
+	   é‡ç™»é™†baseappæˆåŠŸ
 	*/
 	virtual void onReloginBaseappSuccessfully(Network::Channel * pChannel, MemoryStream& s);
 
 	virtual void onTargetChanged();
 
 	/** 
-		·şÎñ¶ËÌí¼ÓÁËÄ³¸öspaceµÄ¼¸ºÎÓ³Éä
+		æœåŠ¡ç«¯æ·»åŠ äº†æŸä¸ªspaceçš„å‡ ä½•æ˜ å°„
 	*/
 	virtual void onAddSpaceGeometryMapping(SPACE_ID spaceID, std::string& respath);
 
 	static PyObject* __py_GetSpaceData(PyObject *self, PyObject* args)
 	{
-		return ClientObjectBase::__py_GetSpaceData(&ClientApp::getSingleton(), args);	
+		return ClientObjectBase::__py_GetSpaceData(ClientApp::getSingletonPtr(), args);	
 	}
 
 	static PyObject* __py_callback(PyObject *self, PyObject* args)
 	{
-		return ClientObjectBase::__py_callback(&ClientApp::getSingleton(), args);	
+		return ClientObjectBase::__py_callback(ClientApp::getSingletonPtr(), args);	
 	}
 
 	static PyObject* __py_cancelCallback(PyObject *self, PyObject* args)
 	{
-		return ClientObjectBase::__py_cancelCallback(&ClientApp::getSingleton(), args);	
+		return ClientObjectBase::__py_cancelCallback(ClientApp::getSingletonPtr(), args);	
 	}
 
 	static PyObject* __py_getWatcher(PyObject *self, PyObject* args)
 	{
-		return ClientObjectBase::__py_getWatcher(&ClientApp::getSingleton(), args);	
+		return ClientObjectBase::__py_getWatcher(ClientApp::getSingletonPtr(), args);	
 	}
 
 	static PyObject* __py_getWatcherDir(PyObject *self, PyObject* args)
 	{
-		return ClientObjectBase::__py_getWatcherDir(&ClientApp::getSingleton(), args);	
+		return ClientObjectBase::__py_getWatcherDir(ClientApp::getSingletonPtr(), args);	
 	}
 
 	static PyObject* __py_disconnect(PyObject *self, PyObject* args)
 	{
-		return ClientObjectBase::__py_disconnect(&ClientApp::getSingleton(), args);	
+		return ClientObjectBase::__py_disconnect(ClientApp::getSingletonPtr(), args);	
 	}
 
 	/**
-		Í¨¹ıÏà¶ÔÂ·¾¶»ñÈ¡×ÊÔ´µÄÈ«Â·¾¶
+		é€šè¿‡ç›¸å¯¹è·¯å¾„è·å–èµ„æºçš„å…¨è·¯å¾„
 	*/
 	static PyObject* __py_getResFullPath(PyObject* self, PyObject* args);
 
 	/**
-		Í¨¹ıÏà¶ÔÂ·¾¶ÅĞ¶Ï×ÊÔ´ÊÇ·ñ´æÔÚ
+		é€šè¿‡ç›¸å¯¹è·¯å¾„åˆ¤æ–­èµ„æºæ˜¯å¦å­˜åœ¨
 	*/
 	static PyObject* __py_hasRes(PyObject* self, PyObject* args);
 
 	/**
-		openÎÄ¼ş
+		openæ–‡ä»¶
 	*/
 	static PyObject* __py_kbeOpen(PyObject* self, PyObject* args);
 
 	/**
-		ÁĞ³öÄ¿Â¼ÏÂËùÓĞÎÄ¼ş
+		åˆ—å‡ºç›®å½•ä¸‹æ‰€æœ‰æ–‡ä»¶
 	*/
 	static PyObject* __py_listPathRes(PyObject* self, PyObject* args);
 
 	/**
-		Æ¥ÅäÏà¶ÔÂ·¾¶»ñµÃÈ«Â·¾¶
+		åŒ¹é…ç›¸å¯¹è·¯å¾„è·å¾—å…¨è·¯å¾„
 	*/
 	static PyObject* __py_matchPath(PyObject* self, PyObject* args);
 
@@ -237,7 +239,7 @@ protected:
 
 	COMPONENT_TYPE											componentType_;
 
-	// ±¾×é¼şµÄID
+	// æœ¬ç»„ä»¶çš„ID
 	COMPONENT_ID											componentID_;									
 
 	Network::EventDispatcher& 								dispatcher_;
@@ -247,7 +249,7 @@ protected:
 	Network::TCPPacketReceiver*								pTCPPacketReceiver_;
 	Network::BlowfishFilter*								pBlowfishFilter_;
 
-	// Ïß³Ì³Ø
+	// çº¿ç¨‹æ± 
 	thread::ThreadPool										threadPool_;
 
 	PyObjectPtr												entryScript_;

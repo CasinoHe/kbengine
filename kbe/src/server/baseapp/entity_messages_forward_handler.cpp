@@ -19,7 +19,7 @@ createTime_(0)
 	DEBUG_MSG(fmt::format("EntityMessagesForwardCellappHandler::EntityMessagesForwardCellappHandler() : entityID({})!\n", 
 		(pEntity_ ? pEntity_->id() : 0)));
 	
-	Baseapp::getSingleton().networkInterface().dispatcher().addTask(this);
+	Baseapp::getSingletonPtr()->networkInterface().dispatcher().addTask(this);
 
 	createTime_ = timestamp();
 }
@@ -31,7 +31,7 @@ EntityMessagesForwardCellappHandler::~EntityMessagesForwardCellappHandler()
 		bufferedSendToCellappMessages_.size(), (pEntity_ ? pEntity_->id() : 0)));
 
 	if(!completed_)
-		Baseapp::getSingleton().networkInterface().dispatcher().cancelTask(this);
+		Baseapp::getSingletonPtr()->networkInterface().dispatcher().cancelTask(this);
 
 	std::vector<Network::Bundle*>::iterator iter = bufferedSendToCellappMessages_.begin();
 	for(; iter != bufferedSendToCellappMessages_.end(); ++iter)
@@ -134,7 +134,7 @@ createTime_(0)
 	DEBUG_MSG(fmt::format("BaseMessagesForwardClientHandler::BaseMessagesForwardClientHandler() : cellappID({}), entityID({})!\n", 
 		cellappID_, (pEntity_ ? pEntity_->id() : 0)));
 	
-	Baseapp::getSingleton().networkInterface().dispatcher().addTask(this);
+	Baseapp::getSingletonPtr()->networkInterface().dispatcher().addTask(this);
 
 	createTime_ = timestamp();
 }
@@ -146,7 +146,7 @@ BaseMessagesForwardClientHandler::~BaseMessagesForwardClientHandler()
 		bufferedSendToClientMessages_.size(), cellappID_, (pEntity_ ? pEntity_->id() : 0)));
 
 	if(!completed_)
-		Baseapp::getSingleton().networkInterface().dispatcher().cancelTask(this);
+		Baseapp::getSingletonPtr()->networkInterface().dispatcher().cancelTask(this);
 
 	std::vector<Network::Bundle*>::iterator iter = bufferedSendToClientMessages_.begin();
 	for(; iter != bufferedSendToClientMessages_.end(); ++iter)

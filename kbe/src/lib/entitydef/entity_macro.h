@@ -259,7 +259,7 @@ namespace KBEngine{
 }																											\
 
 
-// ÊµÌåµÄ±êÖ¾
+// å®žä½“çš„æ ‡å¿—
 #define ENTITY_FLAGS_UNKNOWN						0x00000000
 #define ENTITY_FLAGS_DESTROYING						0x00000001
 #define ENTITY_FLAGS_INITING						0x00000002
@@ -448,7 +448,7 @@ public:																										\
 																											\
 				if (pCompPropertyDescription)																\
 				{																							\
-					if(PyDict_Check(value) /* createDictDataFromPersistentStream Á÷³Ìµ¼ÖÂ·Ç×Öµä */)			\
+					if(PyDict_Check(value) /* createDictDataFromPersistentStream æµç¨‹å¯¼è‡´éžå­—å…¸ */)			\
 					{																						\
 						EntityComponent* pEntityComponent = (EntityComponent*)PyObject_GetAttr(this, key);	\
 						pEntityComponent->updateFromDict(this, value);										\
@@ -493,7 +493,7 @@ public:																										\
 																											\
 				if (pCompPropertyDescription)																\
 				{																							\
-					/* Ò»°ãÔÚbaseÉÏ¿ÉÄÜ·ÅÔÚcellDataÖÐÊÇ×Öµä£¬¶øÃ»ÓÐcellµÄÊµÌåÐèÒªpassÕâ¸öÉèÖÃ */					\
+					/* ä¸€èˆ¬åœ¨baseä¸Šå¯èƒ½æ”¾åœ¨cellDataä¸­æ˜¯å­—å…¸ï¼Œè€Œæ²¡æœ‰cellçš„å®žä½“éœ€è¦passè¿™ä¸ªè®¾ç½® */					\
 					if(PyDict_Check(value))																	\
 						continue;																			\
 				}																							\
@@ -530,7 +530,7 @@ public:																										\
 			ScriptDefModule::PROPERTYDESCRIPTION_UIDMAP::iterator iter = propertyDescrs.begin();			\
 			for(; iter != propertyDescrs.end(); ++iter)														\
 			{																								\
-				/* ÓÉÓÚ´æÔÚÒ»ÖÖÇé¿ö£¬ ×é¼þdefÖÐÃ»ÓÐÄÚÈÝ£¬ µ«ÓÐcell½Å±¾£¬´ËÊ±baseappÉÏÎÞ·¨ÅÐ¶ÏËûÊÇ·ñÓÐcellÊôÐÔ£¬ËùÒÔÐ´celldataÊ±Ã»ÓÐÊý¾ÝÐ´Èë */ \
+				/* ç”±äºŽå­˜åœ¨ä¸€ç§æƒ…å†µï¼Œ ç»„ä»¶defä¸­æ²¡æœ‰å†…å®¹ï¼Œ ä½†æœ‰cellè„šæœ¬ï¼Œæ­¤æ—¶baseappä¸Šæ— æ³•åˆ¤æ–­ä»–æ˜¯å¦æœ‰cellå±žæ€§ï¼Œæ‰€ä»¥å†™celldataæ—¶æ²¡æœ‰æ•°æ®å†™å…¥ */ \
 				if (iter->second->getDataType()->type() == DATA_TYPE_ENTITY_COMPONENT)						\
 				{																							\
 					EntityComponentType* pEntityComponentType = (EntityComponentType*)iter->second->getDataType();	\
@@ -545,7 +545,7 @@ public:																										\
 																											\
 		while(mstream->length() > 0 && count-- > 0)															\
 		{																									\
-			(*mstream) >> uid /* ¸¸ÊôÐÔ */ >> uid;															\
+			(*mstream) >> uid /* çˆ¶å±žæ€§ */ >> uid;															\
 			ScriptDefModule::PROPERTYDESCRIPTION_UIDMAP::iterator iter = propertyDescrs.find(uid);			\
 			if(iter == propertyDescrs.end())																\
 			{																								\
@@ -809,7 +809,7 @@ public:																										\
 					Py_ssize_t ob_refcnt = value->ob_refcnt;												\
 					PyObject* pySetObj = propertyDescription->onSetValue(this, value);						\
 																											\
-					/* Èç¹ûdefÊôÐÔÊý¾ÝÓÐ¸Ä±ä£¬ ÄÇÃ´¿ÉÄÜÐèÒª¹ã²¥ */												\
+					/* å¦‚æžœdefå±žæ€§æ•°æ®æœ‰æ”¹å˜ï¼Œ é‚£ä¹ˆå¯èƒ½éœ€è¦å¹¿æ’­ */												\
 					if(pySetObj != NULL)																	\
 					{																						\
 						onDefDataChanged(NULL, propertyDescription, pySetObj);								\
@@ -862,7 +862,7 @@ public:																										\
 		}																									\
 		else if(g_componentType == BASEAPP_TYPE)															\
 		{																									\
-			extra = -1;	/* shouldAutoLoad -1Ä¬ÈÏ²»¸Ä±äÉèÖÃ */												\
+			extra = -1;	/* shouldAutoLoad -1é»˜è®¤ä¸æ”¹å˜è®¾ç½® */												\
 		}																									\
 																											\
 		if(currargsSize == 1)																				\
@@ -1355,319 +1355,317 @@ public:																										\
 		}																									\
 																											\
 		Py_RETURN_NONE;																						\
-	}																										\
+	}
 
-
-#define ENTITY_CPP_IMPL(APP, CLASS)																			\
-	class EntityScriptTimerHandler : public TimerHandler													\
-	{																										\
-	public:																									\
-		EntityScriptTimerHandler(CLASS * entity) : pEntity_( entity )										\
-		{																									\
-		}																									\
-																											\
-	private:																								\
-		virtual void handleTimeout(TimerHandle handle, void * pUser)										\
-		{																									\
-			ScriptTimers* scriptTimers = &pEntity_->scriptTimers();											\
-			int id = ScriptTimersUtil::getIDForHandle( scriptTimers, handle );								\
-			pEntity_->onTimer(id, intptr( pUser ));															\
-		}																									\
-																											\
-		virtual void onRelease( TimerHandle handle, void * /*pUser*/ )										\
-		{																									\
-			ScriptTimers* scriptTimers = &pEntity_->scriptTimers();											\
-			scriptTimers->releaseTimer(handle);																\
-			delete this;																					\
-		}																									\
-																											\
-		CLASS* pEntity_;																					\
-	};																										\
-																											\
-	PyObject* CLASS::pyAddTimer(float interval, float repeat, int32 userArg)								\
-	{																										\
-		EntityScriptTimerHandler* pHandler = new EntityScriptTimerHandler(this);							\
-		ScriptTimers * pTimers = &scriptTimers_;															\
-		int id = ScriptTimersUtil::addTimer(&pTimers,														\
-				interval, repeat,																			\
-				userArg, pHandler);																			\
-																											\
-		if (id == 0)																						\
-		{																									\
-			PyErr_SetString(PyExc_ValueError, "Unable to add timer");										\
-			PyErr_PrintEx(0);																				\
-			delete pHandler;																				\
-																											\
-			return NULL;																					\
-		}																									\
-																											\
-		return PyLong_FromLong(id);																			\
-	}																										\
-																											\
-	static PyObject* __py_pyDelTimer(PyObject* self, PyObject* args)										\
-	{																										\
-		uint16 currargsSize = PyTuple_Size(args);															\
-		CLASS* pobj = static_cast<CLASS*>(self);															\
-																											\
-		if (currargsSize != 1)																				\
-		{																									\
-			PyErr_Format(PyExc_AssertionError,																\
-				"%s::delTimer: args require 1 args(id|int or \"All\"|str), gived %d!\n",					\
-				pobj->scriptName(), currargsSize);															\
-																											\
-			PyErr_PrintEx(0);																				\
-			return PyLong_FromLong(-1);																		\
-		}																									\
-																											\
-		ScriptID timerID = 0;																				\
-		PyObject* pyargobj = NULL;																			\
-																											\
-		if (!PyArg_ParseTuple(args, "O", &pyargobj))														\
-		{																									\
-			PyErr_Format(PyExc_TypeError,																	\
-				"%s::delTimer: args(id|int or \"All\"|str) error!",											\
-				pobj->scriptName());																		\
-																											\
-			PyErr_PrintEx(0);																				\
-			return PyLong_FromLong(-1);																		\
-		}																									\
-																											\
-		if (pyargobj == NULL)																				\
-		{																									\
-			PyErr_Format(PyExc_TypeError,																	\
-				"%s::delTimer: args(id|int or \"All\"|str) error!",											\
-				pobj->scriptName());																		\
-																											\
-			PyErr_PrintEx(0);																				\
-			return PyLong_FromLong(-1);																		\
-		}																									\
-																											\
-		if (PyUnicode_Check(pyargobj))																		\
-		{																									\
-			if (strcmp(PyUnicode_AsUTF8AndSize(pyargobj, NULL), "All") == 0)								\
-			{																								\
-				pobj->scriptTimers().cancelAll();															\
-			}																								\
-			else																							\
-			{																								\
-				PyErr_Format(PyExc_TypeError,																\
-					"%s::delTimer: args not is \"All\"!",													\
-					pobj->scriptName());																	\
-																											\
-				PyErr_PrintEx(0);																			\
-				return PyLong_FromLong(-1);																	\
-			}																								\
-																											\
-			return PyLong_FromLong(0);																		\
-		}																									\
-		else                                                                                                \
-		{																									\
-			if (!PyLong_Check(pyargobj))																	\
-			{																								\
-				PyErr_Format(PyExc_TypeError,																\
-					"%s::delTimer: args(id|int) error!",													\
-					pobj->scriptName());																	\
-																											\
-				PyErr_PrintEx(0);																			\
-				return PyLong_FromLong(-1);																	\
-			}																								\
-																											\
-			timerID = PyLong_AsLong(pyargobj);																\
-		}																									\
-																											\
-		if(!ScriptTimersUtil::delTimer(&pobj->scriptTimers(), timerID))										\
-		{																									\
-			return PyLong_FromLong(-1);																		\
-		}																									\
-																											\
-		return PyLong_FromLong(timerID);																	\
-	}																										\
-																											\
-	void CLASS::destroyEntity()																				\
-	{																										\
-		APP::getSingleton().destroyEntity(id_, true);														\
-	}																										\
-																											\
-	PyObject* CLASS::pyGetIsDestroyed()																		\
-	{																										\
-		return PyBool_FromLong(isDestroyed());																\
-	}																										\
-																											\
-	PyObject* CLASS::pyGetClassName()																		\
-	{																										\
-		return PyUnicode_FromString(scriptName());															\
-	}																										\
-																											\
-	void CLASS::addPositionAndDirectionToStream(MemoryStream& s, bool useAliasID)							\
-	{																										\
-		ENTITY_PROPERTY_UID posuid = ENTITY_BASE_PROPERTY_UTYPE_POSITION_XYZ;								\
-		ENTITY_PROPERTY_UID diruid = ENTITY_BASE_PROPERTY_UTYPE_DIRECTION_ROLL_PITCH_YAW;					\
-																											\
-		Network::FixedMessages::MSGInfo* msgInfo =															\
-					Network::FixedMessages::getSingleton().isFixed("Property::position");					\
-																											\
-		if(msgInfo != NULL)																					\
-		{																									\
-			posuid = msgInfo->msgid;																		\
-			msgInfo = NULL;																					\
-		}																									\
-																											\
-		msgInfo = Network::FixedMessages::getSingleton().isFixed("Property::direction");					\
-		if(msgInfo != NULL)																					\
-		{																									\
-			diruid = msgInfo->msgid;																		\
-			msgInfo = NULL;																					\
-		}																									\
-																											\
-		PyObject* pyPos = NULL;																				\
-		PyObject* pyDir = NULL;																				\
-																											\
-																											\
-		if(g_componentType == BASEAPP_TYPE)																	\
-		{																									\
-			PyObject* cellDataDict = PyObject_GetAttrString(this, "cellData");								\
-			if(cellDataDict == NULL)																		\
-			{																								\
-				PyErr_Clear();																				\
-				return;																						\
-			}																								\
-			else																							\
-			{																								\
-				pyPos = PyDict_GetItemString(cellDataDict, "position");										\
-				pyDir = PyDict_GetItemString(cellDataDict, "direction");									\
-			}																								\
-																											\
-			Py_XDECREF(cellDataDict);																		\
-			if(pyPos == NULL && pyDir == NULL)																\
-			{																								\
-				PyErr_Clear();																				\
-				return;																						\
-			}																								\
-		}																									\
-		else																								\
-		{																									\
-			pyPos = PyObject_GetAttrString(this, "position");												\
-			pyDir = PyObject_GetAttrString(this, "direction");												\
-		}																									\
-																											\
-																											\
-		Vector3 pos, dir;																					\
-		script::ScriptVector3::convertPyObjectToVector3(pos, pyPos);										\
-		script::ScriptVector3::convertPyObjectToVector3(dir, pyDir);										\
-																											\
-		if(pScriptModule()->usePropertyDescrAlias() && useAliasID)											\
-		{																									\
-			ADD_POS_DIR_TO_STREAM_ALIASID(s, pos, dir)														\
-		}																									\
-		else																								\
-		{																									\
-			ADD_POS_DIR_TO_STREAM(s, pos, dir)																\
-		}																									\
-																											\
-		if(g_componentType != BASEAPP_TYPE)																	\
-		{																									\
-			Py_XDECREF(pyPos);																				\
-			Py_XDECREF(pyDir);																				\
-		}																									\
-	}																										\
-																											\
-	void CLASS::initProperty(bool isReload)																	\
-	{																										\
-		EntityDef::context().currComponentType = g_componentType;											\
-		EntityDef::context().currEntityID = id();															\
-																											\
-		ScriptDefModule::PROPERTYDESCRIPTION_MAP* oldpropers = NULL;										\
-		if(isReload)																						\
-		{																									\
-			ScriptDefModule* pOldScriptDefModule =															\
-										EntityDef::findOldScriptModule(pScriptModule_->getName());			\
-			if(!pOldScriptDefModule)																		\
-			{																								\
-				ERROR_MSG(fmt::format("{}::initProperty: not found old_module!\n",							\
-					pScriptModule_->getName()));															\
-				KBE_ASSERT(false && "Entity::initProperty: not found old_module");							\
-			}																								\
-																											\
-			oldpropers =																					\
-											&pOldScriptDefModule->getPropertyDescrs();						\
-		}																									\
-																											\
-		ScriptDefModule::PROPERTYDESCRIPTION_MAP::const_iterator iter = pPropertyDescrs_->begin();			\
-		for(; iter != pPropertyDescrs_->end(); ++iter)														\
-		{																									\
-			PropertyDescription* propertyDescription = iter->second;										\
-			DataType* dataType = propertyDescription->getDataType();										\
-																											\
-			if(oldpropers)																					\
-			{																								\
-				ScriptDefModule::PROPERTYDESCRIPTION_MAP::iterator olditer = oldpropers->find(iter->first);	\
-				if(olditer != oldpropers->end())															\
-				{																							\
-					if(strcmp(olditer->second->getDataType()->getName(),									\
-							propertyDescription->getDataType()->getName()) == 0 &&							\
-						strcmp(olditer->second->getDataType()->getName(),									\
-							propertyDescription->getDataType()->getName()) == 0)							\
-						continue;																			\
-				}																							\
-			}																								\
-																											\
-			if(dataType)																					\
-			{																								\
-				PyObject* defObj = propertyDescription->newDefaultVal();									\
-																											\
-				if(dataType->type() == DATA_TYPE_ENTITY_COMPONENT)											\
-					((EntityComponent*)defObj)->updateOwner(id(), this);									\
-																											\
-				PyObject_SetAttrString(static_cast<PyObject*>(this),										\
-							propertyDescription->getName(), defObj);										\
-				Py_DECREF(defObj);																			\
-																											\
-				/* DEBUG_MSG(fmt::format(#CLASS"::"#CLASS": added [{}] property ref={}.\n",					\
-								propertyDescription->getName(), defObj->ob_refcnt));*/						\
-			}																								\
-			else																							\
-			{																								\
-				ERROR_MSG(fmt::format("{}::initProperty: {} dataType is NULL£¡ entityID={}\n",				\
-					scriptName(), propertyDescription->getName(), id()));									\
-			}																								\
-		}																									\
-																											\
-		/* ÓÉÓÚ×é¼þ³õÊ¼»¯Ê±»á×Ô¶¯initProperty£¬ËùÒÔÖ»ÓÐÖØ¼ÓÔØÊ±ÐèÒªÏÔÊ¾µÄÈ¥µ÷ÓÃ×é¼þµÄinitProperty */				\
-		if(isReload)																						\
-		{																									\
-			const ScriptDefModule::COMPONENTDESCRIPTION_MAP* pComponentDescrs =								\
-				&pScriptModule_->getComponentDescrs();														\
-																											\
-			ScriptDefModule::COMPONENTDESCRIPTION_MAP::const_iterator iter1 = pComponentDescrs->begin();	\
-			for (; iter1 != pComponentDescrs->end(); ++iter1)												\
-			{																								\
-				PyObject* pComponentProperty = PyObject_GetAttrString(this, iter1->first.c_str());			\
-				if(pComponentProperty)																		\
-				{																							\
-					if(PyObject_TypeCheck(pComponentProperty, EntityComponent::getScriptType()))			\
-					{																						\
-						EntityComponent* pEntityComponent = static_cast<EntityComponent*>(pComponentProperty);\
-						pEntityComponent->initProperty();													\
-					}																						\
-					else																					\
-					{																						\
-						PyErr_Format(PyExc_AssertionError, "%s.%s is not property of EntityComponent!",		\
-							scriptName(), iter1->first.c_str());											\
-						PyErr_PrintEx(0);																	\
-					}																						\
-																											\
-					Py_DECREF(pComponentProperty);															\
-				}																							\
-				else																						\
-				{																							\
-					PyErr_Clear();																			\
-				}																							\
-			}																								\
-		}																									\
-	}																										\
-																											\
-
-
+#define ENTITY_CPP_IMPL(APP, CLASS)                                                                                             \
+	class EntityScriptTimerHandler : public TimerHandler                                                                          \
+	{                                                                                                                             \
+	public:                                                                                                                       \
+		EntityScriptTimerHandler(CLASS *entity) : pEntity_(entity)                                                                  \
+		{                                                                                                                           \
+		}                                                                                                                           \
+                                                                                                                                \
+	private:                                                                                                                      \
+		virtual void handleTimeout(TimerHandle handle, void *pUser)                                                                 \
+		{                                                                                                                           \
+			ScriptTimers *scriptTimers = &pEntity_->scriptTimers();                                                                   \
+			int id = ScriptTimersUtil::getIDForHandle(scriptTimers, handle);                                                          \
+			pEntity_->onTimer(id, intptr(pUser));                                                                                     \
+		}                                                                                                                           \
+                                                                                                                                \
+		virtual void onRelease(TimerHandle handle, void * /*pUser*/)                                                                \
+		{                                                                                                                           \
+			ScriptTimers *scriptTimers = &pEntity_->scriptTimers();                                                                   \
+			scriptTimers->releaseTimer(handle);                                                                                       \
+			delete this;                                                                                                              \
+		}                                                                                                                           \
+                                                                                                                                \
+		CLASS *pEntity_;                                                                                                            \
+	};                                                                                                                            \
+                                                                                                                                \
+	PyObject *CLASS::pyAddTimer(float interval, float repeat, int32 userArg)                                                      \
+	{                                                                                                                             \
+		EntityScriptTimerHandler *pHandler = new EntityScriptTimerHandler(this);                                                    \
+		ScriptTimers *pTimers = &scriptTimers_;                                                                                     \
+		int id = ScriptTimersUtil::addTimer(&pTimers,                                                                               \
+																				interval, repeat,                                                                       \
+																				userArg, pHandler);                                                                     \
+                                                                                                                                \
+		if (id == 0)                                                                                                                \
+		{                                                                                                                           \
+			PyErr_SetString(PyExc_ValueError, "Unable to add timer");                                                                 \
+			PyErr_PrintEx(0);                                                                                                         \
+			delete pHandler;                                                                                                          \
+                                                                                                                                \
+			return NULL;                                                                                                              \
+		}                                                                                                                           \
+                                                                                                                                \
+		return PyLong_FromLong(id);                                                                                                 \
+	}                                                                                                                             \
+                                                                                                                                \
+	static PyObject *__py_pyDelTimer(PyObject *self, PyObject *args)                                                              \
+	{                                                                                                                             \
+		uint16 currargsSize = PyTuple_Size(args);                                                                                   \
+		CLASS *pobj = static_cast<CLASS *>(self);                                                                                   \
+                                                                                                                                \
+		if (currargsSize != 1)                                                                                                      \
+		{                                                                                                                           \
+			PyErr_Format(PyExc_AssertionError,                                                                                        \
+									 "%s::delTimer: args require 1 args(id|int or \"All\"|str), gived %d!\n",                                     \
+									 pobj->scriptName(), currargsSize);                                                                           \
+                                                                                                                                \
+			PyErr_PrintEx(0);                                                                                                         \
+			return PyLong_FromLong(-1);                                                                                               \
+		}                                                                                                                           \
+                                                                                                                                \
+		ScriptID timerID = 0;                                                                                                       \
+		PyObject *pyargobj = NULL;                                                                                                  \
+                                                                                                                                \
+		if (!PyArg_ParseTuple(args, "O", &pyargobj))                                                                                \
+		{                                                                                                                           \
+			PyErr_Format(PyExc_TypeError,                                                                                             \
+									 "%s::delTimer: args(id|int or \"All\"|str) error!",                                                          \
+									 pobj->scriptName());                                                                                         \
+                                                                                                                                \
+			PyErr_PrintEx(0);                                                                                                         \
+			return PyLong_FromLong(-1);                                                                                               \
+		}                                                                                                                           \
+                                                                                                                                \
+		if (pyargobj == NULL)                                                                                                       \
+		{                                                                                                                           \
+			PyErr_Format(PyExc_TypeError,                                                                                             \
+									 "%s::delTimer: args(id|int or \"All\"|str) error!",                                                          \
+									 pobj->scriptName());                                                                                         \
+                                                                                                                                \
+			PyErr_PrintEx(0);                                                                                                         \
+			return PyLong_FromLong(-1);                                                                                               \
+		}                                                                                                                           \
+                                                                                                                                \
+		if (PyUnicode_Check(pyargobj))                                                                                              \
+		{                                                                                                                           \
+			if (strcmp(PyUnicode_AsUTF8AndSize(pyargobj, NULL), "All") == 0)                                                          \
+			{                                                                                                                         \
+				pobj->scriptTimers().cancelAll();                                                                                       \
+			}                                                                                                                         \
+			else                                                                                                                      \
+			{                                                                                                                         \
+				PyErr_Format(PyExc_TypeError,                                                                                           \
+										 "%s::delTimer: args not is \"All\"!",                                                                      \
+										 pobj->scriptName());                                                                                       \
+                                                                                                                                \
+				PyErr_PrintEx(0);                                                                                                       \
+				return PyLong_FromLong(-1);                                                                                             \
+			}                                                                                                                         \
+                                                                                                                                \
+			return PyLong_FromLong(0);                                                                                                \
+		}                                                                                                                           \
+		else                                                                                                                        \
+		{                                                                                                                           \
+			if (!PyLong_Check(pyargobj))                                                                                              \
+			{                                                                                                                         \
+				PyErr_Format(PyExc_TypeError,                                                                                           \
+										 "%s::delTimer: args(id|int) error!",                                                                       \
+										 pobj->scriptName());                                                                                       \
+                                                                                                                                \
+				PyErr_PrintEx(0);                                                                                                       \
+				return PyLong_FromLong(-1);                                                                                             \
+			}                                                                                                                         \
+                                                                                                                                \
+			timerID = PyLong_AsLong(pyargobj);                                                                                        \
+		}                                                                                                                           \
+                                                                                                                                \
+		if (!ScriptTimersUtil::delTimer(&pobj->scriptTimers(), timerID))                                                            \
+		{                                                                                                                           \
+			return PyLong_FromLong(-1);                                                                                               \
+		}                                                                                                                           \
+                                                                                                                                \
+		return PyLong_FromLong(timerID);                                                                                            \
+	}                                                                                                                             \
+                                                                                                                                \
+	void CLASS::destroyEntity()                                                                                                   \
+	{                                                                                                                             \
+		auto singleton_ptr = APP::getSingletonPtr();                                                                                \
+		if (singleton_ptr)                                                                                                          \
+		{                                                                                                                           \
+			singleton_ptr->destroyEntity(id_, true);                                                                                  \
+		}                                                                                                                           \
+	}                                                                                                                             \
+                                                                                                                                \
+	PyObject *CLASS::pyGetIsDestroyed()                                                                                           \
+	{                                                                                                                             \
+		return PyBool_FromLong(isDestroyed());                                                                                      \
+	}                                                                                                                             \
+                                                                                                                                \
+	PyObject *CLASS::pyGetClassName()                                                                                             \
+	{                                                                                                                             \
+		return PyUnicode_FromString(scriptName());                                                                                  \
+	}                                                                                                                             \
+                                                                                                                                \
+	void CLASS::addPositionAndDirectionToStream(MemoryStream &s, bool useAliasID)                                                 \
+	{                                                                                                                             \
+		ENTITY_PROPERTY_UID posuid = ENTITY_BASE_PROPERTY_UTYPE_POSITION_XYZ;                                                       \
+		ENTITY_PROPERTY_UID diruid = ENTITY_BASE_PROPERTY_UTYPE_DIRECTION_ROLL_PITCH_YAW;                                           \
+                                                                                                                                \
+		Network::FixedMessages::MSGInfo *msgInfo =                                                                                  \
+				Network::FixedMessages::getSingleton().isFixed("Property::position");                                                   \
+                                                                                                                                \
+		if (msgInfo != NULL)                                                                                                        \
+		{                                                                                                                           \
+			posuid = msgInfo->msgid;                                                                                                  \
+			msgInfo = NULL;                                                                                                           \
+		}                                                                                                                           \
+                                                                                                                                \
+		msgInfo = Network::FixedMessages::getSingleton().isFixed("Property::direction");                                            \
+		if (msgInfo != NULL)                                                                                                        \
+		{                                                                                                                           \
+			diruid = msgInfo->msgid;                                                                                                  \
+			msgInfo = NULL;                                                                                                           \
+		}                                                                                                                           \
+                                                                                                                                \
+		PyObject *pyPos = NULL;                                                                                                     \
+		PyObject *pyDir = NULL;                                                                                                     \
+                                                                                                                                \
+		if (g_componentType == BASEAPP_TYPE)                                                                                        \
+		{                                                                                                                           \
+			PyObject *cellDataDict = PyObject_GetAttrString(this, "cellData");                                                        \
+			if (cellDataDict == NULL)                                                                                                 \
+			{                                                                                                                         \
+				PyErr_Clear();                                                                                                          \
+				return;                                                                                                                 \
+			}                                                                                                                         \
+			else                                                                                                                      \
+			{                                                                                                                         \
+				pyPos = PyDict_GetItemString(cellDataDict, "position");                                                                 \
+				pyDir = PyDict_GetItemString(cellDataDict, "direction");                                                                \
+			}                                                                                                                         \
+                                                                                                                                \
+			Py_XDECREF(cellDataDict);                                                                                                 \
+			if (pyPos == NULL && pyDir == NULL)                                                                                       \
+			{                                                                                                                         \
+				PyErr_Clear();                                                                                                          \
+				return;                                                                                                                 \
+			}                                                                                                                         \
+		}                                                                                                                           \
+		else                                                                                                                        \
+		{                                                                                                                           \
+			pyPos = PyObject_GetAttrString(this, "position");                                                                         \
+			pyDir = PyObject_GetAttrString(this, "direction");                                                                        \
+		}                                                                                                                           \
+                                                                                                                                \
+		Vector3 pos, dir;                                                                                                           \
+		script::ScriptVector3::convertPyObjectToVector3(pos, pyPos);                                                                \
+		script::ScriptVector3::convertPyObjectToVector3(dir, pyDir);                                                                \
+                                                                                                                                \
+		if (pScriptModule()->usePropertyDescrAlias() && useAliasID)                                                                 \
+		{                                                                                                                           \
+			ADD_POS_DIR_TO_STREAM_ALIASID(s, pos, dir)                                                                                \
+		}                                                                                                                           \
+		else                                                                                                                        \
+		{                                                                                                                           \
+			ADD_POS_DIR_TO_STREAM(s, pos, dir)                                                                                        \
+		}                                                                                                                           \
+                                                                                                                                \
+		if (g_componentType != BASEAPP_TYPE)                                                                                        \
+		{                                                                                                                           \
+			Py_XDECREF(pyPos);                                                                                                        \
+			Py_XDECREF(pyDir);                                                                                                        \
+		}                                                                                                                           \
+	}                                                                                                                             \
+                                                                                                                                \
+	void CLASS::initProperty(bool isReload)                                                                                       \
+	{                                                                                                                             \
+		EntityDef::context().currComponentType = g_componentType;                                                                   \
+		EntityDef::context().currEntityID = id();                                                                                   \
+                                                                                                                                \
+		ScriptDefModule::PROPERTYDESCRIPTION_MAP *oldpropers = NULL;                                                                \
+		if (isReload)                                                                                                               \
+		{                                                                                                                           \
+			ScriptDefModule *pOldScriptDefModule =                                                                                    \
+					EntityDef::findOldScriptModule(pScriptModule_->getName());                                                            \
+			if (!pOldScriptDefModule)                                                                                                 \
+			{                                                                                                                         \
+				ERROR_MSG(fmt::format("{}::initProperty: not found old_module!\n",                                                      \
+															pScriptModule_->getName()));                                                                      \
+				KBE_ASSERT(false && "Entity::initProperty: not found old_module");                                                      \
+			}                                                                                                                         \
+                                                                                                                                \
+			oldpropers =                                                                                                              \
+					&pOldScriptDefModule->getPropertyDescrs();                                                                            \
+		}                                                                                                                           \
+                                                                                                                                \
+		ScriptDefModule::PROPERTYDESCRIPTION_MAP::const_iterator iter = pPropertyDescrs_->begin();                                  \
+		for (; iter != pPropertyDescrs_->end(); ++iter)                                                                             \
+		{                                                                                                                           \
+			PropertyDescription *propertyDescription = iter->second;                                                                  \
+			DataType *dataType = propertyDescription->getDataType();                                                                  \
+                                                                                                                                \
+			if (oldpropers)                                                                                                           \
+			{                                                                                                                         \
+				ScriptDefModule::PROPERTYDESCRIPTION_MAP::iterator olditer = oldpropers->find(iter->first);                             \
+				if (olditer != oldpropers->end())                                                                                       \
+				{                                                                                                                       \
+					if (strcmp(olditer->second->getDataType()->getName(),                                                                 \
+										 propertyDescription->getDataType()->getName()) == 0 &&                                                     \
+							strcmp(olditer->second->getDataType()->getName(),                                                                 \
+										 propertyDescription->getDataType()->getName()) == 0)                                                       \
+						continue;                                                                                                           \
+				}                                                                                                                       \
+			}                                                                                                                         \
+                                                                                                                                \
+			if (dataType)                                                                                                             \
+			{                                                                                                                         \
+				PyObject *defObj = propertyDescription->newDefaultVal();                                                                \
+                                                                                                                                \
+				if (dataType->type() == DATA_TYPE_ENTITY_COMPONENT)                                                                     \
+					((EntityComponent *)defObj)->updateOwner(id(), this);                                                                 \
+                                                                                                                                \
+				PyObject_SetAttrString(static_cast<PyObject *>(this),                                                                   \
+															 propertyDescription->getName(), defObj);                                                         \
+				Py_DECREF(defObj);                                                                                                      \
+                                                                                                                                \
+				/* DEBUG_MSG(fmt::format(#CLASS"::"#CLASS": added [{}] property ref={}.\n",                                             \
+								propertyDescription->getName(), defObj->ob_refcnt));*/                                                          \
+			}                                                                                                                         \
+			else                                                                                                                      \
+			{                                                                                                                         \
+				ERROR_MSG(fmt::format("{}::initProperty: {} dataType is NULLï¼ entityID={}\n",                                          \
+															scriptName(), propertyDescription->getName(), id()));                                             \
+			}                                                                                                                         \
+		}                                                                                                                           \
+                                                                                                                                \
+		/* ç”±äºŽç»„ä»¶åˆå§‹åŒ–æ—¶ä¼šè‡ªåŠ¨initPropertyï¼Œæ‰€ä»¥åªæœ‰é‡åŠ è½½æ—¶éœ€è¦æ˜¾ç¤ºçš„åŽ»è°ƒç”¨ç»„ä»¶çš„initProperty */ \
+		if (isReload)                                                                                                               \
+		{                                                                                                                           \
+			const ScriptDefModule::COMPONENTDESCRIPTION_MAP *pComponentDescrs =                                                       \
+					&pScriptModule_->getComponentDescrs();                                                                                \
+                                                                                                                                \
+			ScriptDefModule::COMPONENTDESCRIPTION_MAP::const_iterator iter1 = pComponentDescrs->begin();                              \
+			for (; iter1 != pComponentDescrs->end(); ++iter1)                                                                         \
+			{                                                                                                                         \
+				PyObject *pComponentProperty = PyObject_GetAttrString(this, iter1->first.c_str());                                      \
+				if (pComponentProperty)                                                                                                 \
+				{                                                                                                                       \
+					if (PyObject_TypeCheck(pComponentProperty, EntityComponent::getScriptType()))                                         \
+					{                                                                                                                     \
+						EntityComponent *pEntityComponent = static_cast<EntityComponent *>(pComponentProperty);                             \
+						pEntityComponent->initProperty();                                                                                   \
+					}                                                                                                                     \
+					else                                                                                                                  \
+					{                                                                                                                     \
+						PyErr_Format(PyExc_AssertionError, "%s.%s is not property of EntityComponent!",                                     \
+												 scriptName(), iter1->first.c_str());                                                                   \
+						PyErr_PrintEx(0);                                                                                                   \
+					}                                                                                                                     \
+                                                                                                                                \
+					Py_DECREF(pComponentProperty);                                                                                        \
+				}                                                                                                                       \
+				else                                                                                                                    \
+				{                                                                                                                       \
+					PyErr_Clear();                                                                                                        \
+				}                                                                                                                       \
+			}                                                                                                                         \
+		}                                                                                                                           \
+	}
 
 #define ENTITY_CONSTRUCTION(CLASS)																			\
 	id_(id),																								\

@@ -4,9 +4,8 @@
 #include "sqlstatement.h"
 
 namespace KBEngine{ 
-KBE_SINGLETON_INIT(EntitySqlStatementMapping);
 
-EntitySqlStatementMapping _g_entitySqlStatementMapping;
+EntitySqlStatementMapping &_g_entitySqlStatementMapping = EntitySqlStatementMapping::getSingleton();
 
 //-------------------------------------------------------------------------------------
 void EntitySqlStatementMapping::addQuerySqlStatement(const std::string& tableName, SqlStatement* pSqlStatement)
