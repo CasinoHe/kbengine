@@ -41,10 +41,10 @@ namespace smallgames
 		void operator=(PathMgr &) = delete;
 
 	public:
-		inline static const std::filesystem::path DEFAULT_BIN_PATH{"bin"};
-		inline static const std::filesystem::path DEFAULT_ASSETS_PATH{"assets"};
-		inline static const std::filesystem::path DEFAULT_RES_PATH{"assets/res"};
-		inline static const std::filesystem::path DEFAULT_SCRIPT_PATH{"assets/res/scripts"};
+		inline static const std::filesystem::path DEFAULT_BIN_PATH{"bin/"};
+		inline static const std::filesystem::path DEFAULT_ASSETS_PATH{"assets/"};
+		inline static const std::filesystem::path DEFAULT_RES_PATH{"assets/res/"};
+		inline static const std::filesystem::path DEFAULT_SCRIPT_PATH{"assets/res/scripts/"};
 		inline static const char *const ROOT_PATH_VAR{"SMG_ROOT"};
 		inline static const char *const BIN_PATH_VAR{"SMG_BIN_PATH"};
 		inline static const char *const RES_PATH_VAR{"SMG_RES_PATH"};
